@@ -8,7 +8,7 @@ effort.
 
 The settings for the plugin are located in `Settings -> Media`.
 
-![wp-gpt-vision-img-alt-generator](https://github.com/android-com-pl/wp-gpt-vision-img-alt-generator/assets/25438601/6ff5f29f-dd51-467e-9de7-67af41493e06)
+![wp-gpt-vision-img-alt-generator](https://github.com/android-com-pl/wp-gpt-vision-img-alt-generator/assets/25438601/d68179ad-4ed4-43b6-8d52-b2eeeb4b2534)
 
 ## TODO:
 
