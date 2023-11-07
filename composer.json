@@ -1,0 +1,28 @@
+{
+  "name": "acpl/wp-gpt-vision-img-alt-generator",
+  "type": "wordpress-plugin",
+  "autoload": {
+    "psr-4": {
+      "ACP\\AiAltGenerator\\": "includes/"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require": {
+    "php": ">=8.1",
+    "ext-mbstring": "*"
+  },
+  "require-dev": {
+    "szepeviktor/phpstan-wordpress": "^v1.3",
+    "phpstan/extension-installer": "^1.3"
+  },
+  "config": {
+    "allow-plugins": {
+      "phpstan/extension-installer": true
+    }
+  },
+  "scripts": {
+    "analyse:phpstan": "phpstan analyse",
+    "clear-cache:phpstan": "phpstan clear-result-cache"
+  }
+}
