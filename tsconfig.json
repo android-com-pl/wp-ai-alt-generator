@@ -1,0 +1,14 @@
+{
+	"compilerOptions": {
+		"target": "ES6",
+		"jsx": "react-jsx",
+		"esModuleInterop": true,
+		"resolveJsonModule": true,
+		"moduleResolution": "node",
+		"allowSyntheticDefaultImports": true,
+		"strict": true,
+		"typeRoots": ["node_modules/@types", "src/types"]
+	},
+	"include": ["src"],
+	"exclude": ["build", "node_modules", "vendor"]
+}

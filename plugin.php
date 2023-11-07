@@ -29,6 +29,11 @@ require __DIR__ . '/vendor/autoload.php';
 class AiAltGenerator {
 	public const OPTION_NAME = 'acp_ai_alt_generator';
 
+	public function __construct() {
+		add_filter( 'wp_generate_attachment_metadata', [ AltGenerator::class, 'on_attachment_upload' ], 10, 3 );
+		add_action( 'enqueue_block_editor_assets', [ $this, 'editor_assets' ] );
+	}
+
 	public static function get_options(): array|false {
 		return get_option( self::OPTION_NAME );
 	}
@@ -38,11 +43,15 @@ class AiAltGenerator {
 
 		return ! empty( $options['api_key'] );
 	}
+
+	public function editor_assets(): void {
+		$js_asset = include ACP_AI_ALT_PLUGIN_PATH . 'build/editor.asset.php';
+		wp_enqueue_script( 'acp/ai-alt-generator/editor', ACP_AI_ALT_PLUGIN_URL . 'build/editor.js', $js_asset['dependencies'], $js_asset['version'] );
+	}
 }
 
+new AiAltGenerator;
 
 if ( is_admin() ) {
-	new Admin();
+	new Admin;
 }
-
-add_filter( 'wp_generate_attachment_metadata', [ AltGenerator::class, 'on_attachment_upload' ], 10, 3 );
