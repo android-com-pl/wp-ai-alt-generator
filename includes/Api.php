@@ -2,6 +2,34 @@
 
 namespace ACP\AiAltGenerator;
 
+use WP_Error;
+use WP_REST_Request;
+use WP_REST_Response;
+
 class Api {
-	// TODO
+	public function register_routes(): void {
+		register_rest_route(
+			'acp',
+			'/ai-alt-generator',
+			[
+				'methods'             => 'POST',
+				'args'                => [
+					'attachment_id' => [
+						'required' => true,
+						'type'     => 'integer',
+					],
+				],
+				'callback'            => [ $this, 'generate_alt_text' ],
+				'permission_callback' => fn() => current_user_can( 'edit_posts' ),
+			]
+		);
+	}
+
+	public function generate_alt_text( WP_REST_Request $request ): WP_REST_Response|WP_Error {
+		$attachment_id = $request->get_param( 'attachment_id' );
+
+		return new WP_REST_Response( [
+			'alt' => AltGenerator::generate_alt_text( $attachment_id )
+		] );
+	}
 }

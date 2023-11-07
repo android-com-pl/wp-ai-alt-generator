@@ -33,4 +33,5 @@ type ImageBlockProps = {
   name: string;
   attributes: ImageBlockAttrs;
   setAttributes: ImageBlockSetAttrs;
+  [key: string]: any;
 };

@@ -31,6 +31,7 @@ class AiAltGenerator {
 
 	public function __construct() {
 		add_filter( 'wp_generate_attachment_metadata', [ AltGenerator::class, 'on_attachment_upload' ], 10, 3 );
+		add_action( 'rest_api_init', [ ( new Api ), 'register_routes' ] );
 		add_action( 'enqueue_block_editor_assets', [ $this, 'editor_assets' ] );
 	}
 

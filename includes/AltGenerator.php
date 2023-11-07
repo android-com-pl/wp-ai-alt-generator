@@ -80,12 +80,15 @@ class AltGenerator {
 		return $completion['choices'][0]['message']['content'] ?? '';
 	}
 
-	public static function generate_and_set_alt_text( int $attachment_id ): void {
+	public static function generate_and_set_alt_text( int $attachment_id ): ?string {
 		$alt_text = self::generate_alt_text( $attachment_id );
 		if ( ! empty( $alt_text ) ) {
 			update_post_meta( $attachment_id, '_wp_attachment_image_alt', sanitize_text_field( $alt_text ) );
 
+			return $alt_text;
 		}
+
+		return null;
 	}
 
 	public static function on_attachment_upload( array $metadata, int $attachment_id, string $context ): array {

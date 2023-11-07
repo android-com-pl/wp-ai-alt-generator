@@ -7,7 +7,8 @@ images during the upload process. This plugin is designed to enhance website acc
 effort.
 
 > [!IMPORTANT]  
-> The settings for the plugin are located in `Settings -> Media`. You need to enter your [OpenAI](https://platform.openai.com/api-keys) API key there.
+> The settings for the plugin are located in `Settings -> Media`.
+> You need to enter your [OpenAI API key](https://platform.openai.com/api-keys) there.
 
 ![wp-gpt-vision-img-alt-generator](https://github.com/android-com-pl/wp-gpt-vision-img-alt-generator/assets/25438601/d68179ad-4ed4-43b6-8d52-b2eeeb4b2534)
 
