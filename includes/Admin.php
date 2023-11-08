@@ -118,7 +118,7 @@ class Admin {
 
 				printf(
 					'<p class="description">' .
-					__( 'Choose "Low" detail to minimize token usage and costs for image processing. "High" detail will use more tokens but provides finer detail. For precise token calculations and cost implications, refer to the <a href="%s" target="_blank">OpenAI documentation on calculating costs</a>.', 'gpt-vision-img-alt-generator' )
+					__( 'Choose "Low" detail to minimize token usage and costs for image processing, which should be sufficient for most use cases and is significantly cheaper. "High" detail will use more tokens but provides finer detail. For precise token calculations and cost implications, refer to the <a href="%s" target="_blank">OpenAI documentation on calculating costs</a>.', 'gpt-vision-img-alt-generator' )
 					. '</p>',
 					esc_url( 'https://platform.openai.com/docs/guides/vision/calculating-costs' )
 				);
