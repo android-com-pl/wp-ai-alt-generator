@@ -110,7 +110,7 @@ class Admin {
 					printf(
 						'<option value="%s" %s>%s</option>',
 						$detail,
-						selected( $options['detail'] ?? 'high', $detail, false ),
+						selected( $options['detail'] ?? 'low', $detail, false ),
 						esc_html( $label )
 					);
 				}
