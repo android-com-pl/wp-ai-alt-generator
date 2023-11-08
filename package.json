@@ -1,12 +1,14 @@
 {
-  "main": "index.js",
   "scripts": {
     "build": "wp-scripts build",
     "dev": "wp-scripts start",
-    "dev:hot": "wp-scripts start --hot"
+    "dev:hot": "wp-scripts start --hot",
+    "format": "wp-scripts format",
+    "plugin-zip": "wp-scripts plugin-zip"
   },
   "dependencies": {
-    "@wordpress/scripts": "^26.16.0"
+    "@wordpress/scripts": "^26.16.0",
+    "ts-dom-utils": "^2.1.0"
   },
   "devDependencies": {
     "@types/wordpress__block-editor": "^11.5.6",

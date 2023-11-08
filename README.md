@@ -16,5 +16,6 @@ effort.
 
 - [x] Add settings page
 - [x] Generate alt on upload option
-- [ ] Generate alt button
+- [x] Generate alt button
+- [ ] Error handling
 - [ ] Upload to WordPress.org

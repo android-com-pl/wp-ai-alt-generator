@@ -15,6 +15,8 @@
 
 namespace ACP\AiAltGenerator;
 
+use WP_Post;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	http_response_code( 403 );
 	exit();
@@ -33,6 +35,7 @@ class AiAltGenerator {
 		add_filter( 'wp_generate_attachment_metadata', [ AltGenerator::class, 'on_attachment_upload' ], 10, 3 );
 		add_action( 'rest_api_init', [ ( new Api ), 'register_routes' ] );
 		add_action( 'enqueue_block_editor_assets', [ $this, 'editor_assets' ] );
+		add_action( 'wp_enqueue_media', [ $this, 'media_assets' ] );
 	}
 
 	public static function get_options(): array|false {
@@ -48,6 +51,13 @@ class AiAltGenerator {
 	public function editor_assets(): void {
 		$js_asset = include ACP_AI_ALT_PLUGIN_PATH . 'build/editor.asset.php';
 		wp_enqueue_script( 'acp/ai-alt-generator/editor', ACP_AI_ALT_PLUGIN_URL . 'build/editor.js', $js_asset['dependencies'], $js_asset['version'] );
+		wp_set_script_translations( 'acp/ai-alt-generator/editor', 'gpt-vision-img-alt-generator' );
+	}
+
+	public function media_assets(): void {
+		$js_asset = include ACP_AI_ALT_PLUGIN_PATH . 'build/media.asset.php';
+		wp_enqueue_script( 'acp/ai-alt-generator/media', ACP_AI_ALT_PLUGIN_URL . 'build/media.js', $js_asset['dependencies'], $js_asset['version'], true );
+		wp_set_script_translations( 'acp/ai-alt-generator/media', 'gpt-vision-img-alt-generator' );
 	}
 }
 
