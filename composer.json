@@ -10,7 +10,8 @@
   "prefer-stable": true,
   "require": {
     "php": ">=8.1",
-    "ext-mbstring": "*"
+    "ext-mbstring": "*",
+    "ext-intl": "*"
   },
   "require-dev": {
     "szepeviktor/phpstan-wordpress": "^v1.3",

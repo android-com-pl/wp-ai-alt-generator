@@ -19,3 +19,5 @@ type ImageBlockAttrs = {
 };
 
 type ImageBlockSetAttrs = (attributes: Partial<ImageBlockAttrs>) => void;
+
+type WPError = { code: string; data: any; message: string };

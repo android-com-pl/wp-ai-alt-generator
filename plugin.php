@@ -15,6 +15,8 @@
 
 namespace ACP\AiAltGenerator;
 
+use WP_Error;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	http_response_code( 403 );
 	exit();
@@ -45,6 +47,10 @@ class AiAltGenerator {
 		$options = self::get_options();
 
 		return ! empty( $options['api_key'] );
+	}
+
+	public static function error_log( WP_Error $error ): void {
+		error_log( '[GPT Vision Alt Generator] ' . $error->get_error_message() );
 	}
 
 	public function editor_assets(): void {

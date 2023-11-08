@@ -1,5 +1,5 @@
 import { createElement, qs } from "ts-dom-utils";
-import { __ } from "@wordpress/i18n";
+import { __, sprintf } from "@wordpress/i18n";
 
 import { TEXT_DOMAIN } from "../constants";
 import generateAltText from "../utils/generateAltText";
@@ -41,16 +41,26 @@ wp.media.view.Attachment.Details = wp.media.view.Attachment.Details.extend({
           }
         }
 
-        spinner.classList.add("is-active");
-        button.disabled = true;
+        try {
+          spinner.classList.add("is-active");
+          button.disabled = true;
 
-        const altText = await generateAltText(this.model.get("id"));
-        this.model.set("alt", altText);
+          const altText = await generateAltText(this.model.get("id"));
+          this.model.set("alt", altText);
 
-        spinner.classList.remove("is-active");
-        button.disabled = false;
-        this.render();
-        this.model.save();
+          this.render();
+          this.model.save();
+        } catch (error) {
+          alert(
+            sprintf(
+              __("There was an error generating the alt text: %s", TEXT_DOMAIN),
+              error.message,
+            ),
+          );
+        } finally {
+          spinner.classList.remove("is-active");
+          button.disabled = false;
+        }
       },
     });
     buttonWrapper.append(button);

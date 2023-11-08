@@ -1,5 +1,5 @@
 import { Button } from "@wordpress/components";
-import { __ } from "@wordpress/i18n";
+import { __, sprintf } from "@wordpress/i18n";
 import { useState } from "@wordpress/element";
 import { useDispatch } from "@wordpress/data";
 import { store as noticesStore } from "@wordpress/notices";
@@ -15,7 +15,7 @@ export default ({
   setAttributes: ImageBlockSetAttrs;
 }) => {
   const [isGenerating, setIsGenerating] = useState(false);
-  const { createSuccessNotice } = useDispatch(noticesStore);
+  const { createSuccessNotice, createErrorNotice } = useDispatch(noticesStore);
 
   const handleClick = async () => {
     let confirmed = true;
@@ -31,15 +31,33 @@ export default ({
 
     if (!confirmed) return;
 
-    setIsGenerating(true);
-    const alt = await generateAltText(attributes.id);
-    setAttributes({ alt });
-    setIsGenerating(false);
+    try {
+      setIsGenerating(true);
 
-    // TODO handle errors
-    await createSuccessNotice(__("Alternative text generated", TEXT_DOMAIN), {
-      type: "snackbar",
-    });
+      const alt = await generateAltText(attributes.id);
+      setAttributes({ alt });
+
+      await createSuccessNotice(__("Alternative text generated", TEXT_DOMAIN), {
+        type: "snackbar",
+        id: "alt-text-generated",
+      });
+      //@ts-ignore
+    } catch (error: WPError) {
+      if (error.message) {
+        await createErrorNotice(
+          sprintf(
+            __("There was an error generating the alt text: %s", TEXT_DOMAIN),
+            error.message,
+          ),
+          {
+            id: "alt-text-error",
+            type: "default",
+          },
+        );
+      }
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   return (
