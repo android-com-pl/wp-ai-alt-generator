@@ -14,7 +14,7 @@ jobs:
         with:
           node-version: 20
           cache: "npm"
-      - run: npm ci
+      - run: npm ci --production
       - run: npm run build
 
       - name: Cache Composer dependencies
