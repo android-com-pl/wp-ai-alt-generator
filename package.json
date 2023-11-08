@@ -20,5 +20,13 @@
     "@wordpress/hooks": "^3.45.0",
     "@wordpress/i18n": "^4.45.0",
     "@wordpress/notices": "^4.13.0"
-  }
+  },
+  "files": [
+    "plugin.php",
+    "includes",
+    "build",
+    "vendor",
+    "composer.json",
+    "readme.txt"
+  ]
 }
