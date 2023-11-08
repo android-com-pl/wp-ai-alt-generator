@@ -12,6 +12,8 @@ export default ({
   attributes: ImageBlockAttrs;
   setAttributes: ImageBlockSetAttrs;
 }) => {
+  if (!attributes.id) return null;
+
   return (
     <InspectorControls>
       <Panel>

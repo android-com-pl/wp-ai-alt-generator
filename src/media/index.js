@@ -8,6 +8,12 @@ wp.media.view.Attachment.Details = wp.media.view.Attachment.Details.extend({
   render: function () {
     wp.media.view.Attachment.prototype.render.apply(this, arguments);
 
+    console.log(this.model);
+
+    if (this.model.get("type") !== "image") {
+      return this;
+    }
+
     const { el } = this;
     const altTextField = qs(".attachment-info .setting.alt-text", el);
 
