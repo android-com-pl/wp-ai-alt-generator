@@ -44,7 +44,11 @@ class Admin {
 				     __( 'This plugin uses the OpenAI API to generate alt text for images.', 'gpt-vision-img-alt-generator' )
 				     . '</p>';
 			},
-			'media'
+			'media',
+			[
+				'before_section' => sprintf( '<div id="%s">', self::SETTINGS_SECTION_ID ),
+				'after_section'  => '</div>',
+			]
 		);
 
 		add_settings_field(

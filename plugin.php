@@ -1,10 +1,10 @@
 <?php
 /**
  * @wordpress-plugin
- * Plugin Name: GPT-Powered Alt Text Generator
+ * Plugin Name: GPT Vision Alt Text Generator
  * Plugin URI: https://github.com/android-com-pl/wp-gpt-vision-img-alt-generator
  * Version: 1.0.0
- * Requires at least: 6.1
+ * Requires at least: 6.3
  * Requires PHP: 8.1
  * Author: android.com.pl
  * Author URI: https://android.com.pl/
@@ -14,8 +14,6 @@
  */
 
 namespace ACP\AiAltGenerator;
-
-use WP_Post;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	http_response_code( 403 );
@@ -36,6 +34,7 @@ class AiAltGenerator {
 		add_action( 'rest_api_init', [ ( new Api ), 'register_routes' ] );
 		add_action( 'enqueue_block_editor_assets', [ $this, 'editor_assets' ] );
 		add_action( 'wp_enqueue_media', [ $this, 'media_assets' ] );
+		add_filter( 'plugin_row_meta', [ $this, 'plugin_row_meta' ], 10, 4 );
 	}
 
 	public static function get_options(): array|false {
@@ -49,15 +48,35 @@ class AiAltGenerator {
 	}
 
 	public function editor_assets(): void {
-		$js_asset = include ACP_AI_ALT_PLUGIN_PATH . 'build/editor.asset.php';
-		wp_enqueue_script( 'acp/ai-alt-generator/editor', ACP_AI_ALT_PLUGIN_URL . 'build/editor.js', $js_asset['dependencies'], $js_asset['version'] );
-		wp_set_script_translations( 'acp/ai-alt-generator/editor', 'gpt-vision-img-alt-generator' );
+		$js_asset  = include ACP_AI_ALT_PLUGIN_PATH . 'build/editor.asset.php';
+		$js_handle = 'acp/ai-alt-generator/editor';
+		wp_enqueue_script( $js_handle, ACP_AI_ALT_PLUGIN_URL . 'build/editor.js', $js_asset['dependencies'], $js_asset['version'] );
+		wp_set_script_translations( $js_handle, 'gpt-vision-img-alt-generator' );
 	}
 
 	public function media_assets(): void {
-		$js_asset = include ACP_AI_ALT_PLUGIN_PATH . 'build/media.asset.php';
-		wp_enqueue_script( 'acp/ai-alt-generator/media', ACP_AI_ALT_PLUGIN_URL . 'build/media.js', $js_asset['dependencies'], $js_asset['version'], true );
-		wp_set_script_translations( 'acp/ai-alt-generator/media', 'gpt-vision-img-alt-generator' );
+		$js_asset  = include ACP_AI_ALT_PLUGIN_PATH . 'build/media.asset.php';
+		$js_handle = 'acp/ai-alt-generator/media';
+		wp_enqueue_script( $js_handle, ACP_AI_ALT_PLUGIN_URL . 'build/media.js', $js_asset['dependencies'], $js_asset['version'], true );
+		wp_set_script_translations( $js_handle, 'gpt-vision-img-alt-generator' );
+	}
+
+	public function plugin_row_meta( array $plugin_meta, string $plugin_file, array $plugin_data, string $status ): array {
+		if ( str_contains( $plugin_file, basename( ACP_AI_ALT_PLUGIN_FILE ) ) ) {
+			$plugin_meta[] = sprintf(
+				'<a href=%s>%s</a>',
+				admin_url( 'options-media.php#' . Admin::SETTINGS_SECTION_ID ),
+				__( 'Settings', 'gpt-vision-img-alt-generator' )
+			);
+
+			$plugin_meta[] = sprintf(
+				'<a href=%s target="_blank" rel="noopener noreferrer">%s</a>',
+				'https://github.com/android-com-pl/wp-gpt-vision-img-alt-generator?sponsor=1',
+				__( 'Donate', 'gpt-vision-img-alt-generator' )
+			);
+		}
+
+		return $plugin_meta;
 	}
 }
 
