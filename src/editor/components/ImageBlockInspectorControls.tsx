@@ -2,7 +2,6 @@ import { InspectorControls } from "@wordpress/block-editor";
 import { Panel, PanelBody } from "@wordpress/components";
 import { __ } from "@wordpress/i18n";
 
-import { TEXT_DOMAIN } from "../../constants";
 import GenerateAltButton from "./GenerateAltButton";
 
 export default ({
@@ -17,7 +16,9 @@ export default ({
   return (
     <InspectorControls>
       <Panel>
-        <PanelBody title={__("GPT Vision Alt Generator", TEXT_DOMAIN)}>
+        <PanelBody
+          title={__("GPT Vision Alt Generator", "gpt-vision-img-alt-generator")}
+        >
           <GenerateAltButton
             attributes={attributes}
             setAttributes={setAttributes}

@@ -4,7 +4,6 @@ import { useState } from "@wordpress/element";
 import { useDispatch } from "@wordpress/data";
 import { store as noticesStore } from "@wordpress/notices";
 
-import { TEXT_DOMAIN } from "../../constants";
 import generateAltText from "../../utils/generateAltText";
 
 export default ({
@@ -24,7 +23,7 @@ export default ({
       confirmed = confirm(
         __(
           "Are you sure you want to overwrite the existing alt text?",
-          TEXT_DOMAIN,
+          "gpt-vision-img-alt-generator",
         ),
       );
     }
@@ -37,16 +36,22 @@ export default ({
       const alt = await generateAltText(attributes.id);
       setAttributes({ alt });
 
-      await createSuccessNotice(__("Alternative text generated", TEXT_DOMAIN), {
-        type: "snackbar",
-        id: "alt-text-generated",
-      });
+      await createSuccessNotice(
+        __("Alternative text generated", "gpt-vision-img-alt-generator"),
+        {
+          type: "snackbar",
+          id: "alt-text-generated",
+        },
+      );
       //@ts-ignore
     } catch (error: WPError) {
       if (error.message) {
         await createErrorNotice(
           sprintf(
-            __("There was an error generating the alt text: %s", TEXT_DOMAIN),
+            __(
+              "There was an error generating the alt text: %s",
+              "gpt-vision-img-alt-generator",
+            ),
             error.message,
           ),
           {
@@ -67,7 +72,7 @@ export default ({
       isBusy={isGenerating}
       disabled={isGenerating}
     >
-      {__("Generate alternative text", TEXT_DOMAIN)}
+      {__("Generate alternative text", "gpt-vision-img-alt-generator")}
     </Button>
   );
 };

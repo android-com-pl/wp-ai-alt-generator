@@ -1,7 +1,6 @@
 import { createElement, qs } from "ts-dom-utils";
 import { __, sprintf } from "@wordpress/i18n";
 
-import { TEXT_DOMAIN } from "../constants";
 import generateAltText from "../utils/generateAltText";
 
 wp.media.view.Attachment.Details = wp.media.view.Attachment.Details.extend({
@@ -31,7 +30,10 @@ wp.media.view.Attachment.Details = wp.media.view.Attachment.Details.extend({
 
     const button = createElement("button", {
       class: "button",
-      text: __("Generate Alt Text using GPT Vision", TEXT_DOMAIN),
+      text: __(
+        "Generate Alt Text using GPT Vision",
+        "gpt-vision-img-alt-generator",
+      ),
       onclick: async (e) => {
         const currentAlt = this.model.get("alt");
         if (currentAlt?.length) {
@@ -39,7 +41,7 @@ wp.media.view.Attachment.Details = wp.media.view.Attachment.Details.extend({
             !confirm(
               __(
                 "Are you sure you want to overwrite the current alt text?",
-                TEXT_DOMAIN,
+                "gpt-vision-img-alt-generator",
               ),
             )
           ) {
@@ -59,7 +61,10 @@ wp.media.view.Attachment.Details = wp.media.view.Attachment.Details.extend({
         } catch (error) {
           alert(
             sprintf(
-              __("There was an error generating the alt text: %s", TEXT_DOMAIN),
+              __(
+                "There was an error generating the alt text: %s",
+                "gpt-vision-img-alt-generator",
+              ),
               error.message,
             ),
           );
