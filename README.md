@@ -12,6 +12,8 @@ effort.
 
 ![wp-gpt-vision-img-alt-generator](https://github.com/android-com-pl/wp-gpt-vision-img-alt-generator/assets/25438601/d68179ad-4ed4-43b6-8d52-b2eeeb4b2534)
 
+![wp-gpt-vision-img-alt-generator-2](https://github.com/android-com-pl/wp-gpt-vision-img-alt-generator/assets/25438601/a221655e-ab9e-4a74-97c0-f6359ec1741c)
+
 ## TODO:
 
 - [x] Add settings page
