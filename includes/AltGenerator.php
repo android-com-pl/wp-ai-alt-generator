@@ -43,11 +43,13 @@ class AltGenerator {
 		$api_response = wp_remote_post(
 			self::API_URL,
 			[
-				'headers' => [
+				'headers'     => [
 					'Content-Type'  => 'application/json',
 					'Authorization' => 'Bearer ' . $api_key,
 				],
-				'body'    => json_encode( [
+				'timeout'     => 90,
+				'httpversion' => '1.1',
+				'body'        => json_encode( [
 					'model'      => self::MODEL,
 					'messages'   => [
 						[
