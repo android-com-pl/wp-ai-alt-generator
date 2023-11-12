@@ -45,7 +45,7 @@ class AltGenerator {
 			[
 				'headers'     => [
 					'Content-Type'  => 'application/json',
-					'Authorization' => 'Bearer ' . $api_key,
+					'Authorization' => "Bearer $api_key",
 				],
 				'timeout'     => 90,
 				'httpversion' => '1.1',
@@ -78,6 +78,10 @@ class AltGenerator {
 		}
 
 		$completion = json_decode( wp_remote_retrieve_body( $api_response ), true );
+
+		if ( $completion['error'] ) {
+			return new WP_Error( $completion['error']['code'], "OpenAI API error: {$completion['error']['message']}" );
+		}
 
 		return $completion['choices'][0]['message']['content'] ?? '';
 	}
