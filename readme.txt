@@ -4,7 +4,7 @@ Tags: alt text, accessibility, SEO, GPT-4, OpenAI, image
 Requires at least: 6.3
 Tested up to: 6.4
 Requires PHP: 8.1
-Stable tag: 1.0.0
+Stable tag: 0.1.6
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Plugin URI: https://github.com/android-com-pl/wp-gpt-vision-img-alt-generator
