@@ -7,8 +7,6 @@ wp.media.view.Attachment.Details = wp.media.view.Attachment.Details.extend({
   render: function () {
     wp.media.view.Attachment.prototype.render.apply(this, arguments);
 
-    console.log(this.model);
-
     if (this.model.get("type") !== "image") {
       return this;
     }
@@ -30,10 +28,7 @@ wp.media.view.Attachment.Details = wp.media.view.Attachment.Details.extend({
 
     const button = createElement("button", {
       class: "button",
-      text: __(
-        "Generate Alt Text using GPT Vision",
-        "gpt-vision-img-alt-generator",
-      ),
+      text: __("Generate Alt Text", "gpt-vision-img-alt-generator"),
       onclick: async (e) => {
         const currentAlt = this.model.get("alt");
         if (currentAlt?.length) {

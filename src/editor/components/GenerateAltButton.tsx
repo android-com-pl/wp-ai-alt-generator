@@ -17,18 +17,17 @@ export default ({
   const { createSuccessNotice, createErrorNotice } = useDispatch(noticesStore);
 
   const handleClick = async () => {
-    let confirmed = true;
-
-    if (attributes.alt.length) {
-      confirmed = confirm(
+    if (
+      attributes.alt.length &&
+      !confirm(
         __(
           "Are you sure you want to overwrite the existing alt text?",
           "gpt-vision-img-alt-generator",
         ),
-      );
+      )
+    ) {
+      return;
     }
-
-    if (!confirmed) return;
 
     try {
       setIsGenerating(true);
