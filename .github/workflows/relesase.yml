@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Node.js
+      - name: 🛠️ Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -17,24 +17,21 @@ jobs:
       - run: npm ci --production
       - run: npm run build
 
-      - name: Cache Composer dependencies
-        uses: actions/cache@v3
+      - name: 🐘 Setup PHP
+        uses: shivammathur/setup-php@v2
         with:
-          path: /tmp/composer-cache
-          key: composer--no-dev-${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
+          php-version: "8.1"
 
-      - name: Install Composer dependencies
-        uses: php-actions/composer@v6
+      - name: 📥 Install PHP dependencies
+        uses: ramsey/composer-install@v2
         with:
-          php_version: "8.1"
-          php_extensions: intl
-          dev: no
-          args: --classmap-authoritative
+          composer-options: "--no-dev --ignore-platform-reqs --classmap-authoritative"
 
-      - name: Generate zip
+      - name: 📦 Generate zip
         run: npm run plugin-zip && cp .zip ${{ github.event.repository.name }}.zip
 
-      - name: Release
+      - name: 📢 Release
         uses: softprops/action-gh-release@v1
         with:
           files: ${{ github.event.repository.name }}.zip
+          generate_release_notes: true
