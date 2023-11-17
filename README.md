@@ -1,8 +1,10 @@
 # GPT-Powered Alt Text Generator for WordPress
 
-WordPress plugin that uses the GPT-4 API to automatically generate descriptive and contextually relevant alt text for
+WordPress plugin that uses the GPT-4 API to automatically generate descriptive and contextually relevant alt text (matching your WordPress site's language) for
 images during the upload process. This plugin is designed to enhance website accessibility and improve SEO with minimal
 effort.
+
+It generates alt text in your WordPress Site Language.
 
 ## Installation
 
