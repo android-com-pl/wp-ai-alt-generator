@@ -28,7 +28,7 @@ class Api {
 	public function generate_alt_text( WP_REST_Request $request ): WP_REST_Response|WP_Error {
 		$attachment_id = $request->get_param( 'attachment_id' );
 
-		$alt_text = AltGenerator::generate_alt_text( $attachment_id );
+		$alt_text = Alt_Generator::generate_alt_text( $attachment_id );
 
 		if ( is_wp_error( $alt_text ) ) {
 			return $alt_text;
@@ -36,7 +36,7 @@ class Api {
 
 		return new WP_REST_Response( [
 			'img_id' => $attachment_id,
-			'alt'    => AltGenerator::generate_alt_text( $attachment_id )
+			'alt'    => Alt_Generator::generate_alt_text( $attachment_id )
 		] );
 	}
 }

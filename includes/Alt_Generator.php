@@ -2,26 +2,23 @@
 
 namespace ACP\AiAltGenerator;
 
+use ACP\AiAltGenerator\Enum\Error_Codes;
 use WP_Error;
 
-class AltGenerator {
+class Alt_Generator {
 	const API_URL = 'https://api.openai.com/v1/chat/completions';
 	const MODEL = 'gpt-4-vision-preview';
 
 	public static function generate_alt_text( int $attachment_id ): string|WP_Error {
 		if ( ! wp_attachment_is_image( $attachment_id ) ) {
-			_doing_it_wrong( __METHOD__, 'Attachment ID is not an image.', '1.0.0' );
-
-			return new WP_Error( 'not_an_image', 'Attachment ID is not an image.' );
+			return Error_Codes::Not_image->to_WP_Error( [ 'attachment_id' => $attachment_id ] );
 		}
 
-		$options = AiAltGenerator::get_options();
+		$options = AI_Alt_Generator::get_options();
 		$api_key = $options['api_key'];
 
 		if ( empty( $api_key ) ) {
-			_doing_it_wrong( __METHOD__, 'API key is not configured.', '1.0.0' );
-
-			return new WP_Error( 'api_key_not_configured', 'API key is not configured.' );
+			return Error_Codes::No_API_key->to_WP_Error();
 		}
 
 		$locale   = get_locale();
@@ -80,7 +77,10 @@ class AltGenerator {
 		$completion = json_decode( wp_remote_retrieve_body( $api_response ), true );
 
 		if ( $completion['error'] ) {
-			return new WP_Error( $completion['error']['code'], "OpenAI API error: {$completion['error']['message']}" );
+			return new WP_Error(
+				$completion['error']['code'],
+				sprintf( __( "OpenAI's API error: %s", 'gpt-vision-img-alt-generator' ), $completion['error']['message'] )
+			);
 		}
 
 		return $completion['choices'][0]['message']['content'] ?? '';
@@ -89,7 +89,9 @@ class AltGenerator {
 	public static function generate_and_set_alt_text( int $attachment_id ): ?string {
 		$alt_text = self::generate_alt_text( $attachment_id );
 		if ( is_wp_error( $alt_text ) ) {
-			AiAltGenerator::error_log( $alt_text );
+			AI_Alt_Generator::error_log( $alt_text );
+
+			return null;
 		}
 
 		if ( ! empty( $alt_text ) ) {
@@ -106,7 +108,7 @@ class AltGenerator {
 			return $metadata;
 		}
 
-		$options = AiAltGenerator::get_options();
+		$options = AI_Alt_Generator::get_options();
 		if ( ! $options['auto_generate'] ) {
 			return $metadata;
 		}
@@ -120,7 +122,7 @@ class AltGenerator {
 		$image = file_get_contents( get_attached_file( $attachment_id ) );
 
 		if ( ! $image ) {
-			return new WP_Error( 'image_not_found', 'Image not found.' );
+			return Error_Codes::Img_not_found->to_WP_Error();
 		}
 
 		return base64_encode( $image );

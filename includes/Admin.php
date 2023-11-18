@@ -13,7 +13,7 @@ class Admin {
 	public function register_settings(): void {
 		register_setting(
 			'media',
-			AiAltGenerator::OPTION_NAME,
+			AI_Alt_Generator::OPTION_NAME,
 			[
 				'type'              => 'array',
 				'sanitize_callback' => function ( $input ) {
@@ -34,7 +34,7 @@ class Admin {
 	}
 
 	public function add_plugin_settings(): void {
-		$options = AiAltGenerator::get_options();
+		$options = AI_Alt_Generator::get_options();
 
 		add_settings_section(
 			self::SETTINGS_SECTION_ID,
@@ -57,7 +57,7 @@ class Admin {
 			function () use ( $options ) {
 				printf(
 					'<input type="password" id="openai_api_key" name="%1$s[api_key]" value="%2$s" class="regular-text" placeholder="sk-..." autocomplete="off"/>',
-					AiAltGenerator::OPTION_NAME,
+					AI_Alt_Generator::OPTION_NAME,
 					esc_attr( $options['api_key'] ?? '' )
 				);
 
@@ -81,7 +81,7 @@ class Admin {
 			function () use ( $options ) {
 				printf(
 					'<input type="checkbox" id="auto_generate_alt" name="%1$s[auto_generate]" %2$s/>',
-					AiAltGenerator::OPTION_NAME,
+					AI_Alt_Generator::OPTION_NAME,
 					checked( $options['auto_generate'] ?? false, true, false )
 				);
 
@@ -105,7 +105,7 @@ class Admin {
 					'low'  => _x( 'Low', 'Detail level', 'gpt-vision-img-alt-generator' ),
 				];
 
-				printf( '<select id="detail_level" name="%s[detail]">', AiAltGenerator::OPTION_NAME );
+				printf( '<select id="detail_level" name="%s[detail]">', AI_Alt_Generator::OPTION_NAME );
 				foreach ( $detail_levels as $detail => $label ) {
 					printf(
 						'<option value="%s" %s>%s</option>',

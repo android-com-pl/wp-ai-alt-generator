@@ -29,11 +29,11 @@ define( 'ACP_AI_ALT_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 require __DIR__ . '/vendor/autoload.php';
 
-class AiAltGenerator {
+class AI_Alt_Generator {
 	public const OPTION_NAME = 'acp_ai_alt_generator';
 
 	public function __construct() {
-		add_filter( 'wp_generate_attachment_metadata', [ AltGenerator::class, 'on_attachment_upload' ], 10, 3 );
+		add_filter( 'wp_generate_attachment_metadata', [ Alt_Generator::class, 'on_attachment_upload' ], 10, 3 );
 		add_action( 'rest_api_init', [ ( new Api ), 'register_routes' ] );
 		add_action( 'enqueue_block_editor_assets', [ $this, 'editor_assets' ] );
 		add_action( 'wp_enqueue_media', [ $this, 'media_assets' ] );
@@ -44,14 +44,10 @@ class AiAltGenerator {
 		return get_option( self::OPTION_NAME );
 	}
 
-	public static function is_api_key_configured(): bool {
-		$options = self::get_options();
+	public static function error_log( WP_Error $error ): WP_Error {
+		error_log( '[GPT-V Alt Generator] ' . $error->get_error_message() );
 
-		return ! empty( $options['api_key'] );
-	}
-
-	public static function error_log( WP_Error $error ): void {
-		error_log( '[GPT Vision Alt Generator] ' . $error->get_error_message() );
+		return $error;
 	}
 
 	public function editor_assets(): void {
@@ -71,15 +67,15 @@ class AiAltGenerator {
 	public function plugin_row_meta( array $plugin_meta, string $plugin_file, array $plugin_data, string $status ): array {
 		if ( str_contains( $plugin_file, basename( ACP_AI_ALT_PLUGIN_FILE ) ) ) {
 			$plugin_meta[] = sprintf(
-				'<a href=%s>%s</a>',
+				'<a href="%s">%s</a>',
 				admin_url( 'options-media.php#' . Admin::SETTINGS_SECTION_ID ),
 				__( 'Settings', 'gpt-vision-img-alt-generator' )
 			);
 
 			$plugin_meta[] = sprintf(
-				'<a href=%s target="_blank" rel="noopener noreferrer">%s</a>',
+				'<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
 				'https://github.com/android-com-pl/wp-gpt-vision-img-alt-generator?sponsor=1',
-				__( 'Donate', 'gpt-vision-img-alt-generator' )
+				__( 'Support Development', 'gpt-vision-img-alt-generator' )
 			);
 		}
 
@@ -87,7 +83,7 @@ class AiAltGenerator {
 	}
 }
 
-new AiAltGenerator;
+new AI_Alt_Generator;
 
 if ( is_admin() ) {
 	new Admin;
