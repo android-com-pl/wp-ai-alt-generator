@@ -4,8 +4,6 @@ WordPress plugin that uses the GPT-4 API to automatically generate descriptive a
 images during the upload process. This plugin is designed to enhance website accessibility and improve SEO with minimal
 effort.
 
-It generates alt text in your WordPress Site Language.
-
 ## Installation
 
 The plugin is currently awaiting approval on WordPress.org. In the meantime, you can download it from the [releases section on GitHub](https://github.com/android-com-pl/wp-gpt-vision-img-alt-generator/releases). Download the ZIP file and upload it to your website.
