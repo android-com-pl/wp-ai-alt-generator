@@ -64,18 +64,22 @@ class Admin {
 				echo '<p class="description">' .
 					wp_kses(
 						sprintf(
-						// translators: %s is a link to the OpenAI account settings page.
-							__( 'Enter your OpenAI API key here. You can find it in your <a href="%s" target="_blank">OpenAI account settings</a>.', 'gpt-vision-img-alt-generator' ),
-							esc_url( 'https://platform.openai.com/account/api-keys' )
+							// translators: %s is for link attributes.
+							__(
+								'Enter your OpenAI API key here. You can find it in your <a href="https://platform.openai.com/account/api-keys" %s>OpenAI account settings</a>.',
+								'gpt-vision-img-alt-generator'
+							),
+							'target="_blank" rel="noopener noreferrer"'
 						),
 						[
 							'a' => [
 								'href'   => [],
 								'target' => [],
+								'rel'    => [],
 							],
 						]
 					)
-				     . '</p>';
+				. '</p>';
 			},
 			'media',
 			self::SETTINGS_SECTION_ID,
@@ -99,7 +103,7 @@ class Admin {
 						'Enable this option to automatically generate alt text when images are uploaded. Please review generated alt texts as GPT can sometimes produce inaccurate descriptions.',
 						'gpt-vision-img-alt-generator'
 					)
-					. '</p>';
+				. '</p>';
 			},
 			'media',
 			self::SETTINGS_SECTION_ID,
@@ -128,21 +132,25 @@ class Admin {
 				}
 				echo '</select>';
 
-				printf(
-					'<p class="description">' .
+				echo '<p class="description">' .
 					wp_kses(
-					// translators: %s is a link to the OpenAI documentation on calculating costs.
-						__( 'Choose "Low" detail to minimize token usage and costs for image processing, which should be sufficient for most use cases and is significantly cheaper. "High" detail will use more tokens but provides finer detail. For precise token calculations and cost implications, refer to the <a href="%s" target="_blank">OpenAI documentation on calculating costs</a>.', 'gpt-vision-img-alt-generator' ),
+						sprintf(
+							// translators: %s is for link attributes.
+							__(
+								'Choose "Low" detail to minimize token usage and costs for image processing, which should be sufficient for most use cases and is significantly cheaper. "High" detail will use more tokens but provides finer detail. For precise token calculations and cost implications, refer to the <a href="https://platform.openai.com/docs/guides/vision/calculating-costs" %s>OpenAI documentation on calculating costs</a>.',
+								'gpt-vision-img-alt-generator'
+							),
+							'target="_blank" rel="noopener noreferrer"'
+						),
 						[
 							'a' => [
 								'href'   => [],
 								'target' => [],
+								'rel'    => [],
 							],
 						]
 					)
-					. '</p>',
-					esc_url( 'https://platform.openai.com/docs/guides/vision/calculating-costs' )
-				);
+				. '</p>';
 			},
 			'media',
 			self::SETTINGS_SECTION_ID,
