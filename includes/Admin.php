@@ -67,15 +67,15 @@ class Admin {
 						// translators: %s is a link to the OpenAI account settings page.
 							__( 'Enter your OpenAI API key here. You can find it in your <a href="%s" target="_blank">OpenAI account settings</a>.', 'gpt-vision-img-alt-generator' ),
 							esc_url( 'https://platform.openai.com/account/api-keys' )
-						)
-						. '</p>',
+						),
 						[
 							'a' => [
 								'href'   => [],
 								'target' => [],
 							],
 						]
-					);
+					)
+				     . '</p>';
 			},
 			'media',
 			self::SETTINGS_SECTION_ID,
