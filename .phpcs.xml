@@ -13,14 +13,32 @@
     <rule ref="WordPress">
         <exclude name="Universal.Arrays.DisallowShortArraySyntax"/>
         <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
-        <exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
         <exclude name="Squiz.Commenting.FileComment.Missing"/>
         <exclude name="Squiz.Commenting.ClassComment.Missing"/>
         <exclude name="Squiz.Commenting.FunctionComment.Missing"/>
         <exclude name="Generic.Commenting.DocComment.MissingShort"/>
         <exclude name="WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode"/>
-        <exclude name="WordPress.NamingConventions.ValidHookName.UseUnderscores"/>
         <exclude name="WordPress.WP.AlternativeFunctions.json_encode_json_encode"/>
         <exclude name="WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents"/>
+    </rule>
+
+    <rule ref="WordPress.Files.FileName">
+        <properties>
+            <property name="strict_class_file_names" value="false"/>
+        </properties>
+    </rule>
+
+    <rule ref="WordPress.NamingConventions.ValidHookName">
+        <properties>
+            <property name="additionalWordDelimiters" value="/"/>
+        </properties>
+    </rule>
+
+    <rule ref="WordPress.WP.I18n">
+        <properties>
+            <property name="text_domain" type="array">
+                <element value="gpt-vision-img-alt-generator"/>
+            </property>
+        </properties>
     </rule>
 </ruleset>

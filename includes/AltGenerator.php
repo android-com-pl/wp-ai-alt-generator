@@ -25,7 +25,7 @@ class AltGenerator {
 		$language = locale_get_display_language( $locale );
 
 		$user_prompt = apply_filters(
-			'acp/ai-alt-generator/user-prompt',
+			'acp/ai_alt_generator/user_prompt',
 			"Generate a high-quality and concise alt text in $language ($locale) for the provided image without adding any additional comments.",
 			$locale,
 			$language
