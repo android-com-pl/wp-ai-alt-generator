@@ -23,6 +23,7 @@
   },
   "files": [
     "plugin.php",
+    "uninstall.php",
     "includes",
     "build",
     "vendor",
