@@ -1,0 +1,35 @@
+name: PHPCS and PHPStan Check
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "**.php"
+  pull_request:
+    paths:
+      - "**.php"
+
+jobs:
+  phpcs:
+    name: Run PHPCS
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 🐘 Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.1"
+
+      - name: 📥 Install PHP dependencies
+        uses: ramsey/composer-install@v2
+        with:
+          composer-options: "--classmap-authoritative"
+
+      - name: ✨ PHPCS
+        run: composer analyse:phpcs
+
+      - name: 🧐 PHPStan
+        run: composer analyse:phpstan

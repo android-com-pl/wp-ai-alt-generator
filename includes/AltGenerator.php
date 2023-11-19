@@ -2,23 +2,23 @@
 
 namespace ACP\AiAltGenerator;
 
-use ACP\AiAltGenerator\Enum\Error_Codes;
+use ACP\AiAltGenerator\Enum\ErrorCodes;
 use WP_Error;
 
-class Alt_Generator {
+class AltGenerator {
 	const API_URL = 'https://api.openai.com/v1/chat/completions';
-	const MODEL = 'gpt-4-vision-preview';
+	const MODEL   = 'gpt-4-vision-preview';
 
 	public static function generate_alt_text( int $attachment_id ): string|WP_Error {
 		if ( ! wp_attachment_is_image( $attachment_id ) ) {
-			return Error_Codes::Not_image->to_WP_Error( [ 'attachment_id' => $attachment_id ] );
+			return ErrorCodes::Not_image->to_wp_error( [ 'attachment_id' => $attachment_id ] );
 		}
 
-		$options = AI_Alt_Generator::get_options();
+		$options = AltGeneratorPlugin::get_options();
 		$api_key = $options['api_key'];
 
 		if ( empty( $api_key ) ) {
-			return Error_Codes::No_API_key->to_WP_Error();
+			return ErrorCodes::No_API_key->to_wp_error();
 		}
 
 		$locale   = get_locale();
@@ -27,7 +27,8 @@ class Alt_Generator {
 		$user_prompt = apply_filters(
 			'acp/ai-alt-generator/user-prompt',
 			"Generate a high-quality and concise alt text in $language ($locale) for the provided image without adding any additional comments.",
-			$locale, $language
+			$locale,
+			$language
 		);
 
 		$image_mime_type = get_post_mime_type( $attachment_id );
@@ -46,27 +47,29 @@ class Alt_Generator {
 				],
 				'timeout'     => 90,
 				'httpversion' => '1.1',
-				'body'        => json_encode( [
-					'model'      => self::MODEL,
-					'messages'   => [
-						[
-							'role'    => 'user',
-							'content' => [
-								[
-									'type' => 'text',
-									'text' => $user_prompt,
+				'body'        => json_encode(
+					[
+						'model'      => self::MODEL,
+						'messages'   => [
+							[
+								'role'    => 'user',
+								'content' => [
+									[
+										'type' => 'text',
+										'text' => $user_prompt,
+									],
+									[
+										'type'      => 'image_url',
+										'image_url' => [
+											'url' => "data:$image_mime_type;base64,$image_base64",
+										],
+									],
 								],
-								[
-									'type'      => 'image_url',
-									'image_url' => [
-										'url' => "data:$image_mime_type;base64,$image_base64"
-									]
-								]
-							]
-						]
-					],
-					'max_tokens' => 300
-				] )
+							],
+						],
+						'max_tokens' => 300,
+					]
+				),
 			]
 		);
 
@@ -79,6 +82,7 @@ class Alt_Generator {
 		if ( $completion['error'] ) {
 			return new WP_Error(
 				$completion['error']['code'],
+				// translators: %s is the error message from OpenAI's API.
 				sprintf( __( "OpenAI's API error: %s", 'gpt-vision-img-alt-generator' ), $completion['error']['message'] )
 			);
 		}
@@ -89,7 +93,7 @@ class Alt_Generator {
 	public static function generate_and_set_alt_text( int $attachment_id ): ?string {
 		$alt_text = self::generate_alt_text( $attachment_id );
 		if ( is_wp_error( $alt_text ) ) {
-			AI_Alt_Generator::error_log( $alt_text );
+			AltGeneratorPlugin::error_log( $alt_text );
 
 			return null;
 		}
@@ -104,11 +108,11 @@ class Alt_Generator {
 	}
 
 	public static function on_attachment_upload( array $metadata, int $attachment_id, string $context ): array {
-		if ( $context !== 'create' || ! wp_attachment_is_image( $attachment_id ) || ! empty( get_post_meta( $attachment_id, '_wp_attachment_image_alt', true ) ) ) {
+		if ( 'create' !== $context || ! wp_attachment_is_image( $attachment_id ) || ! empty( get_post_meta( $attachment_id, '_wp_attachment_image_alt', true ) ) ) {
 			return $metadata;
 		}
 
-		$options = AI_Alt_Generator::get_options();
+		$options = AltGeneratorPlugin::get_options();
 		if ( ! $options['auto_generate'] ) {
 			return $metadata;
 		}
@@ -122,7 +126,7 @@ class Alt_Generator {
 		$image = file_get_contents( get_attached_file( $attachment_id ) );
 
 		if ( ! $image ) {
-			return Error_Codes::Img_not_found->to_WP_Error();
+			return ErrorCodes::Img_not_found->to_wp_error();
 		}
 
 		return base64_encode( $image );

@@ -12,6 +12,7 @@
  * License: GPL v3
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain: gpt-vision-img-alt-generator
+ * @package ACP\AiAltGenerator
  */
 
 namespace ACP\AiAltGenerator;
@@ -29,14 +30,15 @@ define( 'ACP_AI_ALT_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 require __DIR__ . '/vendor/autoload.php';
 
-class AI_Alt_Generator {
+class AltGeneratorPlugin {
 	public const OPTION_NAME = 'acp_ai_alt_generator';
 
 	public function __construct() {
-		add_filter( 'wp_generate_attachment_metadata', [ Alt_Generator::class, 'on_attachment_upload' ], 10, 3 );
-		add_action( 'rest_api_init', [ ( new Api ), 'register_routes' ] );
+		add_filter( 'wp_generate_attachment_metadata', [ AltGenerator::class, 'on_attachment_upload' ], 10, 3 );
+		add_action( 'rest_api_init', [ ( new Api() ), 'register_routes' ] );
 		add_action( 'enqueue_block_editor_assets', [ $this, 'editor_assets' ] );
 		add_action( 'wp_enqueue_media', [ $this, 'media_assets' ] );
+		/** @phpstan-ignore-next-line */
 		add_filter( 'plugin_row_meta', [ $this, 'plugin_row_meta' ], 10, 4 );
 	}
 
@@ -45,7 +47,11 @@ class AI_Alt_Generator {
 	}
 
 	public static function error_log( WP_Error $error ): WP_Error {
-		error_log( '[GPT-V Alt Generator] ' . $error->get_error_message() );
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			// phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( '[GPT-V Alt Generator] ' . $error->get_error_message() );
+			// phpcs:enable
+		}
 
 		return $error;
 	}
@@ -53,7 +59,7 @@ class AI_Alt_Generator {
 	public function editor_assets(): void {
 		$js_asset  = include ACP_AI_ALT_PLUGIN_PATH . 'build/editor.asset.php';
 		$js_handle = 'acp/ai-alt-generator/editor';
-		wp_enqueue_script( $js_handle, ACP_AI_ALT_PLUGIN_URL . 'build/editor.js', $js_asset['dependencies'], $js_asset['version'] );
+		wp_enqueue_script( $js_handle, ACP_AI_ALT_PLUGIN_URL . 'build/editor.js', $js_asset['dependencies'], $js_asset['version'], false );
 		wp_set_script_translations( $js_handle, 'gpt-vision-img-alt-generator' );
 	}
 
@@ -64,7 +70,7 @@ class AI_Alt_Generator {
 		wp_set_script_translations( $js_handle, 'gpt-vision-img-alt-generator' );
 	}
 
-	public function plugin_row_meta( array $plugin_meta, string $plugin_file, array $plugin_data, string $status ): array {
+	public function plugin_row_meta( array $plugin_meta, string $plugin_file ): array {
 		if ( str_contains( $plugin_file, basename( ACP_AI_ALT_PLUGIN_FILE ) ) ) {
 			$plugin_meta[] = sprintf(
 				'<a href="%s">%s</a>',
@@ -83,8 +89,8 @@ class AI_Alt_Generator {
 	}
 }
 
-new AI_Alt_Generator;
+new AltGeneratorPlugin();
 
 if ( is_admin() ) {
-	new Admin;
+	new Admin();
 }

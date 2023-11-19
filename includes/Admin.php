@@ -13,7 +13,7 @@ class Admin {
 	public function register_settings(): void {
 		register_setting(
 			'media',
-			AI_Alt_Generator::OPTION_NAME,
+			AltGeneratorPlugin::OPTION_NAME,
 			[
 				'type'              => 'array',
 				'sanitize_callback' => function ( $input ) {
@@ -26,7 +26,7 @@ class Admin {
 				'default'           => [
 					'api_key'       => null,
 					'auto_generate' => false,
-					'detail'        => 'low'
+					'detail'        => 'low',
 				],
 				'show_in_rest'      => false,
 			]
@@ -34,15 +34,15 @@ class Admin {
 	}
 
 	public function add_plugin_settings(): void {
-		$options = AI_Alt_Generator::get_options();
+		$options = AltGeneratorPlugin::get_options();
 
 		add_settings_section(
 			self::SETTINGS_SECTION_ID,
 			__( 'GPT Vision Alt Generator', 'gpt-vision-img-alt-generator' ),
 			function () {
 				echo '<p>' .
-				     __( 'This plugin uses the OpenAI API to generate alt text for images.', 'gpt-vision-img-alt-generator' )
-				     . '</p>';
+					esc_html__( 'This plugin uses the OpenAI API to generate alt text for images.', 'gpt-vision-img-alt-generator' )
+					. '</p>';
 			},
 			'media',
 			[
@@ -57,21 +57,30 @@ class Admin {
 			function () use ( $options ) {
 				printf(
 					'<input type="password" id="openai_api_key" name="%1$s[api_key]" value="%2$s" class="regular-text" placeholder="sk-..." autocomplete="off"/>',
-					AI_Alt_Generator::OPTION_NAME,
+					esc_attr( AltGeneratorPlugin::OPTION_NAME ),
 					esc_attr( $options['api_key'] ?? '' )
 				);
 
 				echo '<p class="description">' .
-				     sprintf(
-					     __( 'Enter your OpenAI API key here. You can find it in your <a href="%s" target="_blank">OpenAI account settings</a>.', 'gpt-vision-img-alt-generator' ),
-					     esc_url( 'https://platform.openai.com/account/api-keys' )
-				     )
-				     . '</p>';
+					wp_kses(
+						sprintf(
+						// translators: %s is a link to the OpenAI account settings page.
+							__( 'Enter your OpenAI API key here. You can find it in your <a href="%s" target="_blank">OpenAI account settings</a>.', 'gpt-vision-img-alt-generator' ),
+							esc_url( 'https://platform.openai.com/account/api-keys' )
+						)
+						. '</p>',
+						[
+							'a' => [
+								'href'   => [],
+								'target' => [],
+							],
+						]
+					);
 			},
 			'media',
 			self::SETTINGS_SECTION_ID,
 			[
-				'label_for' => 'openai_api_key'
+				'label_for' => 'openai_api_key',
 			]
 		);
 
@@ -81,18 +90,21 @@ class Admin {
 			function () use ( $options ) {
 				printf(
 					'<input type="checkbox" id="auto_generate_alt" name="%1$s[auto_generate]" %2$s/>',
-					AI_Alt_Generator::OPTION_NAME,
+					esc_attr( AltGeneratorPlugin::OPTION_NAME ),
 					checked( $options['auto_generate'] ?? false, true, false )
 				);
 
 				echo '<p class="description">' .
-				     __( 'Enable this option to automatically generate alt text when images are uploaded. Please review generated alt texts as GPT can sometimes produce inaccurate descriptions.', 'gpt-vision-img-alt-generator' )
-				     . '</p>';
+					esc_html__(
+						'Enable this option to automatically generate alt text when images are uploaded. Please review generated alt texts as GPT can sometimes produce inaccurate descriptions.',
+						'gpt-vision-img-alt-generator'
+					)
+					. '</p>';
 			},
 			'media',
 			self::SETTINGS_SECTION_ID,
 			[
-				'label_for' => 'auto_generate_alt'
+				'label_for' => 'auto_generate_alt',
 			]
 		);
 
@@ -105,11 +117,11 @@ class Admin {
 					'low'  => _x( 'Low', 'Detail level', 'gpt-vision-img-alt-generator' ),
 				];
 
-				printf( '<select id="detail_level" name="%s[detail]">', AI_Alt_Generator::OPTION_NAME );
+				printf( '<select id="detail_level" name="%s[detail]">', esc_attr( AltGeneratorPlugin::OPTION_NAME ) );
 				foreach ( $detail_levels as $detail => $label ) {
 					printf(
 						'<option value="%s" %s>%s</option>',
-						$detail,
+						esc_attr( $detail ),
 						selected( $options['detail'] ?? 'low', $detail, false ),
 						esc_html( $label )
 					);
@@ -118,7 +130,16 @@ class Admin {
 
 				printf(
 					'<p class="description">' .
-					__( 'Choose "Low" detail to minimize token usage and costs for image processing, which should be sufficient for most use cases and is significantly cheaper. "High" detail will use more tokens but provides finer detail. For precise token calculations and cost implications, refer to the <a href="%s" target="_blank">OpenAI documentation on calculating costs</a>.', 'gpt-vision-img-alt-generator' )
+					wp_kses(
+					// translators: %s is a link to the OpenAI documentation on calculating costs.
+						__( 'Choose "Low" detail to minimize token usage and costs for image processing, which should be sufficient for most use cases and is significantly cheaper. "High" detail will use more tokens but provides finer detail. For precise token calculations and cost implications, refer to the <a href="%s" target="_blank">OpenAI documentation on calculating costs</a>.', 'gpt-vision-img-alt-generator' ),
+						[
+							'a' => [
+								'href'   => [],
+								'target' => [],
+							],
+						]
+					)
 					. '</p>',
 					esc_url( 'https://platform.openai.com/docs/guides/vision/calculating-costs' )
 				);
@@ -126,7 +147,7 @@ class Admin {
 			'media',
 			self::SETTINGS_SECTION_ID,
 			[
-				'label_for' => 'detail_level'
+				'label_for' => 'detail_level',
 			]
 		);
 	}
