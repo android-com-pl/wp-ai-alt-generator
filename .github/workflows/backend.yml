@@ -1,4 +1,4 @@
-name: PHPCS and PHPStan Check
+name: Backend Checks
 
 on:
   push:
@@ -12,7 +12,7 @@ on:
 
 jobs:
   phpcs:
-    name: Run PHPCS
+    name: Run Backend Checks
     runs-on: ubuntu-latest
 
     steps:
