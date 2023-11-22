@@ -12,17 +12,18 @@ wp.media.view.Attachment.Details = wp.media.view.Attachment.Details.extend({
     }
 
     const { el } = this;
-    const altTextField = qs(".attachment-info .setting.alt-text", el);
+    const altTextField = qs(".attachment-details .setting.alt-text", el);
 
     if (!altTextField) return this;
 
     const buttonWrapper = createElement("div", {
-      style: "text-align: right;",
+      style:
+        "display: flex; align-items: center; justify-content: end; clear: both; gap: 1em;",
     });
 
     const spinner = createElement("span", {
       class: "spinner",
-      style: "float: none;",
+      style: "margin: 0;",
     });
     buttonWrapper.append(spinner);
 
