@@ -4,7 +4,7 @@
  * Plugin Name: GPT Vision Alt Text Generator
  * Plugin URI: https://github.com/android-com-pl/wp-gpt-vision-img-alt-generator
  * Description: Automatically generate alt text for images using OpenAI GPT Vision API.
- * Version: 1.1.2
+ * Version: 1.2.0
  * Requires at least: 6.3
  * Requires PHP: 8.1
  * Author: android.com.pl
@@ -36,8 +36,9 @@ class AltGeneratorPlugin {
 	public function __construct() {
 		add_filter( 'wp_generate_attachment_metadata', [ AltGenerator::class, 'on_attachment_upload' ], 10, 3 );
 		add_action( 'rest_api_init', [ ( new Api() ), 'register_routes' ] );
-		add_action( 'enqueue_block_editor_assets', [ $this, 'editor_assets' ] );
-		add_action( 'wp_enqueue_media', [ $this, 'media_assets' ] );
+		add_action( 'enqueue_block_editor_assets', fn()=> $this->enqueue_script( 'editor' ) );
+		add_action( 'wp_enqueue_media', fn()=> $this->enqueue_script( 'media-modal', true ) );
+		add_action( 'admin_enqueue_scripts', fn()=> $this->enqueue_attachment_edit_page_script() );
 		/** @phpstan-ignore-next-line */
 		add_filter( 'plugin_row_meta', [ $this, 'plugin_row_meta' ], 10, 4 );
 	}
@@ -56,18 +57,19 @@ class AltGeneratorPlugin {
 		return $error;
 	}
 
-	public function editor_assets(): void {
-		$js_asset  = include ACP_AI_ALT_PLUGIN_PATH . 'build/editor.asset.php';
-		$js_handle = 'acp/ai-alt-generator/editor';
-		wp_enqueue_script( $js_handle, ACP_AI_ALT_PLUGIN_URL . 'build/editor.js', $js_asset['dependencies'], $js_asset['version'], false );
-		wp_set_script_translations( $js_handle, 'gpt-vision-img-alt-generator' );
+	private function enqueue_script( string $file_name, array|bool $args = false ): void {
+		$asset_file = include ACP_AI_ALT_PLUGIN_PATH . "build/$file_name.asset.php";
+		$handle     = "acp/ai-alt-generator/$file_name";
+		wp_enqueue_script( $handle, ACP_AI_ALT_PLUGIN_URL . "build/$file_name.js", $asset_file['dependencies'], $asset_file['version'], $args );
+		wp_set_script_translations( $handle, 'gpt-vision-img-alt-generator' );
 	}
 
-	public function media_assets(): void {
-		$js_asset  = include ACP_AI_ALT_PLUGIN_PATH . 'build/media.asset.php';
-		$js_handle = 'acp/ai-alt-generator/media';
-		wp_enqueue_script( $js_handle, ACP_AI_ALT_PLUGIN_URL . 'build/media.js', $js_asset['dependencies'], $js_asset['version'], true );
-		wp_set_script_translations( $js_handle, 'gpt-vision-img-alt-generator' );
+	private function enqueue_attachment_edit_page_script(): void {
+		global $pagenow;
+
+		if ( 'post.php' === $pagenow && 'attachment' === get_post_type() && wp_attachment_is_image() ) {
+			$this->enqueue_script( 'media-edit-page', true );
+		}
 	}
 
 	public function plugin_row_meta( array $plugin_meta, string $plugin_file ): array {
