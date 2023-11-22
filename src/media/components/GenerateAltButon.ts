@@ -8,13 +8,18 @@ export default (
   currentAlt?: string,
 ) => {
   const buttonWrapper = createElement("div", {
-    style:
-      "display: flex; align-items: center; justify-content: end; clear: both; gap: 1em;",
+    style: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "end",
+      clear: "both",
+      gap: "1em",
+    },
   });
 
   const spinner = createElement("span", {
     class: "spinner",
-    style: "margin: 0;",
+    style: { margin: "0" },
   });
   buttonWrapper.append(spinner);
 

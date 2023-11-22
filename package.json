@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@wordpress/scripts": "^26.17.0",
-    "ts-dom-utils": "^2.1.0"
+    "ts-dom-utils": "^2.2.0"
   },
   "devDependencies": {
     "@types/wordpress__block-editor": "^11.5.7",
