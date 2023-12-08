@@ -2,11 +2,16 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "esModuleInterop": true,
+    "allowJs": true,
+    "skipLibCheck": true,
     "resolveJsonModule": true,
     "module": "ESNext",
     "moduleResolution": "bundler",
+    "noEmit": true,
+    "lib": ["ESNext", "dom", "dom.iterable"],
     "allowSyntheticDefaultImports": true,
     "strict": true,
+    "noUncheckedIndexedAccess": true,
     "typeRoots": ["node_modules/@types", "src/types"]
   },
   "include": ["src"],
