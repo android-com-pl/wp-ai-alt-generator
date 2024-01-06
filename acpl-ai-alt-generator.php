@@ -58,7 +58,7 @@ class AltGeneratorPlugin {
 
 	private function enqueue_script( string $file_name, array|bool $args = false ): void {
 		$asset_file = include ACPL_AI_ALT_PLUGIN_PATH . "build/$file_name.asset.php";
-		$handle     = "acp/ai-alt-generator/$file_name";
+		$handle     = "acpl/ai-alt-generator/$file_name";
 		wp_enqueue_script( $handle, ACPL_AI_ALT_PLUGIN_URL . "build/$file_name.js", $asset_file['dependencies'], $asset_file['version'], $args );
 		wp_set_script_translations( $handle, 'acpl-ai-alt-generator' );
 	}

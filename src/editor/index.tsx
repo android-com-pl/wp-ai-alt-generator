@@ -24,7 +24,7 @@ const withGenerateAltButton =
 
 addFilter(
   "editor.BlockEdit",
-  "acp/ai-alt-generator",
+  "acpl/ai-alt-generator",
   withGenerateAltButton,
   20,
 );
