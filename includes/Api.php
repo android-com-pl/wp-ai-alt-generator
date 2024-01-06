@@ -1,6 +1,6 @@
 <?php
 
-namespace ACP\AiAltGenerator;
+namespace ACPL\AIAltGenerator;
 
 use WP_Error;
 use WP_REST_Request;
@@ -9,7 +9,7 @@ use WP_REST_Response;
 class Api {
 	public function register_routes(): void {
 		register_rest_route(
-			'acp',
+			'acpl',
 			'/ai-alt-generator',
 			[
 				'methods'             => 'POST',

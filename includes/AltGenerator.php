@@ -1,8 +1,8 @@
 <?php
 
-namespace ACP\AiAltGenerator;
+namespace ACPL\AIAltGenerator;
 
-use ACP\AiAltGenerator\Enum\ErrorCodes;
+use ACPL\AIAltGenerator\Enum\ErrorCodes;
 use WP_Error;
 
 class AltGenerator {
@@ -83,7 +83,7 @@ class AltGenerator {
 			return new WP_Error(
 				$completion['error']['code'],
 				// translators: %s is the error message from OpenAI's API.
-				sprintf( __( "OpenAI's API error: %s", 'gpt-vision-img-alt-generator' ), $completion['error']['message'] )
+				sprintf( __( "OpenAI's API error: %s", 'acpl-ai-alt-generator' ), $completion['error']['message'] )
 			);
 		}
 

@@ -17,7 +17,7 @@ export default ({
     <InspectorControls>
       <Panel>
         <PanelBody
-          title={__("GPT Vision Alt Generator", "gpt-vision-img-alt-generator")}
+          title={__("GPT Vision Alt Generator", "acpl-ai-alt-generator")}
         >
           <GenerateAltButton
             attributes={attributes}

@@ -1,7 +1,7 @@
 parameters:
     level: 5
     paths:
-        - plugin.php
+        - acpl-ai-alt-generator.php
         - includes/
     bootstrapFiles:
-        - plugin.php
+        - acpl-ai-alt-generator.php

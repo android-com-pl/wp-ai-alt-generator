@@ -3,7 +3,7 @@
   "type": "wordpress-plugin",
   "autoload": {
     "psr-4": {
-      "ACP\\AiAltGenerator\\": "includes/"
+      "ACPL\\AIAltGenerator\\": "includes/"
     }
   },
   "minimum-stability": "dev",

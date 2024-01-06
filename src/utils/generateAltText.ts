@@ -2,7 +2,7 @@ import apiFetch from "@wordpress/api-fetch";
 import { API_PATH } from "../constants";
 
 export default async (attachmentId: number) => {
-  return apiFetch({
+  return apiFetch<{ alt: string }>({
     path: API_PATH,
     method: "POST",
     headers: {
@@ -13,12 +13,9 @@ export default async (attachmentId: number) => {
       attachment_id: attachmentId,
     }),
   })
-    .then(
-      //@ts-ignore
-      (response: { alt: string }) => {
-        return response.alt;
-      },
-    )
+    .then((response) => {
+      return response.alt;
+    })
     .catch((error) => {
       console.error(error);
       throw error as WPError;

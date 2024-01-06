@@ -1,6 +1,6 @@
 <?php
 
-namespace ACP\AiAltGenerator;
+namespace ACPL\AIAltGenerator;
 
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	http_response_code( 403 );

@@ -22,7 +22,7 @@ export default ({
       !confirm(
         __(
           "Are you sure you want to overwrite the existing alt text?",
-          "gpt-vision-img-alt-generator",
+          "acpl-ai-alt-generator",
         ),
       )
     ) {
@@ -36,7 +36,7 @@ export default ({
       setAttributes({ alt });
 
       await createSuccessNotice(
-        __("Alternative text generated", "gpt-vision-img-alt-generator"),
+        __("Alternative text generated", "acpl-ai-alt-generator"),
         {
           type: "snackbar",
           id: "alt-text-generated",
@@ -49,7 +49,7 @@ export default ({
           sprintf(
             __(
               "There was an error generating the alt text: %s",
-              "gpt-vision-img-alt-generator",
+              "acpl-ai-alt-generator",
             ),
             error.message,
           ),
@@ -71,7 +71,7 @@ export default ({
       isBusy={isGenerating}
       disabled={isGenerating}
     >
-      {__("Generate alternative text", "gpt-vision-img-alt-generator")}
+      {__("Generate alternative text", "acpl-ai-alt-generator")}
     </Button>
   );
 };

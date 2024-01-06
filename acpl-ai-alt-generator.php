@@ -2,7 +2,7 @@
 /**
  * @wordpress-plugin
  * Plugin Name: GPT Vision Alt Text Generator
- * Plugin URI: https://github.com/android-com-pl/wp-gpt-vision-img-alt-generator
+ * Plugin URI: https://github.com/android-com-pl/wp-ai-alt-generator
  * Description: Automatically generate alt text for images using OpenAI GPT Vision API.
  * Version: 1.2.0
  * Requires at least: 6.3
@@ -11,11 +11,10 @@
  * Author URI: https://android.com.pl/
  * License: GPL v3
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
- * Text Domain: gpt-vision-img-alt-generator
- * @package ACP\AiAltGenerator
+ * @package ACPL\AIAltGenerator
  */
 
-namespace ACP\AiAltGenerator;
+namespace ACPL\AIAltGenerator;
 
 use WP_Error;
 
@@ -24,14 +23,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit();
 }
 
-define( 'ACP_AI_ALT_PLUGIN_FILE', __FILE__ );
-define( 'ACP_AI_ALT_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
-define( 'ACP_AI_ALT_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+define( 'ACPL_AI_ALT_PLUGIN_FILE', __FILE__ );
+define( 'ACPL_AI_ALT_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
+define( 'ACPL_AI_ALT_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 require __DIR__ . '/vendor/autoload.php';
 
 class AltGeneratorPlugin {
-	public const OPTION_NAME = 'acp_ai_alt_generator';
+	public const OPTION_NAME = 'acpl_ai_alt_generator';
 
 	public function __construct() {
 		add_filter( 'wp_generate_attachment_metadata', [ AltGenerator::class, 'on_attachment_upload' ], 10, 3 );
@@ -58,10 +57,10 @@ class AltGeneratorPlugin {
 	}
 
 	private function enqueue_script( string $file_name, array|bool $args = false ): void {
-		$asset_file = include ACP_AI_ALT_PLUGIN_PATH . "build/$file_name.asset.php";
+		$asset_file = include ACPL_AI_ALT_PLUGIN_PATH . "build/$file_name.asset.php";
 		$handle     = "acp/ai-alt-generator/$file_name";
-		wp_enqueue_script( $handle, ACP_AI_ALT_PLUGIN_URL . "build/$file_name.js", $asset_file['dependencies'], $asset_file['version'], $args );
-		wp_set_script_translations( $handle, 'gpt-vision-img-alt-generator' );
+		wp_enqueue_script( $handle, ACPL_AI_ALT_PLUGIN_URL . "build/$file_name.js", $asset_file['dependencies'], $asset_file['version'], $args );
+		wp_set_script_translations( $handle, 'acpl-ai-alt-generator' );
 	}
 
 	private function enqueue_attachment_edit_page_script(): void {
@@ -73,17 +72,17 @@ class AltGeneratorPlugin {
 	}
 
 	public function plugin_row_meta( array $plugin_meta, string $plugin_file ): array {
-		if ( str_contains( $plugin_file, basename( ACP_AI_ALT_PLUGIN_FILE ) ) ) {
+		if ( str_contains( $plugin_file, basename( ACPL_AI_ALT_PLUGIN_FILE ) ) ) {
 			$plugin_meta[] = sprintf(
 				'<a href="%s">%s</a>',
 				admin_url( 'options-media.php#' . Admin::SETTINGS_SECTION_ID ),
-				__( 'Settings', 'gpt-vision-img-alt-generator' )
+				__( 'Settings', 'acpl-ai-alt-generator' )
 			);
 
 			$plugin_meta[] = sprintf(
 				'<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
-				'https://github.com/android-com-pl/wp-gpt-vision-img-alt-generator?sponsor=1',
-				__( 'Support Development', 'gpt-vision-img-alt-generator' )
+				'https://github.com/android-com-pl/wp-ai-alt-generator?sponsor=1',
+				__( 'Support Development', 'acpl-ai-alt-generator' )
 			);
 		}
 

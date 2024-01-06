@@ -25,7 +25,7 @@ export default (
 
   const button = createElement("button", {
     class: "button",
-    text: __("Generate Alt Text", "gpt-vision-img-alt-generator"),
+    text: __("Generate Alt Text", "acpl-ai-alt-generator"),
     onclick: async (e) => {
       e.preventDefault();
       if (
@@ -33,7 +33,7 @@ export default (
         !confirm(
           __(
             "Are you sure you want to overwrite the current alt text?",
-            "gpt-vision-img-alt-generator",
+            "acpl-ai-alt-generator",
           ),
         )
       ) {
@@ -51,7 +51,7 @@ export default (
           sprintf(
             __(
               "There was an error generating the alt text: %s",
-              "gpt-vision-img-alt-generator",
+              "acpl-ai-alt-generator",
             ),
             error.message,
           ),

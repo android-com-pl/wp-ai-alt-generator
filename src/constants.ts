@@ -1,1 +1,1 @@
-export const API_PATH = "acp/ai-alt-generator";
+export const API_PATH = "acpl/ai-alt-generator";
