@@ -49,7 +49,7 @@ class AltGeneratorPlugin {
 	public static function error_log( WP_Error $error ): WP_Error {
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 			// phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_error_log
-			error_log( '[GPT-V Alt Generator] ' . $error->get_error_message() );
+			error_log( '[AI Alt Generator] ' . $error->get_error_message() );
 			// phpcs:enable
 		}
 
