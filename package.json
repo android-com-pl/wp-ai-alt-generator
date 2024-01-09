@@ -1,5 +1,4 @@
 {
-  "name": "@acpl/ai-alt-generator",
   "private": true,
   "scripts": {
     "build": "wp-scripts build",
@@ -24,7 +23,7 @@
     "@wordpress/notices": "^4.14.0"
   },
   "files": [
-    "plugin.php",
+    "acpl-ai-alt-generator.php",
     "uninstall.php",
     "includes",
     "build",
