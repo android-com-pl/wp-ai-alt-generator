@@ -6,19 +6,20 @@ effort.
 
 ## Installation
 
-The plugin is currently awaiting approval on WordPress.org. In the meantime, you can download it from the [releases section on GitHub](https://github.com/android-com-pl/wp-gpt-vision-img-alt-generator/releases). Download the ZIP file and upload it to your website.
+The plugin is currently awaiting approval on WordPress.org. In the meantime, you can download it from the [releases section on GitHub](https://github.com/android-com-pl/wp-ai-alt-generator/releases). Download the ZIP file and upload it to your website.
 
 > [!IMPORTANT]  
 > The settings for the plugin are located in `Settings -> Media`.
 > You need to enter your [OpenAI's API key](https://platform.openai.com/api-keys) there.
 
-![wp-gpt-vision-img-alt-generator-2](https://github.com/android-com-pl/wp-gpt-vision-img-alt-generator/assets/25438601/a221655e-ab9e-4a74-97c0-f6359ec1741c)
+![Generating manually](https://github.com/android-com-pl/wp-ai-alt-generator/assets/25438601/a221655e-ab9e-4a74-97c0-f6359ec1741c)
 
-![wp-gpt-vision-img-alt-generator](https://github.com/android-com-pl/wp-gpt-vision-img-alt-generator/assets/25438601/d68179ad-4ed4-43b6-8d52-b2eeeb4b2534)
+![Automatically generating on upload](https://github.com/android-com-pl/wp-ai-alt-generator/assets/25438601/d68179ad-4ed4-43b6-8d52-b2eeeb4b2534)
 
 ## Contributing
 
-Pull requests are warmly welcomed! If you would like to contribute to the development of this plugin, please follow these steps:
+Pull requests are welcomed!
+If you would like to contribute to the development of this plugin, please follow these steps:
 
 1. Fork the Repository: Start by forking the GitHub repository to your own account.
 2. Clone Your Fork: Clone your forked repository to your local machine.

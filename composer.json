@@ -1,5 +1,5 @@
 {
-  "name": "acpl/wp-gpt-vision-img-alt-generator",
+  "name": "acpl/ai-alt-generator",
   "type": "wordpress-plugin",
   "autoload": {
     "psr-4": {

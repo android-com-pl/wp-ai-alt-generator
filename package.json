@@ -1,5 +1,5 @@
 {
-  "name": "acpl_ai_alt_generator",
+  "name": "@acpl/ai-alt-generator",
   "private": true,
   "scripts": {
     "build": "wp-scripts build",

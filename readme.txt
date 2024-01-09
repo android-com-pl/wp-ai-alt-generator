@@ -1,20 +1,30 @@
-=== GPT Vision Alt Text Generator ===
+=== AI Alt Text Generator for GPT Vision ===
 Contributors: rafaucau
-Donate link: https://github.com/android-com-pl/wp-gpt-vision-img-alt-generator?sponsor=1
+Donate link: https://github.com/android-com-pl/wp-ai-alt-generator?sponsor=1
 Tags: alt text, accessibility, SEO, GPT-4, GPT-V, OpenAI, image
 Requires at least: 6.3
 Tested up to: 6.4
 Requires PHP: 8.1
-Stable tag: 1.2.0
+Stable tag: 2.0.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
-Plugin URI: https://github.com/android-com-pl/wp-gpt-vision-img-alt-generator
+Plugin URI: https://github.com/android-com-pl/wp-ai-alt-generator
 
 A WordPress plugin that leverages GPT-4 API to automatically generate descriptive and contextually relevant alt text for images.
 
 == Description ==
 
-The GPT Vision Alt Text Generator is a WordPress plugin that uses the OpenAI GPT-4 Vision API to automatically generate alt text for images, either during the upload process or on-demand with a button. It enhances website accessibility, SEO, and user engagement by providing descriptive and relevant image descriptions. You can configure auto-generation on upload and manual generation via a button in the image block and media library.
+Plugin that uses the OpenAI GPT-4 Vision API to automatically generate alt text for images, either during the upload process or on-demand with a button. It enhances website accessibility, SEO, and user engagement by providing descriptive and relevant image descriptions. You can configure auto-generation on upload and manual generation via a button in the image block and media library.
+
+== External Service Usage ==
+
+This plugin relies on OpenAI's API, an external third-party service, to generate alt text for images. The plugin sends your images to OpenAI's API and receives generated alt text in return.
+
+Before using this plugin, please review OpenAI's terms of use and privacy policy:
+- OpenAI API Terms of Use: [https://openai.com/policies/terms-of-use](https://openai.com/policies/terms-of-use)
+- OpenAI Privacy Policy: [https://openai.com/policies/privacy-policy](https://openai.com/policies/privacy-policy)
+
+By using this plugin, you agree to OpenAI's terms and acknowledge that you have understood OpenAI's privacy policy.
 
 == Installation ==
 
@@ -31,4 +41,4 @@ The plugin uses the OpenAI API, which will incur costs. Please check the [OpenAI
 
 == Changelog ==
 
-For the plugin’s changelog, please see [the Releases page on GitHub](https://github.com/android-com-pl/wp-gpt-vision-img-alt-generator/releases).
+For the plugin’s changelog, please see [the Releases page on GitHub](https://github.com/android-com-pl/wp-ai-alt-generator/releases).
