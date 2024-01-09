@@ -12,7 +12,7 @@ The plugin is currently awaiting approval on WordPress.org. In the meantime, you
 > The settings for the plugin are located in `Settings -> Media`.
 > You need to enter your [OpenAI's API key](https://platform.openai.com/api-keys) there.
 
-![Generating manually](https://github.com/android-com-pl/wp-ai-alt-generator/assets/25438601/a221655e-ab9e-4a74-97c0-f6359ec1741c)
+![Generating manually](https://github.com/android-com-pl/wp-ai-alt-generator/assets/25438601/0474e485-1149-4307-b229-5c973451e89a)
 
 ![Automatically generating on upload](https://github.com/android-com-pl/wp-ai-alt-generator/assets/25438601/d68179ad-4ed4-43b6-8d52-b2eeeb4b2534)
 
