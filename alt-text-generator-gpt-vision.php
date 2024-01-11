@@ -11,6 +11,7 @@
  * Author URI: https://android.com.pl/
  * License: GPL v3
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
+ * Text Domain: acpl-ai-alt-generator
  * @package ACPL\AIAltGenerator
  */
 

@@ -23,7 +23,7 @@
     "@wordpress/notices": "^4.14.0"
   },
   "files": [
-    "acpl-ai-alt-generator.php",
+    "alt-text-generator-gpt-vision",
     "uninstall.php",
     "includes",
     "build",

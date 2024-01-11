@@ -28,7 +28,7 @@ jobs:
           composer-options: "--no-dev --ignore-platform-reqs --classmap-authoritative"
 
       - name: 📦 Generate zip
-        run: npm run plugin-zip && cp .zip ${{ github.event.repository.name }}.zip
+        run: npm run plugin-zip && cp .zip alt-text-generator-gpt-vision.zip
 
       - name: 📢 Release
         uses: softprops/action-gh-release@v1
