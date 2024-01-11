@@ -11,7 +11,7 @@
  * Author URI: https://android.com.pl/
  * License: GPL v3
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
- * Text Domain: acpl-ai-alt-generator
+ * Text Domain: alt-text-generator-gpt-vision
  * @package ACPL\AIAltGenerator
  */
 
@@ -61,7 +61,7 @@ class AltGeneratorPlugin {
 		$asset_file = include ACPL_AI_ALT_PLUGIN_PATH . "build/$file_name.asset.php";
 		$handle     = "acpl/ai-alt-generator/$file_name";
 		wp_enqueue_script( $handle, ACPL_AI_ALT_PLUGIN_URL . "build/$file_name.js", $asset_file['dependencies'], $asset_file['version'], $args );
-		wp_set_script_translations( $handle, 'acpl-ai-alt-generator' );
+		wp_set_script_translations( $handle, 'alt-text-generator-gpt-vision' );
 	}
 
 	private function enqueue_attachment_edit_page_script(): void {
@@ -77,13 +77,13 @@ class AltGeneratorPlugin {
 			$plugin_meta[] = sprintf(
 				'<a href="%s">%s</a>',
 				admin_url( 'options-media.php#' . Admin::SETTINGS_SECTION_ID ),
-				__( 'Settings', 'acpl-ai-alt-generator' )
+				__( 'Settings', 'alt-text-generator-gpt-vision' )
 			);
 
 			$plugin_meta[] = sprintf(
 				'<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
 				'https://github.com/android-com-pl/wp-ai-alt-generator?sponsor=1',
-				__( 'Support Development', 'acpl-ai-alt-generator' )
+				__( 'Support Development', 'alt-text-generator-gpt-vision' )
 			);
 		}
 

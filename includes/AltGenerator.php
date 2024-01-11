@@ -83,7 +83,7 @@ class AltGenerator {
 			return new WP_Error(
 				$completion['error']['code'],
 				// translators: %s is the error message from OpenAI's API.
-				sprintf( __( "OpenAI's API error: %s", 'acpl-ai-alt-generator' ), $completion['error']['message'] )
+				sprintf( __( "OpenAI's API error: %s", 'alt-text-generator-gpt-vision' ), $completion['error']['message'] )
 			);
 		}
 

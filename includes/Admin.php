@@ -38,10 +38,10 @@ class Admin {
 
 		add_settings_section(
 			self::SETTINGS_SECTION_ID,
-			__( 'GPT Vision Alt Generator', 'acpl-ai-alt-generator' ),
+			__( 'GPT Vision Alt Generator', 'alt-text-generator-gpt-vision' ),
 			function () {
 				echo '<p>' .
-					esc_html__( 'This plugin uses the OpenAI API to generate alt text for images.', 'acpl-ai-alt-generator' )
+					esc_html__( 'This plugin uses the OpenAI API to generate alt text for images.', 'alt-text-generator-gpt-vision' )
 					. '</p>';
 			},
 			'media',
@@ -53,7 +53,7 @@ class Admin {
 
 		add_settings_field(
 			'acpl_ai_alt_generator_api_key',
-			__( 'OpenAI API Key', 'acpl-ai-alt-generator' ),
+			__( 'OpenAI API Key', 'alt-text-generator-gpt-vision' ),
 			function () use ( $options ) {
 				printf(
 					'<input type="password" id="openai_api_key" name="%1$s[api_key]" value="%2$s" class="regular-text" placeholder="sk-..." autocomplete="off"/>',
@@ -67,7 +67,7 @@ class Admin {
 							// translators: %s is for link attributes.
 							__(
 								'Enter your OpenAI API key here. You can find it in your <a href="https://platform.openai.com/account/api-keys" %s>OpenAI account settings</a>.',
-								'acpl-ai-alt-generator'
+								'alt-text-generator-gpt-vision'
 							),
 							'target="_blank" rel="noopener noreferrer"'
 						),
@@ -90,7 +90,7 @@ class Admin {
 
 		add_settings_field(
 			'acpl_ai_alt_generator_auto_generate',
-			__( 'Auto generate alt text on image upload', 'acpl-ai-alt-generator' ),
+			__( 'Auto generate alt text on image upload', 'alt-text-generator-gpt-vision' ),
 			function () use ( $options ) {
 				printf(
 					'<input type="checkbox" id="auto_generate_alt" name="%1$s[auto_generate]" %2$s/>',
@@ -101,7 +101,7 @@ class Admin {
 				echo '<p class="description">' .
 					esc_html__(
 						'Enable this option to automatically generate alt text when images are uploaded. Please review generated alt texts as GPT can sometimes produce inaccurate descriptions.',
-						'acpl-ai-alt-generator'
+						'alt-text-generator-gpt-vision'
 					)
 				. '</p>';
 			},
@@ -114,11 +114,11 @@ class Admin {
 
 		add_settings_field(
 			'acpl_ai_alt_generator_img_size',
-			__( 'Detail level', 'acpl-ai-alt-generator' ),
+			__( 'Detail level', 'alt-text-generator-gpt-vision' ),
 			function () use ( $options ) {
 				$detail_levels = [
-					'high' => _x( 'High', 'Detail level', 'acpl-ai-alt-generator' ),
-					'low'  => _x( 'Low', 'Detail level', 'acpl-ai-alt-generator' ),
+					'high' => _x( 'High', 'Detail level', 'alt-text-generator-gpt-vision' ),
+					'low'  => _x( 'Low', 'Detail level', 'alt-text-generator-gpt-vision' ),
 				];
 
 				printf( '<select id="detail_level" name="%s[detail]">', esc_attr( AltGeneratorPlugin::OPTION_NAME ) );
@@ -138,7 +138,7 @@ class Admin {
 							// translators: %s is for link attributes.
 							__(
 								'Choose "Low" detail to minimize token usage and costs for image processing, which should be sufficient for most use cases and is significantly cheaper. "High" detail will use more tokens but provides finer detail. For precise token calculations and cost implications, refer to the <a href="https://platform.openai.com/docs/guides/vision/calculating-costs" %s>OpenAI documentation on calculating costs</a>.',
-								'acpl-ai-alt-generator'
+								'alt-text-generator-gpt-vision'
 							),
 							'target="_blank" rel="noopener noreferrer"'
 						),

@@ -11,9 +11,9 @@ enum ErrorCodes: string {
 
 	public function get_label(): string {
 		return match ( $this ) {
-			self::Not_image => __( 'Attachment ID is not an image.', 'acpl-ai-alt-generator' ),
-			self::No_API_key => __( "OpenAI's API key is not configured.", 'acpl-ai-alt-generator' ),
-			self::Img_not_found => __( 'Image not found.', 'acpl-ai-alt-generator' ),
+			self::Not_image => __( 'Attachment ID is not an image.', 'alt-text-generator-gpt-vision' ),
+			self::No_API_key => __( "OpenAI's API key is not configured.", 'alt-text-generator-gpt-vision' ),
+			self::Img_not_found => __( 'Image not found.', 'alt-text-generator-gpt-vision' ),
 		};
 	}
 

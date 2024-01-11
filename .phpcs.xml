@@ -37,7 +37,7 @@
     <rule ref="WordPress.WP.I18n">
         <properties>
             <property name="text_domain" type="array">
-                <element value="acpl-ai-alt-generator"/>
+                <element value="alt-text-generator-gpt-vision"/>
             </property>
         </properties>
     </rule>
