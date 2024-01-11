@@ -1,7 +1,7 @@
 parameters:
     level: 5
     paths:
-        - acpl-ai-alt-generator.php
+        - alt-text-generator-gpt-vision.php
         - includes/
     bootstrapFiles:
-        - acpl-ai-alt-generator.php
+        - alt-text-generator-gpt-vision.php
