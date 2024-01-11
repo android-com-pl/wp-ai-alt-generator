@@ -33,5 +33,5 @@ jobs:
       - name: 📢 Release
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{ github.event.repository.name }}.zip
+          files: alt-text-generator-gpt-vision.zip
           generate_release_notes: true
