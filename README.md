@@ -6,11 +6,18 @@ effort.
 
 ## Installation
 
-The plugin is currently awaiting approval on WordPress.org. In the meantime, you can download it from the [releases section on GitHub](https://github.com/android-com-pl/wp-ai-alt-generator/releases). Download the ZIP file and upload it to your website.
+You can download it here: https://wordpress.org/plugins/alt-text-generator-gpt-vision/
+
+Or use composer:
+```shell
+composer require wpackagist-plugin/alt-text-generator-gpt-vision
+```
 
 > [!IMPORTANT]  
 > The settings for the plugin are located in `Settings -> Media`.
 > You need to enter your [OpenAI's API key](https://platform.openai.com/api-keys) there.
+
+## Screenshots
 
 ![Generating manually](https://github.com/android-com-pl/wp-ai-alt-generator/assets/25438601/0474e485-1149-4307-b229-5c973451e89a)
 
