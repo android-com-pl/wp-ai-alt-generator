@@ -9,10 +9,13 @@
 /.gitattributes export-ignore
 /.gitignore export-ignore
 /.wp-env.json export-ignore
+
 /package.json export-ignore
 /package.lock.json export-ignore
 /tsconfig.json export-ignore
+/webpack.config.js export-ignore
 
+/composer.json export-ignore
 /composer.lock export-ignore
 /phpstan.neon export-ignore
 /.phpcs.xml export-ignore
