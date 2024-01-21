@@ -37,7 +37,7 @@ jobs:
           generate-zip: true
         env:
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
-          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
           SLUG: ${{ env.PLUGIN_SLUG }}
 
       - name: Upload release asset
