@@ -4,7 +4,7 @@
  * Plugin Name: AI Alt Text Generator for GPT Vision
  * Plugin URI: https://github.com/android-com-pl/wp-ai-alt-generator
  * Description: Automatically generate alternative text for images using OpenAI's GPT Vision API.
- * Version: 2.0.1
+ * Version: 2.0.2
  * Requires at least: 6.3
  * Requires PHP: 8.1
  * Author: android.com.pl
@@ -39,8 +39,8 @@ class AltGeneratorPlugin {
 		add_action( 'enqueue_block_editor_assets', fn()=> $this->enqueue_script( 'editor' ) );
 		add_action( 'wp_enqueue_media', fn()=> $this->enqueue_script( 'media-modal', true ) );
 		add_action( 'admin_enqueue_scripts', fn()=> $this->enqueue_attachment_edit_page_script() );
-		/** @phpstan-ignore-next-line */
-		add_filter( 'plugin_row_meta', [ $this, 'plugin_row_meta' ], 10, 4 );
+		add_action( 'activated_plugin', [ $this,'redirect_to_plugin_settings_after_activation' ] );
+		add_filter( 'plugin_row_meta', [ $this, 'plugin_row_meta' ], 10, 2 );
 	}
 
 	public static function get_options(): array|false {
@@ -69,6 +69,22 @@ class AltGeneratorPlugin {
 
 		if ( 'post.php' === $pagenow && 'attachment' === get_post_type() && wp_attachment_is_image() ) {
 			$this->enqueue_script( 'media-edit-page', true );
+		}
+	}
+
+	public function redirect_to_plugin_settings_after_activation( string $plugin ): void {
+		global $pagenow;
+
+		// Disable redirect if there are multiple plugins activated at once.
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		if ( 'plugins.php' === $pagenow && isset( $_REQUEST['action'] ) && 'activate-selected' === $_REQUEST['action'] ) {
+			return;
+		}
+		// phpcs:enable
+
+		if ( plugin_basename( __FILE__ ) === $plugin ) {
+			wp_safe_redirect( admin_url( 'options-media.php#' . Admin::SETTINGS_SECTION_ID ) );
+			exit();
 		}
 	}
 
