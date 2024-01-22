@@ -39,6 +39,10 @@ By using this plugin, you agree to OpenAI's terms and acknowledge that you have 
 
 The plugin uses the OpenAI API, which will incur costs. Please check the [OpenAI pricing page](https://openai.com/pricing/) for details.
 
+== Screenshots ==
+1. Generating alt text for an image in the media library.
+2. Generating alt text automatically on upload.
+
 == Changelog ==
 
 For the plugin’s changelog, please see [the Releases page on GitHub](https://github.com/android-com-pl/wp-ai-alt-generator/releases).
