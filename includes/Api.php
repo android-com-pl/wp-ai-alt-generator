@@ -37,7 +37,7 @@ class Api {
 		return new WP_REST_Response(
 			[
 				'img_id' => $attachment_id,
-				'alt'    => AltGenerator::generate_alt_text( $attachment_id ),
+				'alt'    => $alt_text,
 			]
 		);
 	}
