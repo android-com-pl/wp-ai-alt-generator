@@ -4,9 +4,6 @@ on:
     tags:
       - "v*.*.*"
 
-env:
-  PLUGIN_SLUG: alt-text-generator-gpt-vision
-
 jobs:
   deploy:
     name: Deploy to WP.org
@@ -27,7 +24,7 @@ jobs:
           php-version: "8.1"
 
       - name: 📥 Install PHP dependencies
-        uses: ramsey/composer-install@v2
+        uses: ramsey/composer-install@v3
         with:
           composer-options: "--no-dev --ignore-platform-reqs --classmap-authoritative"
 
@@ -38,10 +35,10 @@ jobs:
         env:
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
-          SLUG: ${{ env.PLUGIN_SLUG }}
+          SLUG: ${{ vars.PLUGIN_SLUG }}
 
       - name: Upload release asset
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: ${{github.workspace}}/${{ env.PLUGIN_SLUG }}.zip
         env:

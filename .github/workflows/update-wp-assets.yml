@@ -4,9 +4,6 @@ on:
     branches:
       - trunk
 
-env:
-  PLUGIN_SLUG: alt-text-generator-gpt-vision
-
 jobs:
   trunk:
     name: Push to trunk
@@ -18,5 +15,5 @@ jobs:
         env:
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
-          SLUG: ${{ env.PLUGIN_SLUG }}
+          SLUG: ${{ vars.PLUGIN_SLUG }}
           IGNORE_OTHER_FILES: true
