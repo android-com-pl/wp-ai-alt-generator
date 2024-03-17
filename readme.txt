@@ -3,7 +3,7 @@ Contributors: rafaucau
 Donate link: https://github.com/android-com-pl/wp-ai-alt-generator?sponsor=1
 Tags: alt text, accessibility, SEO, GPT-4, GPT-V, OpenAI, image
 Requires at least: 6.3
-Tested up to: 6.4
+Tested up to: 6.5
 Requires PHP: 8.1
 Stable tag: 2.0.3.1
 License: GPLv3 or later
