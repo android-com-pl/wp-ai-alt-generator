@@ -1,8 +1,12 @@
 import { qs } from "ts-dom-utils";
 import GenerateAltButon from "./components/GenerateAltButon";
 
+const { wp } = window;
+
+// @ts-ignore - missing types for Attachment
 wp.media.view.Attachment.Details = wp.media.view.Attachment.Details.extend({
   render: function () {
+    // @ts-ignore - missing types for Attachment
     wp.media.view.Attachment.prototype.render.apply(this, arguments);
 
     if (this.model.get("type") !== "image") {
