@@ -70,6 +70,12 @@ class AltGeneratorPlugin {
 		$handle     = "acpl/ai-alt-generator/$file_name";
 		wp_enqueue_script( $handle, ACPL_AI_ALT_PLUGIN_URL . "build/$file_name.js", $asset_file['dependencies'], $asset_file['version'], $args );
 		wp_set_script_translations( $handle, 'alt-text-generator-gpt-vision' );
+
+		foreach ( $asset_file['dependencies'] as $dependency ) {
+			if ( $dependency === 'wp-components' ) {
+				wp_enqueue_style( 'wp-components' );
+			}
+		}
 	}
 
 	private function enqueue_attachment_edit_page_script(): void {
