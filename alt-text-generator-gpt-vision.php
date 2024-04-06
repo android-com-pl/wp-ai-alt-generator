@@ -72,7 +72,7 @@ class AltGeneratorPlugin {
 		wp_set_script_translations( $handle, 'alt-text-generator-gpt-vision' );
 
 		foreach ( $asset_file['dependencies'] as $dependency ) {
-			if ( $dependency === 'wp-components' ) {
+			if ( 'wp-components' === $dependency ) {
 				wp_enqueue_style( 'wp-components' );
 			}
 		}
