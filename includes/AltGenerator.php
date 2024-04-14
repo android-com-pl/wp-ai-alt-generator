@@ -90,12 +90,12 @@ class AltGenerator {
 		return $completion['choices'][0]['message']['content'] ?? '';
 	}
 
-	public static function generate_and_set_alt_text( int $attachment_id ): ?string {
+	public static function generate_and_set_alt_text( int $attachment_id ): string|WP_Error|null {
 		$alt_text = self::generate_alt_text( $attachment_id );
 		if ( is_wp_error( $alt_text ) ) {
 			AltGeneratorPlugin::error_log( $alt_text );
 
-			return null;
+			return $alt_text;
 		}
 
 		if ( ! empty( $alt_text ) ) {

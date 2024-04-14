@@ -1,4 +1,4 @@
-import { useState } from "@wordpress/element";
+import { useEffect, useState } from "@wordpress/element";
 import {
   Button,
   Flex,
@@ -9,6 +9,12 @@ import {
 } from "@wordpress/components";
 import { __, _n, _x, sprintf } from "@wordpress/i18n";
 
+import type { AttachmentWithGenerationStatus } from "../types";
+import BulkGenerationStatusTable from "./BulkGenerationStatusTable";
+import generateAltText from "../utils/generateAltText";
+import sleep from "../utils/sleep";
+import useAttachments from "../hooks/useAttachments";
+
 export default function BulkGenerateModal({
   attachment_ids,
   onClose,
@@ -16,10 +22,65 @@ export default function BulkGenerateModal({
   const [overwriteExisting, setOverwriteExisting] = useState(false);
   const [customPrompt, setCustomPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [attachments, setAttachments] = useState<
+    AttachmentWithGenerationStatus[]
+  >([]);
 
-  const handleStart = () => {
+  const { attachmentData, hasAttachmentDataResolved } =
+    useAttachments(attachment_ids);
+
+  useEffect(() => {
+    if (!hasAttachmentDataResolved) return;
+
+    setAttachments(
+      attachmentData.map((attachment) => ({
+        ...attachment,
+        generation_status: "waiting",
+      })),
+    );
+  }, [attachmentData, hasAttachmentDataResolved]);
+
+  const handleStart = async () => {
     setIsGenerating(true);
-    // start generating alt texts
+
+    for (let attachment of attachments) {
+      if (!overwriteExisting && attachment.alt_text.length) {
+        setAttachments((prev) =>
+          prev.map((prevAttachment) =>
+            prevAttachment.id === attachment.id
+              ? { ...prevAttachment, generation_status: "skipped" }
+              : prevAttachment,
+          ),
+        );
+        continue;
+      }
+
+      generateAltText(attachment.id, true)
+        .then((res) => {
+          setAttachments((prev) => {
+            const newAttachments = [...prev];
+            const index = newAttachments.findIndex(
+              (prevAttachment) => prevAttachment.id === attachment.id,
+            );
+            newAttachments[index] = {
+              ...newAttachments[index],
+              alt_text: res,
+              generation_status: "done",
+            };
+            return newAttachments;
+          });
+        })
+        .catch((error) => {
+          attachment.generation_status = "error";
+          console.error(error);
+        });
+
+      // Wait for 1 second before processing the next image to avoid too many requests at once
+      // TODO: Use rate limiting info and implement a better solution
+      await sleep(1000);
+    }
+
+    setIsGenerating(false);
   };
 
   return (
@@ -28,6 +89,7 @@ export default function BulkGenerateModal({
       onRequestClose={onClose}
       shouldCloseOnClickOutside={false}
       shouldCloseOnEsc={!isGenerating}
+      style={{ maxWidth: "48rem" }}
     >
       <ToggleControl
         label={__(
@@ -47,6 +109,7 @@ export default function BulkGenerateModal({
         }
         checked={overwriteExisting}
         onChange={setOverwriteExisting}
+        disabled={isGenerating}
       />
       <TextControl
         label={__(
@@ -64,6 +127,12 @@ export default function BulkGenerateModal({
         )}
         value={customPrompt}
         onChange={setCustomPrompt}
+        disabled={isGenerating}
+      />
+
+      <BulkGenerationStatusTable
+        attachments={attachments}
+        loading={hasAttachmentDataResolved}
       />
 
       <Flex>
@@ -87,7 +156,7 @@ export default function BulkGenerateModal({
 
             <Button
               variant="primary"
-              disabled={isGenerating}
+              disabled={isGenerating || !hasAttachmentDataResolved}
               isBusy={isGenerating}
               onClick={handleStart}
             >
