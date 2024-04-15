@@ -84,7 +84,7 @@ export default function BulkGenerateModal({
           new Map(prevMap.set(id, { ...details, status: "generating" })),
       );
 
-      generateAltText(id, true)
+      generateAltText(id, true, customPrompt)
         .then((alt) => {
           setAltGenerationMap(
             (prevMap) =>

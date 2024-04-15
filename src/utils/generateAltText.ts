@@ -1,7 +1,24 @@
 import apiFetch from "@wordpress/api-fetch";
 import { API_PATH } from "../constants";
 
-export default async (attachmentId: number, save: boolean = false) => {
+export default async (
+  attachmentId: number,
+  save: boolean = false,
+  userPrompt?: string,
+) => {
+  const requestData: {
+    attachment_id: number;
+    save: boolean;
+    user_prompt?: string;
+  } = {
+    attachment_id: attachmentId,
+    save,
+  };
+
+  if (userPrompt?.length) {
+    requestData.user_prompt = userPrompt;
+  }
+
   return apiFetch<{ alt: string; img_id: number }>({
     path: API_PATH,
     method: "POST",
@@ -9,10 +26,7 @@ export default async (attachmentId: number, save: boolean = false) => {
       "Content-Type": "application/json",
     },
 
-    body: JSON.stringify({
-      attachment_id: attachmentId,
-      save,
-    }),
+    body: JSON.stringify(requestData),
   })
     .then((response) => {
       return response.alt;

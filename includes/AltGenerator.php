@@ -9,7 +9,7 @@ class AltGenerator {
 	const API_URL = 'https://api.openai.com/v1/chat/completions';
 	const MODEL   = 'gpt-4-vision-preview';
 
-	public static function generate_alt_text( int $attachment_id ): string|WP_Error {
+	public static function generate_alt_text( int $attachment_id, string $user_prompt = '' ): string|WP_Error {
 		if ( ! wp_attachment_is_image( $attachment_id ) ) {
 			return ErrorCodes::Not_image->to_wp_error( [ 'attachment_id' => $attachment_id ] );
 		}
@@ -23,13 +23,6 @@ class AltGenerator {
 
 		$locale   = get_locale();
 		$language = locale_get_display_language( $locale );
-
-		$user_prompt = apply_filters(
-			'acpl/ai_alt_generator/user_prompt',
-			"Generate a high-quality and concise alt text in $language ($locale) for the provided image without adding any additional comments.",
-			$locale,
-			$language
-		);
 
 		$image_mime_type = get_post_mime_type( $attachment_id );
 		$image_base64    = self::get_image_as_base64( $attachment_id );
@@ -52,11 +45,27 @@ class AltGenerator {
 						'model'      => self::MODEL,
 						'messages'   => [
 							[
+								'role'    => 'system',
+								'content' => apply_filters(
+									'acpl/ai_alt_generator/system_prompt',
+									"Generate a high-quality and concise alt text in $language ($locale) for the provided image without adding any additional comments.",
+									$attachment_id,
+									$locale,
+									$language
+								),
+							],
+							[
 								'role'    => 'user',
 								'content' => [
 									[
 										'type' => 'text',
-										'text' => $user_prompt,
+										'text' => apply_filters(
+											'acpl/ai_alt_generator/user_prompt',
+											$user_prompt,
+											$attachment_id,
+											$locale,
+											$language
+										),
 									],
 									[
 										'type'      => 'image_url',
@@ -90,8 +99,8 @@ class AltGenerator {
 		return $completion['choices'][0]['message']['content'] ?? '';
 	}
 
-	public static function generate_and_set_alt_text( int $attachment_id ): string|WP_Error|null {
-		$alt_text = self::generate_alt_text( $attachment_id );
+	public static function generate_and_set_alt_text( int $attachment_id, string $user_prompt = '' ): string|WP_Error|null {
+		$alt_text = self::generate_alt_text( $attachment_id, $user_prompt );
 		if ( is_wp_error( $alt_text ) ) {
 			AltGeneratorPlugin::error_log( $alt_text );
 
