@@ -8,75 +8,116 @@ import {
   ToggleControl,
 } from "@wordpress/components";
 import { __, _n, _x, sprintf } from "@wordpress/i18n";
+import { decodeEntities } from "@wordpress/html-entities";
 
-import type { AttachmentWithGenerationStatus } from "../types";
+import type { AltGenerationMap } from "../types";
 import BulkGenerationStatusTable from "./BulkGenerationStatusTable";
 import generateAltText from "../utils/generateAltText";
 import sleep from "../utils/sleep";
 import useAttachments from "../hooks/useAttachments";
 
 export default function BulkGenerateModal({
-  attachment_ids,
+  attachmentIds,
   onClose,
 }: BulkGenerateModalProps) {
   const [overwriteExisting, setOverwriteExisting] = useState(false);
   const [customPrompt, setCustomPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
-  const [attachments, setAttachments] = useState<
-    AttachmentWithGenerationStatus[]
-  >([]);
-
-  const { attachmentData, hasAttachmentDataResolved } =
-    useAttachments(attachment_ids);
+  const { attachments, hasResolved } = useAttachments(attachmentIds);
+  const [altGenerationMap, setAltGenerationMap] = useState<AltGenerationMap>(
+    new Map(attachmentIds.map((id) => [id, { status: "", alt: "" }])),
+  );
 
   useEffect(() => {
-    if (!hasAttachmentDataResolved) return;
+    if (!attachments.length) return;
 
-    setAttachments(
-      attachmentData.map((attachment) => ({
-        ...attachment,
-        generation_status: "waiting",
-      })),
-    );
-  }, [attachmentData, hasAttachmentDataResolved]);
+    setAltGenerationMap((prevMap) => {
+      const newMap = new Map(prevMap);
+
+      attachments.forEach((attachment) => {
+        const details = newMap.get(attachment.id);
+        if (!details) {
+          console.error(
+            "Generation details not found for attachment",
+            attachment,
+          );
+          return;
+        }
+
+        details.alt = attachment.alt_text;
+        details.title = decodeEntities(attachment.title.rendered);
+        details.source_url = attachment.source_url;
+
+        const thumbnail =
+          //@ts-ignore - missing WP types
+          attachment.media_details.sizes?.thumbnail ??
+          attachment.media_details.sizes?.[0];
+
+        if (thumbnail)
+          details.thumbnail = {
+            width: thumbnail.width,
+            height: thumbnail.height,
+            source_url: thumbnail.source_url,
+          };
+
+        newMap.set(attachment.id, details);
+      });
+
+      return newMap;
+    });
+  }, [attachments, hasResolved]);
 
   const handleStart = async () => {
     setIsGenerating(true);
 
-    for (let attachment of attachments) {
-      if (!overwriteExisting && attachment.alt_text.length) {
-        setAttachments((prev) =>
-          prev.map((prevAttachment) =>
-            prevAttachment.id === attachment.id
-              ? { ...prevAttachment, generation_status: "skipped" }
-              : prevAttachment,
-          ),
-        );
-        continue;
-      }
+    setAltGenerationMap(
+      (prevMap) =>
+        new Map(
+          Array.from(prevMap, ([id, details]) => {
+            details.status = "queued";
 
-      generateAltText(attachment.id, true)
-        .then((res) => {
-          setAttachments((prev) => {
-            const newAttachments = [...prev];
-            const index = newAttachments.findIndex(
-              (prevAttachment) => prevAttachment.id === attachment.id,
-            );
-            newAttachments[index] = {
-              ...newAttachments[index],
-              alt_text: res,
-              generation_status: "done",
-            };
-            return newAttachments;
-          });
+            if (!overwriteExisting && details.alt.length) {
+              details.status = "skipped";
+            }
+
+            return [id, details];
+          }),
+        ),
+    );
+
+    for (const [id, details] of altGenerationMap) {
+      if (details.status !== "queued") continue;
+
+      setAltGenerationMap(
+        (prevMap) =>
+          new Map(prevMap.set(id, { ...details, status: "generating" })),
+      );
+
+      generateAltText(id, true)
+        .then((alt) => {
+          setAltGenerationMap(
+            (prevMap) =>
+              new Map(prevMap.set(id, { ...details, alt, status: "done" })),
+          );
         })
         .catch((error) => {
-          attachment.generation_status = "error";
+          setAltGenerationMap(
+            (prevMap) =>
+              new Map(
+                prevMap.set(id, {
+                  ...details,
+                  status: "error",
+                  message: error.message,
+                }),
+              ),
+          );
           console.error(error);
         });
 
       // Wait for 1 second before processing the next image to avoid too many requests at once
-      // TODO: Use rate limiting info and implement a better solution
+      // TODO:
+      //  Use rate limiting info and implement a better solution
+      //  https://platform.openai.com/docs/guides/rate-limits/rate-limits-in-headers
       await sleep(1000);
     }
 
@@ -131,8 +172,8 @@ export default function BulkGenerateModal({
       />
 
       <BulkGenerationStatusTable
-        attachments={attachments}
-        loading={hasAttachmentDataResolved}
+        loading={hasResolved}
+        generationMap={altGenerationMap}
       />
 
       <Flex>
@@ -141,10 +182,10 @@ export default function BulkGenerateModal({
             _n(
               "%d image selected",
               "%d images selected",
-              attachment_ids.length,
+              attachmentIds.length,
               "alt-text-generator-gpt-vision",
             ),
-            attachment_ids.length,
+            attachmentIds.length,
           )}
         </p>
 
@@ -156,7 +197,7 @@ export default function BulkGenerateModal({
 
             <Button
               variant="primary"
-              disabled={isGenerating || !hasAttachmentDataResolved}
+              disabled={isGenerating || !hasResolved}
               isBusy={isGenerating}
               onClick={handleStart}
             >
@@ -170,6 +211,6 @@ export default function BulkGenerateModal({
 }
 
 export type BulkGenerateModalProps = {
-  attachment_ids: number[];
+  attachmentIds: number[];
   onClose: () => void;
 };

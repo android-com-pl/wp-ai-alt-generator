@@ -1,17 +1,13 @@
-import { _x } from "@wordpress/i18n";
+import { _x, sprintf } from "@wordpress/i18n";
 import { Flex, Spinner } from "@wordpress/components";
-import type { AttachmentWithGenerationStatus } from "../types";
+import type { AltGenerationDetails } from "../types";
 
 export default function BulkGenerationStatus({
-  status,
+  details,
 }: BulkGenerationStatusProps) {
+  const { status, message } = details;
+
   switch (status) {
-    case "waiting":
-      return _x(
-        "Waiting",
-        "Generation status",
-        "alt-text-generator-gpt-vision",
-      );
     case "queued":
       return _x("Queued", "Generation status", "alt-text-generator-gpt-vision");
     case "generating":
@@ -35,16 +31,15 @@ export default function BulkGenerationStatus({
         "alt-text-generator-gpt-vision",
       );
     case "error":
-      return _x("Error", "Generation status", "alt-text-generator-gpt-vision");
-    default:
-      return _x(
-        "Unknown",
-        "Generation status",
-        "alt-text-generator-gpt-vision",
+      return sprintf(
+        _x("Error: %s", "Generation status", "alt-text-generator-gpt-vision"),
+        message,
       );
+    default:
+      return "";
   }
 }
 
 export type BulkGenerationStatusProps = {
-  status: AttachmentWithGenerationStatus["generation_status"];
+  details: AltGenerationDetails;
 };

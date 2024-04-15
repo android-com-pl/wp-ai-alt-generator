@@ -1,12 +1,11 @@
 import { Flex, Spinner } from "@wordpress/components";
 import { __ } from "@wordpress/i18n";
-import { decodeEntities } from "@wordpress/html-entities";
-import type { AttachmentWithGenerationStatus } from "../types";
+import type { AltGenerationMap } from "../types";
 import BulkGenerationStatus from "./BulkGenerationStatus";
 
 export default function BulkGenerationStatusTable({
-  attachments,
   loading,
+  generationMap,
 }: BulkGenerationStatusTableProps) {
   return (
     <table className="wp-list-table fixed widefat striped">
@@ -26,39 +25,32 @@ export default function BulkGenerationStatusTable({
             </td>
           </tr>
         ) : (
-          attachments.map((attachment) => {
-            const size =
-              // @ts-ignore - wrong `sizes` type
-              attachment.media_details.sizes?.thumbnail ??
-              attachment.media_details.sizes?.[0];
-
-            return (
-              <tr key={attachment.id}>
-                <td>
-                  <a href={attachment.source_url} target="_blank">
-                    <Flex align="start" justify="start">
-                      {size && (
-                        <img
-                          src={size.source_url}
-                          height={size.height}
-                          width={size.width}
-                          alt={attachment.alt_text}
-                          loading="lazy"
-                          decoding="async"
-                          style={{ maxWidth: "60px", height: "auto" }}
-                        />
-                      )}
-                      {decodeEntities(attachment.title.rendered)}
-                    </Flex>
-                  </a>
-                </td>
-                <td>{attachment.alt_text}</td>
-                <td>
-                  <BulkGenerationStatus status={attachment.generation_status} />
-                </td>
-              </tr>
-            );
-          })
+          Array.from(generationMap, ([id, details]) => (
+            <tr key={id}>
+              <td>
+                <a href={details.source_url} target="_blank">
+                  <Flex align="start" justify="start">
+                    {details.thumbnail && (
+                      <img
+                        src={details.thumbnail.source_url}
+                        height={details.thumbnail.height}
+                        width={details.thumbnail.width}
+                        alt={details.alt}
+                        loading="lazy"
+                        decoding="async"
+                        style={{ maxWidth: "60px", height: "auto" }}
+                      />
+                    )}
+                    {details.title}
+                  </Flex>
+                </a>
+              </td>
+              <td>{details.alt}</td>
+              <td>
+                <BulkGenerationStatus details={details} />
+              </td>
+            </tr>
+          ))
         )}
       </tbody>
     </table>
@@ -66,6 +58,6 @@ export default function BulkGenerationStatusTable({
 }
 
 export interface BulkGenerationStatusTableProps {
-  attachments: AttachmentWithGenerationStatus[];
+  generationMap: AltGenerationMap;
   loading: boolean;
 }

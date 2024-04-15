@@ -7,6 +7,7 @@
     "resolveJsonModule": true,
     "module": "ESNext",
     "moduleResolution": "bundler",
+    "target": "ES2022",
     "noEmit": true,
     "lib": ["ESNext", "dom", "dom.iterable"],
     "allowSyntheticDefaultImports": true,
