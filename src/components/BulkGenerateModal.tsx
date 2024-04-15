@@ -70,23 +70,14 @@ export default function BulkGenerateModal({
   const handleStart = async () => {
     setIsGenerating(true);
 
-    setAltGenerationMap(
-      (prevMap) =>
-        new Map(
-          Array.from(prevMap, ([id, details]) => {
-            details.status = "queued";
-
-            if (!overwriteExisting && details.alt.length) {
-              details.status = "skipped";
-            }
-
-            return [id, details];
-          }),
-        ),
-    );
-
     for (const [id, details] of altGenerationMap) {
-      if (details.status !== "queued") continue;
+      if (!overwriteExisting && details.alt.length > 0) {
+        setAltGenerationMap(
+          (prevMap) =>
+            new Map(prevMap.set(id, { ...details, status: "skipped" })),
+        );
+        continue;
+      }
 
       setAltGenerationMap(
         (prevMap) =>

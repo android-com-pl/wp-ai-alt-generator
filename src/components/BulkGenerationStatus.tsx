@@ -8,8 +8,6 @@ export default function BulkGenerationStatus({
   const { status, message } = details;
 
   switch (status) {
-    case "queued":
-      return _x("Queued", "Generation status", "alt-text-generator-gpt-vision");
     case "generating":
       return (
         <Flex justify="start">

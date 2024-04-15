@@ -1,7 +1,7 @@
 import type { Attachment } from "@wordpress/core-data";
 
 export interface AltGenerationDetails {
-  status: "" | "queued" | "generating" | "done" | "skipped" | "error";
+  status: "" | "generating" | "done" | "skipped" | "error";
   message?: string;
   alt: Attachment<"view">["alt_text"];
   title?: Attachment<"view">["title"]["rendered"];
