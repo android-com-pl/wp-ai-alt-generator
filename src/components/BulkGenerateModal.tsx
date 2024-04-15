@@ -11,7 +11,7 @@ import { __, _n, _x, sprintf } from "@wordpress/i18n";
 import { decodeEntities } from "@wordpress/html-entities";
 
 import type { AltGenerationMap } from "../types";
-import BulkGenerationStatusTable from "./BulkGenerationStatusTable";
+import BulkGenerationTable from "./BulkGenerationTable";
 import generateAltText from "../utils/generateAltText";
 import sleep from "../utils/sleep";
 import useAttachments from "../hooks/useAttachments";
@@ -171,7 +171,7 @@ export default function BulkGenerateModal({
         disabled={isGenerating}
       />
 
-      <BulkGenerationStatusTable
+      <BulkGenerationTable
         loading={hasResolved}
         generationMap={altGenerationMap}
       />
