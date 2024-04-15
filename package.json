@@ -7,6 +7,7 @@
     "format": "wp-scripts format"
   },
   "dependencies": {
+    "@wordpress/icons": "^9.46.0",
     "@wordpress/scripts": "^27.6.0",
     "ts-dom-utils": "^2.2.0"
   },

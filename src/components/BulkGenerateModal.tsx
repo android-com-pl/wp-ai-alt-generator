@@ -88,7 +88,9 @@ export default function BulkGenerateModal({
         .then((alt) => {
           setAltGenerationMap(
             (prevMap) =>
-              new Map(prevMap.set(id, { ...details, alt, status: "done" })),
+              new Map(
+                prevMap.set(id, { ...details, alt, status: "generated" }),
+              ),
           );
         })
         .catch((error) => {

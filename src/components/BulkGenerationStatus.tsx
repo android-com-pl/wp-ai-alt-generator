@@ -1,5 +1,6 @@
 import { _x, sprintf } from "@wordpress/i18n";
-import { Flex, Spinner } from "@wordpress/components";
+import { Flex, Icon, Spinner } from "@wordpress/components";
+import { check, next, warning } from "@wordpress/icons";
 import type { AltGenerationDetails } from "../types";
 
 export default function BulkGenerationStatus({
@@ -7,35 +8,47 @@ export default function BulkGenerationStatus({
 }: BulkGenerationStatusProps) {
   const { status, message } = details;
 
-  switch (status) {
-    case "generating":
-      return (
-        <Flex justify="start">
-          {/*@ts-ignore - wrong Spinner prop types*/}
+  return (
+    <Flex justify="start">
+      {status === "generating" ? (
+        <>
+          {/* @ts-ignore - wrong Spinner prop types */}
           <Spinner />
           {_x(
             "Generating...",
             "Generation status",
             "alt-text-generator-gpt-vision",
           )}
-        </Flex>
-      );
-    case "done":
-      return _x("Done", "Generation status", "alt-text-generator-gpt-vision");
-    case "skipped":
-      return _x(
-        "Skipped",
-        "Generation status",
-        "alt-text-generator-gpt-vision",
-      );
-    case "error":
-      return sprintf(
-        _x("Error: %s", "Generation status", "alt-text-generator-gpt-vision"),
-        message,
-      );
-    default:
-      return "";
-  }
+        </>
+      ) : status === "generated" ? (
+        <>
+          <Icon icon={check} />
+          {_x(
+            "Generated",
+            "Generation status",
+            "alt-text-generator-gpt-vision",
+          )}
+        </>
+      ) : status === "skipped" ? (
+        <>
+          <Icon icon={next} />
+          {_x("Skipped", "Generation status", "alt-text-generator-gpt-vision")}
+        </>
+      ) : status === "error" ? (
+        <>
+          <Icon icon={warning} />
+          {sprintf(
+            _x(
+              "Error: %s",
+              "Generation status",
+              "alt-text-generator-gpt-vision",
+            ),
+            message,
+          )}
+        </>
+      ) : null}
+    </Flex>
+  );
 }
 
 export type BulkGenerationStatusProps = {
