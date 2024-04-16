@@ -52,9 +52,6 @@ export default (onButtonClick) => {
       const selection = this.controller.state().get("selection");
       if (!selection.length) return;
 
-      selection.models[0].set("alt", "dupa");
-      selection.models[0].save();
-
       onButtonClick(selection.models.map((model) => model.id));
     },
   });
