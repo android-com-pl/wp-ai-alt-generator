@@ -7,7 +7,6 @@
     "format": "wp-scripts format"
   },
   "dependencies": {
-    "@wordpress/icons": "^9.46.0",
     "@wordpress/scripts": "^27.6.0",
     "ts-dom-utils": "^2.2.0"
   },
@@ -19,10 +18,12 @@
     "@wordpress/components": "^27.3.0",
     "@wordpress/core-data": "^6.32.0",
     "@wordpress/data": "^9.25.0",
+    "@wordpress/dom-ready": "^3.55.0",
     "@wordpress/element": "^5.32.0",
     "@wordpress/hooks": "^3.55.0",
     "@wordpress/html-entities": "^3.55.0",
     "@wordpress/i18n": "^4.55.0",
+    "@wordpress/icons": "^9.46.0",
     "@wordpress/notices": "^4.23.0"
   }
 }
