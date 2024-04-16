@@ -11,8 +11,8 @@ const App = () => {
 
   // Grid mode
   useEffect(() => {
-    const listener = (e: CustomEvent<number[]>) => {
-      setSelectedMediaIds(e.detail);
+    const listener = (e: CustomEvent<{ ids: number[] }>) => {
+      setSelectedMediaIds(e.detail.ids);
       setIsModalOpen(true);
     };
 
@@ -66,7 +66,7 @@ domReady(() => {
   extendMediaBulkSelect((ids) => {
     document.dispatchEvent(
       new CustomEvent("triggerBulkAltGenerateModal", {
-        detail: ids,
+        detail: { ids },
       }),
     );
   });

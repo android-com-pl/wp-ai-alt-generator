@@ -52,6 +52,9 @@ export default (onButtonClick) => {
       const selection = this.controller.state().get("selection");
       if (!selection.length) return;
 
+      selection.models[0].set("alt", "dupa");
+      selection.models[0].save();
+
       onButtonClick(selection.models.map((model) => model.id));
     },
   });
@@ -73,6 +76,12 @@ export default (onButtonClick) => {
           priority: -75,
         }).render(),
       );
+
+      document.addEventListener("altTextsGenerated", (event) => {
+        const library = this.controller.state().get("library");
+        library._requery(true);
+        this.controller.trigger("selection:action:done");
+      });
     },
   });
 };

@@ -88,7 +88,7 @@ class AltGenerator {
 
 		$completion = json_decode( wp_remote_retrieve_body( $api_response ), true );
 
-		if ( $completion['error'] ) {
+		if ( isset( $completion['error'] ) ) {
 			return new WP_Error(
 				$completion['error']['code'],
 				// translators: %s is the error message from OpenAI's API.

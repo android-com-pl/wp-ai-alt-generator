@@ -69,6 +69,7 @@ export default function BulkGenerateModal({
 
   const handleStart = async () => {
     setIsGenerating(true);
+    const generateTasks = [];
 
     for (const [id, details] of altGenerationMap) {
       if (!overwriteExisting && details.alt.length > 0) {
@@ -84,8 +85,15 @@ export default function BulkGenerateModal({
           new Map(prevMap.set(id, { ...details, status: "generating" })),
       );
 
-      generateAltText(id, true, customPrompt)
+      const task = generateAltText(id, true, customPrompt)
         .then((alt) => {
+          const attachment = attachments.find(
+            (attachment) => attachment.id === id,
+          );
+          if (attachment) {
+            attachment.alt_text = alt;
+          }
+
           setAltGenerationMap(
             (prevMap) =>
               new Map(
@@ -107,6 +115,8 @@ export default function BulkGenerateModal({
           console.error(error);
         });
 
+      generateTasks.push(task);
+
       // Wait for 1 second before processing the next image to avoid too many requests at once
       // TODO:
       //  Use rate limiting info and implement a better solution
@@ -114,7 +124,10 @@ export default function BulkGenerateModal({
       await sleep(1000);
     }
 
+    await Promise.all(generateTasks);
     setIsGenerating(false);
+
+    document.dispatchEvent(new CustomEvent("altTextsGenerated"));
   };
 
   return (
