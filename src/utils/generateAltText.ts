@@ -5,6 +5,7 @@ export default async (
   attachmentId: number,
   save: boolean = false,
   userPrompt?: string,
+  signal?: AbortSignal,
 ) => {
   const requestData: {
     attachment_id: number;
@@ -25,8 +26,8 @@ export default async (
     headers: {
       "Content-Type": "application/json",
     },
-
     body: JSON.stringify(requestData),
+    signal,
   })
     .then((response) => {
       return response.alt;

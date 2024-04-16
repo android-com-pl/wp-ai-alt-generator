@@ -1,4 +1,4 @@
-import { useEffect, useState } from "@wordpress/element";
+import { useEffect, useRef, useState } from "@wordpress/element";
 import {
   Button,
   Flex,
@@ -27,6 +27,7 @@ export default function BulkGenerateModal({
   const [altGenerationMap, setAltGenerationMap] = useState<AltGenerationMap>(
     new Map(attachmentIds.map((id) => [id, { status: "", alt: "" }])),
   );
+  const abortController = useRef(new AbortController());
 
   useEffect(() => {
     if (!attachments.length) return;
@@ -85,7 +86,12 @@ export default function BulkGenerateModal({
           new Map(prevMap.set(id, { ...details, status: "generating" })),
       );
 
-      const task = generateAltText(id, true, customPrompt)
+      const task = generateAltText(
+        id,
+        true,
+        customPrompt,
+        abortController.current.signal,
+      )
         .then((alt) => {
           const attachment = attachments.find(
             (attachment) => attachment.id === id,
@@ -129,6 +135,12 @@ export default function BulkGenerateModal({
 
     document.dispatchEvent(new CustomEvent("altTextsGenerated"));
   };
+
+  useEffect(() => {
+    return () => {
+      abortController.current.abort();
+    };
+  }, []);
 
   return (
     <Modal
