@@ -9,7 +9,7 @@
 .gitignore
 
 package.json
-package.lock.json
+package-lock.json
 tsconfig.json
 webpack.config.js
 
