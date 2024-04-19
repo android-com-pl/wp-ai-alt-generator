@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@wordpress/scripts": "^27.6.0",
+    "@wordpress/icons": "^9.47.0",
     "ts-dom-utils": "^2.2.0"
   },
   "devDependencies": {
@@ -23,7 +24,6 @@
     "@wordpress/hooks": "^3.55.0",
     "@wordpress/html-entities": "^3.55.0",
     "@wordpress/i18n": "^4.55.0",
-    "@wordpress/icons": "^9.46.0",
     "@wordpress/notices": "^4.23.0"
   }
 }

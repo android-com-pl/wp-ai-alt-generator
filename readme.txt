@@ -1,11 +1,11 @@
 === AI Alt Text Generator for GPT Vision ===
 Contributors: rafaucau
 Donate link: https://github.com/android-com-pl/wp-ai-alt-generator?sponsor=1
-Tags: alt text, accessibility, SEO, GPT-4, GPT-V, OpenAI, image
+Tags: alt text, accessibility, SEO, GPT-4, GPT-V, OpenAI
 Requires at least: 6.3
 Tested up to: 6.5
 Requires PHP: 8.1
-Stable tag: 2.1.0
+Stable tag: 2.1.1
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Plugin URI: https://github.com/android-com-pl/wp-ai-alt-generator
