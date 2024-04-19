@@ -7,7 +7,7 @@ use WP_Error;
 
 class AltGenerator {
 	const API_URL = 'https://api.openai.com/v1/chat/completions';
-	const MODEL   = 'gpt-4-vision-preview';
+	const MODEL   = 'gpt-4-turbo';
 
 	public static function generate_alt_text( int $attachment_id, string $user_prompt = '' ): string|WP_Error {
 		if ( ! wp_attachment_is_image( $attachment_id ) ) {
@@ -48,7 +48,7 @@ class AltGenerator {
 								'role'    => 'system',
 								'content' => apply_filters(
 									'acpl/ai_alt_generator/system_prompt',
-									"Generate a high-quality and concise alt text in $language ($locale) for the provided image without adding any additional comments and text.",
+									"Generate a concise alt text description in $language ($locale) for the provided image, suitable for use as alt attribute in HTML. The response should be the alt text only, without any additional comments, prefixes, or text.",
 									$attachment_id,
 									$locale,
 									$language
