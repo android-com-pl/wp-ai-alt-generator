@@ -48,7 +48,7 @@ class AltGenerator {
 								'role'    => 'system',
 								'content' => apply_filters(
 									'acpl/ai_alt_generator/system_prompt',
-									"Generate a high-quality and concise alt text in $language ($locale) for the provided image without adding any additional comments.",
+									"Generate a high-quality and concise alt text in $language ($locale) for the provided image without adding any additional comments and text.",
 									$attachment_id,
 									$locale,
 									$language
