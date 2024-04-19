@@ -4,6 +4,9 @@ on:
     tags:
       - "v*.*.*"
 
+env:
+  WP_DEVTOOL: source-map
+
 jobs:
   deploy:
     name: Deploy to WP.org
