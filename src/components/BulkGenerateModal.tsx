@@ -52,7 +52,11 @@ export default function BulkGenerateModal({
         const thumbnail =
           //@ts-ignore - missing WP types
           attachment.media_details.sizes?.thumbnail ??
-          attachment.media_details.sizes?.[0];
+            attachment.media_details.sizes?.[0] ?? {
+              width: attachment.media_details.width,
+              height: attachment.media_details.height,
+              source_url: attachment.source_url,
+            };
 
         if (thumbnail)
           details.thumbnail = {
