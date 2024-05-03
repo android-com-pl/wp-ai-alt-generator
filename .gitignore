@@ -1,5 +1,12 @@
+# IDE config
 .idea
+.fleet
+.vscode
+
+# Custom wp-env config
+.wp-env.override.json
+
+#
 node_modules
 vendor
 build
-.wp-env.override.json
