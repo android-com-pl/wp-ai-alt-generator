@@ -22,7 +22,7 @@ class Api {
 					'user_prompt'   => [
 						'required'          => false,
 						'type'              => 'string',
-						'sanitize_callback' => 'sanitize_text_field',
+						'sanitize_callback' => 'sanitize_textarea_field',
 					],
 					'save'          => [
 						'required'    => false,

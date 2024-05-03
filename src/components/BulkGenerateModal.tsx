@@ -4,6 +4,7 @@ import {
   Flex,
   FlexItem,
   Modal,
+  TextareaControl,
   TextControl,
   ToggleControl,
 } from "@wordpress/components";
@@ -15,6 +16,7 @@ import BulkGenerationTable from "./BulkGenerationTable";
 import generateAltText from "../utils/generateAltText";
 import sleep from "../utils/sleep";
 import useAttachments from "../hooks/useAttachments";
+import AdditionalPromptControl from "./AdditionalPromptControl";
 
 export default function BulkGenerateModal({
   attachmentIds,
@@ -174,20 +176,8 @@ export default function BulkGenerateModal({
         onChange={setOverwriteExisting}
         disabled={isGenerating}
       />
-      <TextControl
-        label={__(
-          "Additional prompt (optional)",
-          "alt-text-generator-gpt-vision",
-        )}
-        help={__(
-          "Provide additional instructions for AI to tailor the alt text generation, such as including specific keywords for SEO.",
-          "alt-text-generator-gpt-vision",
-        )}
-        placeholder={_x(
-          'e.g. Include terms like "AI", "robotics"',
-          "Additional prompt placeholder",
-          "alt-text-generator-gpt-vision",
-        )}
+
+      <AdditionalPromptControl
         value={customPrompt}
         onChange={setCustomPrompt}
         disabled={isGenerating}
