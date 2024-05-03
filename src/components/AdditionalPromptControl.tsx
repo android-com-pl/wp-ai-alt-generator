@@ -27,7 +27,7 @@ export default function AdditionalPromptControl({
       )}
       style={{
         fieldSizing: "content",
-        maxHeight: "8em",
+        maxBlockSize: "6rlh",
       }}
       {...props}
     />
