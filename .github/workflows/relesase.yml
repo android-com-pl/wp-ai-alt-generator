@@ -17,9 +17,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "npm"
-      - run: npm ci --production
-      - run: npm run build
+          cache: "pnpm"
+      - run: pnpm i --frozen-lockfile --prod
+      - run: pnpm run build
 
       - name: 🐘 Setup PHP
         uses: shivammathur/setup-php@v2

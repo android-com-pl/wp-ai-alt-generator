@@ -1,5 +1,6 @@
 {
   "private": true,
+  "packageManager": "pnpm@9.1.1",
   "scripts": {
     "build": "wp-scripts build",
     "dev": "wp-scripts start",
