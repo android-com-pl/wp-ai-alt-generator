@@ -7,7 +7,7 @@ use WP_Error;
 
 class AltGenerator {
 	const API_URL = 'https://api.openai.com/v1/chat/completions';
-	const MODEL   = 'gpt-4-turbo';
+	const MODEL   = 'gpt-4o';
 
 	public static function generate_alt_text( int $attachment_id, string $user_prompt = '' ): string|WP_Error {
 		if ( ! wp_attachment_is_image( $attachment_id ) ) {
