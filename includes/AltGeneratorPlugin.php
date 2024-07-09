@@ -26,7 +26,12 @@ class AltGeneratorPlugin {
 	}
 
 	public static function get_options(): array|false {
-		return get_option( self::OPTION_NAME );
+		$options = get_option( self::OPTION_NAME );
+		if ( defined( 'ACPL_ALT_GENERATOR_OPENAI_API_KEY' ) ) {
+			$options['api_key'] = ACPL_ALT_GENERATOR_OPENAI_API_KEY;
+		}
+
+		return $options;
 	}
 
 	public static function error_log( WP_Error $error ): WP_Error {

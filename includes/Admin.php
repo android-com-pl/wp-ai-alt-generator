@@ -17,7 +17,9 @@ class Admin {
 			[
 				'type'              => 'array',
 				'sanitize_callback' => function ( $input ) {
-					$input['api_key']       = isset( $input['api_key'] ) ? sanitize_text_field( $input['api_key'] ) : null;
+					if ( ! defined( 'ACPL_ALT_GENERATOR_OPENAI_API_KEY' ) ) {
+						$input['api_key'] = isset( $input['api_key'] ) ? sanitize_text_field( $input['api_key'] ) : null;
+					}
 					$input['auto_generate'] = isset( $input['auto_generate'] ) && $input['auto_generate'];
 					$input['detail']        = isset( $input['detail'] ) ? sanitize_text_field( $input['detail'] ) : 'low';
 
@@ -56,27 +58,38 @@ class Admin {
 			__( 'OpenAI API Key', 'alt-text-generator-gpt-vision' ),
 			function () use ( $options ) {
 				printf(
-					'<input type="password" id="openai_api_key" name="%1$s[api_key]" value="%2$s" class="regular-text" placeholder="sk-..." autocomplete="off"/>',
+					'<input type="password" id="openai_api_key" name="%1$s[api_key]" value="%2$s" class="regular-text" placeholder="sk-..." autocomplete="off" %3$s/>',
 					esc_attr( AltGeneratorPlugin::OPTION_NAME ),
-					esc_attr( $options['api_key'] ?? '' )
+					esc_attr( defined( 'ACPL_ALT_GENERATOR_OPENAI_API_KEY' ) ? '' : ( $options['api_key'] ?? '' ) ),
+					disabled( defined( 'ACPL_ALT_GENERATOR_OPENAI_API_KEY' ), true, false )
 				);
+
+				if ( defined( 'ACPL_ALT_GENERATOR_OPENAI_API_KEY' ) ) {
+					$description = __(
+						'The API key is currently set using the <code>ACPL_ALT_GENERATOR_OPENAI_API_KEY</code> constant in PHP. This field will remain disabled until the constant is removed.',
+						'alt-text-generator-gpt-vision'
+					);
+				} else {
+					$description = sprintf(
+						// translators: %s is for link attributes.
+						__(
+							'Enter your OpenAI API key here. You can find it in your <a href="https://platform.openai.com/api-keys" %s>OpenAI account settings</a>.',
+							'alt-text-generator-gpt-vision'
+						),
+						'target="_blank" rel="noopener noreferrer"'
+					);
+				}
 
 				echo '<p class="description">' .
 					wp_kses(
-						sprintf(
-							// translators: %s is for link attributes.
-							__(
-								'Enter your OpenAI API key here. You can find it in your <a href="https://platform.openai.com/api-keys" %s>OpenAI account settings</a>.',
-								'alt-text-generator-gpt-vision'
-							),
-							'target="_blank" rel="noopener noreferrer"'
-						),
+						$description,
 						[
-							'a' => [
+							'a'    => [
 								'href'   => [],
 								'target' => [],
 								'rel'    => [],
 							],
+							'code' => [],
 						]
 					)
 				. '</p>';
