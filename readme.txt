@@ -1,4 +1,4 @@
-=== AI Alt Text Generator for GPT Vision ===
+=== AI Image Alt Text Generator with GPT-4o ===
 Contributors: rafaucau
 Donate link: https://github.com/android-com-pl/wp-ai-alt-generator?sponsor=1
 Tags: alt text, accessibility, SEO, GPT-V, OpenAI

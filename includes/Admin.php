@@ -66,7 +66,7 @@ class Admin {
 						sprintf(
 							// translators: %s is for link attributes.
 							__(
-								'Enter your OpenAI API key here. You can find it in your <a href="https://platform.openai.com/account/api-keys" %s>OpenAI account settings</a>.',
+								'Enter your OpenAI API key here. You can find it in your <a href="https://platform.openai.com/api-keys" %s>OpenAI account settings</a>.',
 								'alt-text-generator-gpt-vision'
 							),
 							'target="_blank" rel="noopener noreferrer"'
