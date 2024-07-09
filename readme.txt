@@ -36,7 +36,7 @@ By using this plugin, you agree to OpenAI's terms and acknowledge that you have 
 1. Upload the plugin directory to your `/wp-content/plugins/` directory.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
 3. Go to `Settings -> Media` to configure the plugin settings.
-4. Enter your OpenAI API key (you can find it in your [OpenAI account settings](https://platform.openai.com/account/api-keys)).
+4. Enter your OpenAI API key (you can find it in your [OpenAI account settings](https://platform.openai.com/api-keys)).
 5. Alternatively, you can set your API key by defining the `ACPL_ALT_GENERATOR_OPENAI_API_KEY` constant in your wp-config.php file: `define('ACPL_ALT_GENERATOR_OPENAI_API_KEY', 'your-api-key-here');`. When the constant is defined, the API key field in the plugin settings will be disabled.
 
 == Frequently Asked Questions ==
