@@ -5,7 +5,7 @@
  * Plugin URI: https://github.com/android-com-pl/wp-ai-alt-generator
  * Description: Automatically generate alternative text for images using OpenAI's GPT Vision API.
  * Version: 2.3.1
- * Requires at least: 6.3
+ * Requires at least: 6.6
  * Requires PHP: 8.1
  * Author: android.com.pl
  * Author URI: https://android.com.pl/
