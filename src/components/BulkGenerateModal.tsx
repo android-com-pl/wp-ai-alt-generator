@@ -4,11 +4,9 @@ import {
   Flex,
   FlexItem,
   Modal,
-  TextareaControl,
-  TextControl,
   ToggleControl,
 } from "@wordpress/components";
-import { __, _n, _x, sprintf } from "@wordpress/i18n";
+import { __, _n, sprintf } from "@wordpress/i18n";
 import { decodeEntities } from "@wordpress/html-entities";
 
 import type { AltGenerationMap } from "../types";

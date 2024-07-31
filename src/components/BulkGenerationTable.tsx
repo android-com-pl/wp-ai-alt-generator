@@ -41,7 +41,7 @@ export default function BulkGenerationTable({
             Array.from(generationMap, ([id, details]) => (
               <tr key={id}>
                 <td>
-                  <a href={details.source_url} target="_blank">
+                  <a href={details.source_url} target="_blank" style={{lineBreak: "anywhere"}}>
                     <Flex align="start" justify="start">
                       {details.thumbnail && (
                         <img
