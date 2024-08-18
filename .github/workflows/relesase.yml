@@ -6,6 +6,7 @@ on:
 
 env:
   WP_DEVTOOL: source-map
+  HUSKY: 0
 
 jobs:
   deploy:

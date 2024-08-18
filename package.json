@@ -5,12 +5,14 @@
     "build": "wp-scripts build",
     "dev": "wp-scripts start",
     "dev:hot": "wp-scripts start --hot",
-    "format": "prettier 'src/**/*.{js,jsx,ts,tsx,json,yml}' --write",
-    "format:check": "prettier 'src/**/*.{js,jsx,ts,tsx,json,yml}' --check"
+    "format": "prettier 'src/**/*' --ignore-unknown --write",
+    "format:check": "prettier 'src/**/*' --ignore-unknown --check",
+    "prepare": "husky"
   },
   "dependencies": {
     "@wordpress/icons": "^10.5.0",
     "@wordpress/scripts": "^28.5.0",
+    "husky": "^9.1.4",
     "ts-dom-utils": "^2.2.0",
     "typescript": "^5.5.4"
   },
@@ -29,6 +31,7 @@
     "@wordpress/html-entities": "^4.5.0",
     "@wordpress/i18n": "^5.5.0",
     "@wordpress/notices": "^5.5.0",
+    "lint-staged": "^15.2.9",
     "prettier": "^3.3.3",
     "prettier-plugin-organize-imports": "^4.0.0"
   }

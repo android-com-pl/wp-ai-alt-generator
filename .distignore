@@ -8,11 +8,13 @@
 .distignore
 .gitignore
 
+.husky
 package.json
 pnpm-lock.yaml
 tsconfig.json
 webpack.config.js
 .prettierrc.yml
+.lintstagedrc
 
 composer.json
 composer.lock
