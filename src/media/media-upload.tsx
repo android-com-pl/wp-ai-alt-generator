@@ -1,9 +1,9 @@
-import domReady from "@wordpress/dom-ready";
-import { createRoot, useEffect, useState } from "@wordpress/element";
-import { qs } from "ts-dom-utils";
-import BulkGenerateModal from "../components/BulkGenerateModal";
-import { BULK_ACTION_OPTION_VALUE } from "../constants";
-import extendMediaBulkSelect from "./extend/extendMediaBulkSelect";
+import domReady from '@wordpress/dom-ready';
+import { createRoot, useEffect, useState } from '@wordpress/element';
+import { qs } from 'ts-dom-utils';
+import BulkGenerateModal from '../components/BulkGenerateModal';
+import { BULK_ACTION_OPTION_VALUE } from '../constants';
+import extendMediaBulkSelect from './extend/extendMediaBulkSelect';
 
 /**
  * Create a React app that renders a modal for bulk alt text generation when triggered.
@@ -14,7 +14,7 @@ const MediaUploadApp = () => {
 
   /**
    * Grid mode (/wp-admin/upload.php?mode=grid).
-   * 
+   *
    * Listens to `triggerBulkAltGenerateModal` event.
    * This approach allows for loose coupling between the media library extension and the React app, enabling the modal to be opened from outside the React component.
    */
@@ -24,10 +24,10 @@ const MediaUploadApp = () => {
       setIsModalOpen(true);
     };
 
-    document.addEventListener("triggerBulkAltGenerateModal", listener);
+    document.addEventListener('triggerBulkAltGenerateModal', listener);
 
     return () => {
-      document.removeEventListener("triggerBulkAltGenerateModal", listener);
+      document.removeEventListener('triggerBulkAltGenerateModal', listener);
     };
   }, []);
 
@@ -35,26 +35,26 @@ const MediaUploadApp = () => {
    * List mode (/wp-admin/upload.php?mode=list).
    */
   useEffect(() => {
-    const form = qs<HTMLFormElement>("form#posts-filter");
+    const form = qs<HTMLFormElement>('form#posts-filter');
     if (!form) return;
 
     const listener = (e: SubmitEvent) => {
       const formData = new FormData(form);
-      const action = formData.get("action");
+      const action = formData.get('action');
 
       if (action !== BULK_ACTION_OPTION_VALUE) return;
 
       e.preventDefault();
-      const mediaIds = formData.getAll("media[]").map((id) => Number(id));
+      const mediaIds = formData.getAll('media[]').map((id) => Number(id));
       setSelectedMediaIds(mediaIds);
 
       setIsModalOpen(true);
     };
 
-    form.addEventListener("submit", listener);
+    form.addEventListener('submit', listener);
 
     return () => {
-      form.removeEventListener("submit", listener);
+      form.removeEventListener('submit', listener);
     };
   }, []);
 
@@ -69,14 +69,14 @@ const MediaUploadApp = () => {
 domReady(() => {
   extendMediaBulkSelect((ids) => {
     document.dispatchEvent(
-      new CustomEvent("triggerBulkAltGenerateModal", {
+      new CustomEvent('triggerBulkAltGenerateModal', {
         detail: { ids },
       }),
     );
   });
 
-  const reactRoot = document.createElement("div");
-  reactRoot.id = "acpl-bulk-generate-alts-app";
+  const reactRoot = document.createElement('div');
+  reactRoot.id = 'acpl-bulk-generate-alts-app';
   document.body.appendChild(reactRoot);
   createRoot(reactRoot).render(<MediaUploadApp />);
 });

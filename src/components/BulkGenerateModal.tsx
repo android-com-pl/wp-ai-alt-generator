@@ -1,31 +1,30 @@
-import { useEffect, useRef, useState } from "@wordpress/element";
 import {
   Button,
   Flex,
   FlexItem,
   Modal,
   ToggleControl,
-} from "@wordpress/components";
-import { __, _n, sprintf } from "@wordpress/i18n";
-import { decodeEntities } from "@wordpress/html-entities";
-
-import type { AltGenerationMap } from "../types";
-import BulkGenerationTable from "./BulkGenerationTable";
-import generateAltText from "../utils/generateAltText";
-import sleep from "../utils/sleep";
-import useAttachments from "../hooks/useAttachments";
-import AdditionalPromptControl from "./AdditionalPromptControl";
+} from '@wordpress/components';
+import { useEffect, useRef, useState } from '@wordpress/element';
+import { decodeEntities } from '@wordpress/html-entities';
+import { __, _n, sprintf } from '@wordpress/i18n';
+import useAttachments from '../hooks/useAttachments';
+import type { AltGenerationMap } from '../types';
+import generateAltText from '../utils/generateAltText';
+import sleep from '../utils/sleep';
+import AdditionalPromptControl from './AdditionalPromptControl';
+import BulkGenerationTable from './BulkGenerationTable';
 
 export default function BulkGenerateModal({
   attachmentIds,
   onClose,
 }: BulkGenerateModalProps) {
   const [overwriteExisting, setOverwriteExisting] = useState(false);
-  const [customPrompt, setCustomPrompt] = useState("");
+  const [customPrompt, setCustomPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const { attachments, hasResolved } = useAttachments(attachmentIds);
   const [altGenerationMap, setAltGenerationMap] = useState<AltGenerationMap>(
-    new Map(attachmentIds.map((id) => [id, { status: "", alt: "" }])),
+    new Map(attachmentIds.map((id) => [id, { status: '', alt: '' }])),
   );
   const abortController = useRef(new AbortController());
 
@@ -39,7 +38,7 @@ export default function BulkGenerateModal({
         const details = newMap.get(attachment.id);
         if (!details) {
           console.error(
-            "Generation details not found for attachment",
+            'Generation details not found for attachment',
             attachment,
           );
           return;
@@ -80,14 +79,14 @@ export default function BulkGenerateModal({
       if (!overwriteExisting && details.alt.length > 0) {
         setAltGenerationMap(
           (prevMap) =>
-            new Map(prevMap.set(id, { ...details, status: "skipped" })),
+            new Map(prevMap.set(id, { ...details, status: 'skipped' })),
         );
         continue;
       }
 
       setAltGenerationMap(
         (prevMap) =>
-          new Map(prevMap.set(id, { ...details, status: "generating" })),
+          new Map(prevMap.set(id, { ...details, status: 'generating' })),
       );
 
       const task = generateAltText(
@@ -107,7 +106,7 @@ export default function BulkGenerateModal({
           setAltGenerationMap(
             (prevMap) =>
               new Map(
-                prevMap.set(id, { ...details, alt, status: "generated" }),
+                prevMap.set(id, { ...details, alt, status: 'generated' }),
               ),
           );
         })
@@ -117,7 +116,7 @@ export default function BulkGenerateModal({
               new Map(
                 prevMap.set(id, {
                   ...details,
-                  status: "error",
+                  status: 'error',
                   message: error.message,
                 }),
               ),
@@ -137,7 +136,7 @@ export default function BulkGenerateModal({
     await Promise.all(generateTasks);
     setIsGenerating(false);
 
-    document.dispatchEvent(new CustomEvent("altTextsGenerated"));
+    document.dispatchEvent(new CustomEvent('altTextsGenerated'));
   };
 
   useEffect(() => {
@@ -148,26 +147,26 @@ export default function BulkGenerateModal({
 
   return (
     <Modal
-      title={__("Generate Alternative Texts", "alt-text-generator-gpt-vision")}
+      title={__('Generate Alternative Texts', 'alt-text-generator-gpt-vision')}
       onRequestClose={onClose}
       shouldCloseOnClickOutside={false}
       shouldCloseOnEsc={!isGenerating}
-      style={{ maxWidth: "48rem" }}
+      style={{ maxWidth: '48rem' }}
     >
       <ToggleControl
         label={__(
-          "Overwrite existing alternative texts",
-          "alt-text-generator-gpt-vision",
+          'Overwrite existing alternative texts',
+          'alt-text-generator-gpt-vision',
         )}
         help={
           overwriteExisting
             ? __(
-                "The existing alternative texts will be overwritten with the new ones.",
-                "alt-text-generator-gpt-vision",
+                'The existing alternative texts will be overwritten with the new ones.',
+                'alt-text-generator-gpt-vision',
               )
             : __(
-                "The existing alternative texts will be preserved.",
-                "alt-text-generator-gpt-vision",
+                'The existing alternative texts will be preserved.',
+                'alt-text-generator-gpt-vision',
               )
         }
         checked={overwriteExisting}
@@ -190,10 +189,10 @@ export default function BulkGenerateModal({
         <p>
           {sprintf(
             _n(
-              "%d image selected",
-              "%d images selected",
+              '%d image selected',
+              '%d images selected',
               attachmentIds.length,
-              "alt-text-generator-gpt-vision",
+              'alt-text-generator-gpt-vision',
             ),
             attachmentIds.length,
           )}
@@ -202,7 +201,7 @@ export default function BulkGenerateModal({
         <FlexItem>
           <Flex justify="end">
             <Button onClick={onClose} isDestructive>
-              {__("Cancel", "alt-text-generator-gpt-vision")}
+              {__('Cancel', 'alt-text-generator-gpt-vision')}
             </Button>
 
             <Button
@@ -211,7 +210,7 @@ export default function BulkGenerateModal({
               isBusy={isGenerating}
               onClick={handleStart}
             >
-              {__("Start", "alt-text-generator-gpt-vision")}
+              {__('Start', 'alt-text-generator-gpt-vision')}
             </Button>
           </Flex>
         </FlexItem>

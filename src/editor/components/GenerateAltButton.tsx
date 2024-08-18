@@ -1,10 +1,9 @@
-import { Button } from "@wordpress/components";
-import { __, sprintf } from "@wordpress/i18n";
-import { useState } from "@wordpress/element";
-import { useDispatch } from "@wordpress/data";
-import { store as noticesStore } from "@wordpress/notices";
-
-import generateAltText from "../../utils/generateAltText";
+import { Button } from '@wordpress/components';
+import { useDispatch } from '@wordpress/data';
+import { useState } from '@wordpress/element';
+import { __, sprintf } from '@wordpress/i18n';
+import { store as noticesStore } from '@wordpress/notices';
+import generateAltText from '../../utils/generateAltText';
 
 export default ({
   attributes,
@@ -21,8 +20,8 @@ export default ({
       attributes.alt.length &&
       !confirm(
         __(
-          "Are you sure you want to overwrite the existing alt text?",
-          "alt-text-generator-gpt-vision",
+          'Are you sure you want to overwrite the existing alt text?',
+          'alt-text-generator-gpt-vision',
         ),
       )
     ) {
@@ -36,10 +35,10 @@ export default ({
       setAttributes({ alt });
 
       await createSuccessNotice(
-        __("Alternative text generated", "alt-text-generator-gpt-vision"),
+        __('Alternative text generated', 'alt-text-generator-gpt-vision'),
         {
-          type: "snackbar",
-          id: "alt-text-generated",
+          type: 'snackbar',
+          id: 'alt-text-generated',
         },
       );
       //@ts-ignore
@@ -48,14 +47,14 @@ export default ({
         await createErrorNotice(
           sprintf(
             __(
-              "There was an error generating the alt text: %s",
-              "alt-text-generator-gpt-vision",
+              'There was an error generating the alt text: %s',
+              'alt-text-generator-gpt-vision',
             ),
             error.message,
           ),
           {
-            id: "alt-text-error",
-            type: "default",
+            id: 'alt-text-error',
+            type: 'default',
           },
         );
       }
@@ -71,7 +70,7 @@ export default ({
       isBusy={isGenerating}
       disabled={isGenerating}
     >
-      {__("Generate alternative text", "alt-text-generator-gpt-vision")}
+      {__('Generate alternative text', 'alt-text-generator-gpt-vision')}
     </Button>
   );
 };

@@ -1,5 +1,5 @@
-import apiFetch from "@wordpress/api-fetch";
-import { API_PATH } from "../constants";
+import apiFetch from '@wordpress/api-fetch';
+import { API_PATH } from '../constants';
 
 export default async (
   attachmentId: number,
@@ -22,9 +22,9 @@ export default async (
 
   return apiFetch<{ alt: string; img_id: number }>({
     path: API_PATH,
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(requestData),
     signal,

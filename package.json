@@ -5,7 +5,8 @@
     "build": "wp-scripts build",
     "dev": "wp-scripts start",
     "dev:hot": "wp-scripts start --hot",
-    "format": "wp-scripts format"
+    "format": "prettier 'src/**/*.{js,jsx,ts,tsx,json,yml}' --write",
+    "format:check": "prettier 'src/**/*.{js,jsx,ts,tsx,json,yml}' --check"
   },
   "dependencies": {
     "@wordpress/icons": "^10.5.0",
@@ -27,6 +28,8 @@
     "@wordpress/hooks": "^4.5.0",
     "@wordpress/html-entities": "^4.5.0",
     "@wordpress/i18n": "^5.5.0",
-    "@wordpress/notices": "^5.5.0"
+    "@wordpress/notices": "^5.5.0",
+    "prettier": "^3.3.3",
+    "prettier-plugin-organize-imports": "^4.0.0"
   }
 }

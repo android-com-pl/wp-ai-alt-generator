@@ -12,6 +12,7 @@ package.json
 pnpm-lock.yaml
 tsconfig.json
 webpack.config.js
+.prettierrc.yml
 
 composer.json
 composer.lock

@@ -1,13 +1,13 @@
-import { addFilter } from "@wordpress/hooks";
-import type { ComponentType } from "react";
-import { type BlockEdit } from "@wordpress/block-editor";
-import ImageBlockInspectorControls from "./components/ImageBlockInspectorControls";
+import { type BlockEdit } from '@wordpress/block-editor';
+import { addFilter } from '@wordpress/hooks';
+import type { ComponentType } from 'react';
+import ImageBlockInspectorControls from './components/ImageBlockInspectorControls';
 
 const withGenerateAltButton =
   (BlockEdit: ComponentType) => (props: BlockEdit.Props) => {
     const { name, attributes, setAttributes } = props as ImageBlockProps;
 
-    if (name !== "core/image") {
+    if (name !== 'core/image') {
       return <BlockEdit {...props} />;
     }
 
@@ -23,8 +23,8 @@ const withGenerateAltButton =
   };
 
 addFilter(
-  "editor.BlockEdit",
-  "acpl/ai-alt-generator",
+  'editor.BlockEdit',
+  'acpl/ai-alt-generator',
   withGenerateAltButton,
   20,
 );
