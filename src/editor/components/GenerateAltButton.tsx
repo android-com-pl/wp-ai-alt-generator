@@ -5,19 +5,27 @@ import { __, sprintf } from '@wordpress/i18n';
 import { store as noticesStore } from '@wordpress/notices';
 import generateAltText from '../../utils/generateAltText';
 
+interface GenerateAltButtonProps {
+  imgId: number;
+  currentAlt?: string;
+  onGenerate: (alt: string) => void;
+  customPrompt?: string;
+  saveAltGlobally?: boolean;
+}
+
 export default ({
-  attributes,
-  setAttributes,
-}: {
-  attributes: ImageBlockAttrs;
-  setAttributes: ImageBlockSetAttrs;
-}) => {
+  imgId,
+  currentAlt = '',
+  onGenerate,
+  customPrompt,
+  saveAltGlobally = false,
+}: GenerateAltButtonProps) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const { createSuccessNotice, createErrorNotice } = useDispatch(noticesStore);
 
   const handleClick = async () => {
     if (
-      attributes.alt.length &&
+      currentAlt.length &&
       !confirm(
         __(
           'Are you sure you want to overwrite the existing alt text?',
@@ -31,8 +39,8 @@ export default ({
     try {
       setIsGenerating(true);
 
-      const alt = await generateAltText(attributes.id);
-      setAttributes({ alt });
+      const alt = await generateAltText(imgId, saveAltGlobally, customPrompt);
+      onGenerate(alt);
 
       await createSuccessNotice(
         __('Alternative text generated', 'alt-text-generator-gpt-vision'),

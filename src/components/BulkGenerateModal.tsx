@@ -12,8 +12,8 @@ import useAttachments from '../hooks/useAttachments';
 import type { AltGenerationMap } from '../types';
 import generateAltText from '../utils/generateAltText';
 import sleep from '../utils/sleep';
-import AdditionalPromptControl from './AdditionalPromptControl';
 import BulkGenerationTable from './BulkGenerationTable';
+import CustomPromptControl from './CustomPromptControl';
 
 export default function BulkGenerateModal({
   attachmentIds,
@@ -174,7 +174,7 @@ export default function BulkGenerateModal({
         disabled={isGenerating}
       />
 
-      <AdditionalPromptControl
+      <CustomPromptControl
         value={customPrompt}
         onChange={setCustomPrompt}
         disabled={isGenerating}

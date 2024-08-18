@@ -1,6 +1,8 @@
 import { InspectorControls } from '@wordpress/block-editor';
 import { Panel, PanelBody } from '@wordpress/components';
+import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import CustomPromptControl from '../../components/CustomPromptControl';
 import GenerateAltButton from './GenerateAltButton';
 
 /**
@@ -15,18 +17,26 @@ export default ({
 }) => {
   if (!attributes.id) return null;
 
+  const [customPrompt, setCustomPrompt] = useState('');
+
   return (
     <InspectorControls>
       <Panel>
         <PanelBody
           title={__(
-            'GPT Vision Alt Generator',
+            'AI Alternative Text Generator',
             'alt-text-generator-gpt-vision',
           )}
         >
+          <CustomPromptControl
+            value={customPrompt}
+            onChange={setCustomPrompt}
+          />
           <GenerateAltButton
-            attributes={attributes}
-            setAttributes={setAttributes}
+            imgId={attributes.id}
+            currentAlt={attributes.alt}
+            customPrompt={customPrompt}
+            onGenerate={(alt) => setAttributes({ alt })}
           />
         </PanelBody>
       </Panel>
