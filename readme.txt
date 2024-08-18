@@ -17,7 +17,7 @@ A WordPress plugin that leverages GPT-4o API to automatically generate descripti
 Plugin that uses the OpenAI GPT-4o API to automatically generate alt text for images, either during the upload process or on-demand with a button. It enhances website accessibility and SEO by providing descriptive and relevant image descriptions.
 
 Features:
-- Bulk alt text generation for multiple images at once
+- Bulk alt text generation for multiple images at once in media library and gallery block
 - Manual generation via a button in the image block and media library
 - Configurable automatic alt text generation during the upload process
 
