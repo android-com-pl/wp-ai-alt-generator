@@ -2,7 +2,9 @@ import { qs } from "ts-dom-utils";
 import GenerateAltButon from "./components/GenerateAltButon";
 
 const { wp } = window;
-
+/**
+ * Add generate alt button to media modal.
+ */
 // @ts-ignore - missing types for Attachment
 wp.media.view.Attachment.Details = wp.media.view.Attachment.Details.extend({
   render: function () {

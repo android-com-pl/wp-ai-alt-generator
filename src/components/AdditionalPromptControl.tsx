@@ -26,6 +26,7 @@ export default function AdditionalPromptControl({
         "alt-text-generator-gpt-vision",
       )}
       style={{
+        // @ts-ignore - missing types for fieldSizing
         fieldSizing: "content",
         maxBlockSize: "6rlh",
       }}

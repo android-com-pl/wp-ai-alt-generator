@@ -1,6 +1,9 @@
 import { qs } from "ts-dom-utils";
 import GenerateAltButon from "./components/GenerateAltButon";
 
+/**
+ * Adds generate alt button to media edit page (/wp-admin/post.php?post=[id]&action=edit).
+ */
 (function () {
   const wrapper = qs<HTMLParagraphElement>(".attachment-alt-text");
   if (!wrapper) {

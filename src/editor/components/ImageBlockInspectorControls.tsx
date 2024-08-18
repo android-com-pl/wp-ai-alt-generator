@@ -4,6 +4,9 @@ import { __ } from "@wordpress/i18n";
 
 import GenerateAltButton from "./GenerateAltButton";
 
+/**
+ * Add alt generation panel to image block settings.
+ */
 export default ({
   attributes,
   setAttributes,

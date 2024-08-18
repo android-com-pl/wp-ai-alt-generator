@@ -1,6 +1,11 @@
 import { __ } from "@wordpress/i18n";
 
 /**
+ * Extends WordPress media library with a bulk alt text generation button.
+ * 
+ * Adds a custom button to the media grid view for generating alternative text for multiple selected items.
+ * Adds event listener for `altTextsGenerated` to update the media library after generation without a page reload.
+ * 
  * @param {(selectedIds: number[]) => void} onButtonClick
  */
 export default (onButtonClick) => {

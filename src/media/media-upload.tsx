@@ -5,31 +5,35 @@ import BulkGenerateModal from "../components/BulkGenerateModal";
 import { BULK_ACTION_OPTION_VALUE } from "../constants";
 import extendMediaBulkSelect from "./extend/extendMediaBulkSelect";
 
-const App = () => {
+/**
+ * Create a React app that renders a modal for bulk alt text generation when triggered.
+ */
+const MediaUploadApp = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedMediaIds, setSelectedMediaIds] = useState<number[]>([]);
 
-  // Grid mode
+  /**
+   * Grid mode (/wp-admin/upload.php?mode=grid).
+   * 
+   * Listens to `triggerBulkAltGenerateModal` event.
+   * This approach allows for loose coupling between the media library extension and the React app, enabling the modal to be opened from outside the React component.
+   */
   useEffect(() => {
     const listener = (e: CustomEvent<{ ids: number[] }>) => {
       setSelectedMediaIds(e.detail.ids);
       setIsModalOpen(true);
     };
 
-    document.addEventListener(
-      "triggerBulkAltGenerateModal",
-      listener as EventListener,
-    );
+    document.addEventListener("triggerBulkAltGenerateModal", listener);
 
     return () => {
-      document.removeEventListener(
-        "triggerBulkAltGenerateModal",
-        listener as EventListener,
-      );
+      document.removeEventListener("triggerBulkAltGenerateModal", listener);
     };
   }, []);
 
-  // List mode
+  /**
+   * List mode (/wp-admin/upload.php?mode=list).
+   */
   useEffect(() => {
     const form = qs<HTMLFormElement>("form#posts-filter");
     if (!form) return;
@@ -74,5 +78,5 @@ domReady(() => {
   const reactRoot = document.createElement("div");
   reactRoot.id = "acpl-bulk-generate-alts-app";
   document.body.appendChild(reactRoot);
-  createRoot(reactRoot).render(<App />);
+  createRoot(reactRoot).render(<MediaUploadApp />);
 });

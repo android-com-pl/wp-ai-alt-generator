@@ -1,6 +1,12 @@
+interface BulkAltGenerateModalEvent extends CustomEvent {
+  detail: { ids: number[] };
+}
+
 declare global {
   interface DocumentEventMap {
-    triggerBulkAltGenerateModal: { ids: number[] };
+    triggerBulkAltGenerateModal: BulkAltGenerateModalEvent;
     altTextsGenerated: CustomEvent;
   }
 }
+
+export {}
