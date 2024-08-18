@@ -14,3 +14,5 @@ export interface AltGenerationDetails {
 }
 
 export type AltGenerationMap = Map<number, AltGenerationDetails>;
+
+export type GenerationContext = 'mediaLibrary' | 'editor';

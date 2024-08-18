@@ -9,15 +9,24 @@ import { useEffect, useRef, useState } from '@wordpress/element';
 import { decodeEntities } from '@wordpress/html-entities';
 import { __, _n, sprintf } from '@wordpress/i18n';
 import useAttachments from '../hooks/useAttachments';
-import type { AltGenerationMap } from '../types';
+import { AltGenerationMap, GenerationContext } from '../types';
 import generateAltText from '../utils/generateAltText';
 import sleep from '../utils/sleep';
 import BulkGenerationTable from './BulkGenerationTable';
 import CustomPromptControl from './CustomPromptControl';
 
+export interface BulkGenerateModalProps {
+  attachmentIds: number[];
+  onGenerate?: ({ id, alt }: { id: number; alt: string }) => void;
+  onClose: () => void;
+  context?: GenerationContext;
+}
+
 export default function BulkGenerateModal({
   attachmentIds,
+  onGenerate,
   onClose,
+  context = 'mediaLibrary',
 }: BulkGenerateModalProps) {
   const [overwriteExisting, setOverwriteExisting] = useState(false);
   const [customPrompt, setCustomPrompt] = useState('');
@@ -91,7 +100,7 @@ export default function BulkGenerateModal({
 
       const task = generateAltText(
         id,
-        true,
+        context === 'mediaLibrary',
         customPrompt,
         abortController.current.signal,
       )
@@ -109,6 +118,10 @@ export default function BulkGenerateModal({
                 prevMap.set(id, { ...details, alt, status: 'generated' }),
               ),
           );
+
+          if (onGenerate) {
+            onGenerate({ id, alt });
+          }
         })
         .catch((error) => {
           setAltGenerationMap(
@@ -218,8 +231,3 @@ export default function BulkGenerateModal({
     </Modal>
   );
 }
-
-export type BulkGenerateModalProps = {
-  attachmentIds: number[];
-  onClose: () => void;
-};

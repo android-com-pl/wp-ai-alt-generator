@@ -1,25 +1,38 @@
 import { type BlockEdit } from '@wordpress/block-editor';
 import { addFilter } from '@wordpress/hooks';
 import type { ComponentType } from 'react';
+import GalleryBlockInspectorControls from './components/GalleryBlockInspectorControls';
 import ImageBlockInspectorControls from './components/ImageBlockInspectorControls';
 
 const withGenerateAltButton =
   (BlockEdit: ComponentType) => (props: BlockEdit.Props) => {
-    const { name, attributes, setAttributes } = props as ImageBlockProps;
+    const { clientId, name, attributes, setAttributes } = props as
+      | BlockProps<'*', any>
+      | ImageBlockProps
+      | GalleryBlockProps;
 
-    if (name !== 'core/image') {
-      return <BlockEdit {...props} />;
+    if (name === 'core/image') {
+      return (
+        <>
+          <BlockEdit {...props} />
+          <ImageBlockInspectorControls
+            attributes={attributes}
+            setAttributes={setAttributes}
+          />
+        </>
+      );
     }
 
-    return (
-      <>
-        <BlockEdit {...props} />
-        <ImageBlockInspectorControls
-          attributes={attributes}
-          setAttributes={setAttributes}
-        />
-      </>
-    );
+    if (name === 'core/gallery') {
+      return (
+        <>
+          <BlockEdit {...props} />
+          <GalleryBlockInspectorControls clientId={clientId} />
+        </>
+      );
+    }
+
+    return <BlockEdit {...props} />;
   };
 
 addFilter(
@@ -28,10 +41,3 @@ addFilter(
   withGenerateAltButton,
   20,
 );
-
-type ImageBlockProps = {
-  name: string;
-  attributes: ImageBlockAttrs;
-  setAttributes: ImageBlockSetAttrs;
-  [key: string]: any;
-};
