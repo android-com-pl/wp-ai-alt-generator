@@ -3,6 +3,7 @@ import { Panel, PanelBody } from '@wordpress/components';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import CustomPromptControl from '../../components/CustomPromptControl';
+import SaveAltInMediaLibraryControl from '../../components/SaveAltInMediaLibraryControl';
 import GenerateAltButton from './GenerateAltButton';
 
 /**
@@ -13,18 +14,19 @@ export default ({
   setAttributes,
 }: {
   attributes: ImageBlockAttrs;
-  setAttributes: ImageBlockSetAttrs;
+  setAttributes: ImageBlockProps['setAttributes'];
 }) => {
   if (!attributes.id) return null;
 
   const [customPrompt, setCustomPrompt] = useState('');
+  const [saveAltInMediaLibrary, setSaveAltInMediaLibrary] = useState(false);
 
   return (
     <InspectorControls>
       <Panel>
         <PanelBody
           title={__(
-            'AI Alternative Text Generator',
+            'Alternative Text Generator',
             'alt-text-generator-gpt-vision',
           )}
         >
@@ -32,11 +34,18 @@ export default ({
             value={customPrompt}
             onChange={setCustomPrompt}
           />
+
+          <SaveAltInMediaLibraryControl
+            checked={saveAltInMediaLibrary}
+            onChange={setSaveAltInMediaLibrary}
+          />
+
           <GenerateAltButton
             imgId={attributes.id}
             currentAlt={attributes.alt}
             customPrompt={customPrompt}
             onGenerate={(alt) => setAttributes({ alt })}
+            saveAltInMediaLibrary={saveAltInMediaLibrary}
           />
         </PanelBody>
       </Panel>

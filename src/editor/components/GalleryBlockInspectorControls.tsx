@@ -44,7 +44,7 @@ export default ({ clientId }: GalleryBlockInspectorControlsProps) => {
       <Panel>
         <PanelBody
           title={__(
-            'AI Alternative Text Generator',
+            'Alternative Text Generator',
             'alt-text-generator-gpt-vision',
           )}
         >

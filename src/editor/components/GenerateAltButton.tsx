@@ -10,7 +10,7 @@ interface GenerateAltButtonProps {
   currentAlt?: string;
   onGenerate: (alt: string) => void;
   customPrompt?: string;
-  saveAltGlobally?: boolean;
+  saveAltInMediaLibrary?: boolean;
 }
 
 export default ({
@@ -18,7 +18,7 @@ export default ({
   currentAlt = '',
   onGenerate,
   customPrompt,
-  saveAltGlobally = false,
+  saveAltInMediaLibrary = false,
 }: GenerateAltButtonProps) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const { createSuccessNotice, createErrorNotice } = useDispatch(noticesStore);
@@ -39,7 +39,11 @@ export default ({
     try {
       setIsGenerating(true);
 
-      const alt = await generateAltText(imgId, saveAltGlobally, customPrompt);
+      const alt = await generateAltText(
+        imgId,
+        saveAltInMediaLibrary,
+        customPrompt,
+      );
       onGenerate(alt);
 
       await createSuccessNotice(

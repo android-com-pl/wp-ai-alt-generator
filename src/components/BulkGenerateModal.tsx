@@ -14,6 +14,7 @@ import generateAltText from '../utils/generateAltText';
 import sleep from '../utils/sleep';
 import BulkGenerationTable from './BulkGenerationTable';
 import CustomPromptControl from './CustomPromptControl';
+import SaveAltInMediaLibraryControl from './SaveAltInMediaLibraryControl';
 
 export interface BulkGenerateModalProps {
   attachmentIds: number[];
@@ -30,6 +31,9 @@ export default function BulkGenerateModal({
 }: BulkGenerateModalProps) {
   const [overwriteExisting, setOverwriteExisting] = useState(false);
   const [customPrompt, setCustomPrompt] = useState('');
+  const [saveAltInMediaLibrary, setSaveAltInMediaLibrary] = useState(
+    context === 'mediaLibrary',
+  );
   const [isGenerating, setIsGenerating] = useState(false);
   const { attachments, hasResolved } = useAttachments(attachmentIds);
   const [altGenerationMap, setAltGenerationMap] = useState<AltGenerationMap>(
@@ -100,7 +104,7 @@ export default function BulkGenerateModal({
 
       const task = generateAltText(
         id,
-        context === 'mediaLibrary',
+        saveAltInMediaLibrary,
         customPrompt,
         abortController.current.signal,
       )
@@ -166,6 +170,12 @@ export default function BulkGenerateModal({
       shouldCloseOnEsc={!isGenerating}
       style={{ maxWidth: '48rem' }}
     >
+      <CustomPromptControl
+        value={customPrompt}
+        onChange={setCustomPrompt}
+        disabled={isGenerating}
+      />
+
       <ToggleControl
         label={__(
           'Overwrite existing alternative texts',
@@ -187,11 +197,13 @@ export default function BulkGenerateModal({
         disabled={isGenerating}
       />
 
-      <CustomPromptControl
-        value={customPrompt}
-        onChange={setCustomPrompt}
-        disabled={isGenerating}
-      />
+      {context === 'editor' && (
+        <SaveAltInMediaLibraryControl
+          checked={saveAltInMediaLibrary}
+          onChange={setSaveAltInMediaLibrary}
+          disabled={isGenerating}
+        />
+      )}
 
       <BulkGenerationTable
         loading={hasResolved}
