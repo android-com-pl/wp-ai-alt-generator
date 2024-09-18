@@ -5,7 +5,12 @@ namespace ACPL\AIAltGenerator;
 use WP_Error;
 
 class AltGeneratorPlugin {
-	public const OPTION_NAME = 'acpl_ai_alt_generator';
+	public const OPTION_NAME      = 'acpl_ai_alt_generator';
+	public const DEFAULT_MODEL    = 'gpt-4o';
+	public const SUPPORTED_MODELS = [
+		'gpt-4o',
+		'gpt-4o-mini',
+	];
 
 	public function __construct() {
 		add_filter( 'wp_generate_attachment_metadata', [ AltGenerator::class, 'on_attachment_upload' ], 10, 3 );

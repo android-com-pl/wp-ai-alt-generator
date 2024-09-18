@@ -23,10 +23,27 @@ class Admin {
 					$input['auto_generate'] = isset( $input['auto_generate'] ) && $input['auto_generate'];
 					$input['detail']        = isset( $input['detail'] ) ? sanitize_text_field( $input['detail'] ) : 'low';
 
+					// Sanitize and validate the model.
+					if ( isset( $input['model'] ) && in_array( $input['model'], AltGeneratorPlugin::SUPPORTED_MODELS, true ) ) {
+						$input['model'] = sanitize_text_field( $input['model'] );
+					} else {
+						$input['model'] = AltGeneratorPlugin::DEFAULT_MODEL;
+						add_settings_error(
+							AltGeneratorPlugin::OPTION_NAME,
+							'invalid_model',
+							sprintf(
+								// translators: %s is for model name.
+								__( 'Invalid model selected. Default model (%s) has been set.', 'alt-text-generator-gpt-vision' ),
+								AltGeneratorPlugin::DEFAULT_MODEL
+							)
+						);
+					}
+
 					return $input;
 				},
 				'default'           => [
 					'api_key'       => null,
+					'model'         => AltGeneratorPlugin::DEFAULT_MODEL,
 					'auto_generate' => false,
 					'detail'        => 'low',
 				],
@@ -98,6 +115,32 @@ class Admin {
 			self::SETTINGS_SECTION_ID,
 			[
 				'label_for' => 'openai_api_key',
+			]
+		);
+
+		add_settings_field(
+			'acpl_ai_alt_generator_model',
+			__( 'Model', 'alt-text-generator-gpt-vision' ),
+			function () use ( $options ) {
+				printf( '<select id="model" name="%s[model]">', esc_attr( AltGeneratorPlugin::OPTION_NAME ) );
+				foreach ( AltGeneratorPlugin::SUPPORTED_MODELS as $model ) {
+					printf(
+						'<option value="%s" %s>%s</option>',
+						esc_attr( $model ),
+						selected( $options['model'] ?? AltGeneratorPlugin::DEFAULT_MODEL, $model, false ),
+						esc_html( $model )
+					);
+				}
+				echo '</select>';
+
+				echo '<p class="description">' .
+					esc_html__( 'Select the OpenAI model to use for generating alt text. Different models may have varying capabilities and costs.', 'alt-text-generator-gpt-vision' ) .
+					'</p>';
+			},
+			'media',
+			self::SETTINGS_SECTION_ID,
+			[
+				'label_for' => 'model',
 			]
 		);
 
