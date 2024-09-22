@@ -5,7 +5,7 @@ Tags: alt text, accessibility, SEO, GPT-V, OpenAI
 Requires at least: 6.6
 Tested up to: 6.6
 Requires PHP: 8.1
-Stable tag: 2.5.0
+Stable tag: 2.5.1
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Plugin URI: https://github.com/android-com-pl/wp-ai-alt-generator
@@ -30,6 +30,10 @@ Before using this plugin, please review OpenAI's terms of use and privacy policy
 - OpenAI Privacy Policy: [https://openai.com/policies/privacy-policy](https://openai.com/policies/privacy-policy)
 
 By using this plugin, you agree to OpenAI's terms and acknowledge that you have understood OpenAI's privacy policy.
+
+== For Developers ==
+
+ You can read about the available hooks here: [https://github.com/android-com-pl/wp-ai-alt-generator?tab=readme-ov-file#for-developers](https://github.com/android-com-pl/wp-ai-alt-generator?tab=readme-ov-file#for-developers)
 
 == Installation ==
 

@@ -21,11 +21,80 @@ composer require wpackagist-plugin/alt-text-generator-gpt-vision
 
 ![Generating manually](https://github.com/android-com-pl/wp-ai-alt-generator/assets/25438601/0474e485-1149-4307-b229-5c973451e89a)
 
-![Automatically generating on upload](https://github.com/android-com-pl/wp-ai-alt-generator/assets/25438601/d68179ad-4ed4-43b6-8d52-b2eeeb4b2534)
+## For Developers
+
+### Filters
+
+#### `acpl/ai_alt_generator/system_prompt`
+
+Modifies the system prompt.
+
+**Parameters:**
+- `string $system_prompt`
+- `int $attachment_id`
+- `string $locale` - The current WordPress locale.
+- `string $language` - The display name of the current WordPress language.
+
+**Usage:**
+```php
+add_filter('acpl/ai_alt_generator/system_prompt', function($system_prompt, $attachment_id, $locale, $language) {
+    // Modify the system prompt here
+    return $system_prompt;
+}, 10, 4);
+```
+
+#### `acpl/ai_alt_generator/user_prompt`
+
+Modifies the user prompt.
+
+**Parameters:**
+- `string $user_prompt`
+- `int $attachment_id`
+- `string $locale` - The current WordPress locale.
+- `string $language` - The display name of the current WordPress language.
+
+**Usage:**
+```php
+add_filter('acpl/ai_alt_generator/user_prompt', function($user_prompt, $attachment_id, $locale, $language) {
+    // Modify the user prompt here
+    return $user_prompt;
+}, 10, 4);
+```
+
+#### `acpl/ai_alt_generator/api_url`
+
+Modifies the API URL used for generating alt text.
+
+**Parameters:**
+- `string $api_url` - Default: https://api.openai.com/v1/chat/completions
+
+**Usage:**
+```php
+add_filter('acpl/ai_alt_generator/api_url', function($api_url) {
+    // Modify the API URL here
+    return $api_url;
+});
+```
+
+#### `acpl/ai_alt_generator/api_request_headers`
+
+Modifies the request headers sent to the OpenAI API.
+
+**Parameters:**
+- `array $request_headers`
+- `string $api_key`
+- `int $attachment_id`
+
+#### `acpl/ai_alt_generator/api_request_body`
+
+Modifies the request body sent to the OpenAI API.
+
+**Parameters:**
+- `array $request_body`
+- `int $attachment_id`
 
 ## Contributing
 
-Pull requests are welcomed!
 If you would like to contribute to the development of this plugin, please follow these steps:
 
 1. Fork the Repository: Start by forking the GitHub repository to your own account.
