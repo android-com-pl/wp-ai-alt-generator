@@ -31,6 +31,10 @@ Before using this plugin, please review OpenAI's terms of use and privacy policy
 
 By using this plugin, you agree to OpenAI's terms and acknowledge that you have understood OpenAI's privacy policy.
 
+== For Developers ==
+
+ You can read about the available hooks here: [https://github.com/android-com-pl/wp-ai-alt-generator?tab=readme-ov-file#for-developers](https://github.com/android-com-pl/wp-ai-alt-generator?tab=readme-ov-file#for-developers)
+
 == Installation ==
 
 1. Upload the plugin directory to your `/wp-content/plugins/` directory.
