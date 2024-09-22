@@ -6,8 +6,6 @@ use ACPL\AIAltGenerator\Enum\ErrorCodes;
 use WP_Error;
 
 class AltGenerator {
-	const API_URL = 'https://api.openai.com/v1/chat/completions';
-
 	public static function generate_alt_text( int $attachment_id, string $user_prompt = '' ): string|WP_Error {
 		if ( ! wp_attachment_is_image( $attachment_id ) ) {
 			return ErrorCodes::Not_image->to_wp_error( [ 'attachment_id' => $attachment_id ] );
@@ -31,52 +29,61 @@ class AltGenerator {
 		}
 
 		$api_response = wp_remote_post(
-			self::API_URL,
+			self::get_api_url(),
 			[
-				'headers'     => [
-					'Content-Type'  => 'application/json',
-					'Authorization' => "Bearer $api_key",
-				],
+				'headers'     => apply_filters(
+					'acpl/ai_alt_generator/api_request_headers',
+					[
+						'Content-Type'  => 'application/json',
+						'Authorization' => "Bearer $api_key",
+					],
+					$api_key,
+					$attachment_id
+				),
 				'timeout'     => 90,
 				'httpversion' => '1.1',
 				'body'        => json_encode(
-					[
-						'model'      => $options['model'] ?? AltGeneratorPlugin::DEFAULT_MODEL,
-						'messages'   => [
-							[
-								'role'    => 'system',
-								'content' => apply_filters(
-									'acpl/ai_alt_generator/system_prompt',
-									"Generate a concise alt text description in $language ($locale) for the provided image, suitable for use as alt attribute in HTML. The response should be the alt text only, without any additional comments, prefixes, or text.",
-									$attachment_id,
-									$locale,
-									$language
-								),
-							],
-							[
-								'role'    => 'user',
-								'content' => [
-									[
-										'type' => 'text',
-										'text' => apply_filters(
-											'acpl/ai_alt_generator/user_prompt',
-											$user_prompt,
-											$attachment_id,
-											$locale,
-											$language
-										),
-									],
-									[
-										'type'      => 'image_url',
-										'image_url' => [
-											'url' => "data:$image_mime_type;base64,$image_base64",
+					apply_filters(
+						'acpl/ai_alt_generator/api_request_body',
+						[
+							'model'      => $options['model'] ?? AltGeneratorPlugin::DEFAULT_MODEL,
+							'messages'   => [
+								[
+									'role'    => 'system',
+									'content' => apply_filters(
+										'acpl/ai_alt_generator/system_prompt',
+										"Generate a concise alt text description in $language ($locale) for the provided image, suitable for use as alt attribute in HTML. The response should be the alt text only, without any additional comments, prefixes, or text.",
+										$attachment_id,
+										$locale,
+										$language
+									),
+								],
+								[
+									'role'    => 'user',
+									'content' => [
+										[
+											'type' => 'text',
+											'text' => apply_filters(
+												'acpl/ai_alt_generator/user_prompt',
+												$user_prompt,
+												$attachment_id,
+												$locale,
+												$language
+											),
+										],
+										[
+											'type'      => 'image_url',
+											'image_url' => [
+												'url' => "data:$image_mime_type;base64,$image_base64",
+											],
 										],
 									],
 								],
 							],
+							'max_tokens' => 300,
 						],
-						'max_tokens' => 300,
-					]
+						$attachment_id
+					)
 				),
 			]
 		);
@@ -96,6 +103,11 @@ class AltGenerator {
 		}
 
 		return $completion['choices'][0]['message']['content'] ?? '';
+	}
+
+	public static function get_api_url() {
+		// Using this filter allows users to change the API address to, for example, a custom proxy
+		return apply_filters( 'acpl/ai_alt_generator/api_url', 'https://api.openai.com/v1/chat/completions' );
 	}
 
 	public static function generate_and_set_alt_text( int $attachment_id, string $user_prompt = '' ): string|WP_Error|null {
