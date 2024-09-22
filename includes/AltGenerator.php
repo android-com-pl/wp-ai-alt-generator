@@ -105,7 +105,7 @@ class AltGenerator {
 		return $completion['choices'][0]['message']['content'] ?? '';
 	}
 
-	public static function get_api_url() {
+	public static function get_api_url(): string {
 		// Using this filter allows users to change the API address to, for example, a custom proxy.
 		return apply_filters( 'acpl/ai_alt_generator/api_url', 'https://api.openai.com/v1/chat/completions' );
 	}
