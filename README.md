@@ -20,6 +20,7 @@ composer require wpackagist-plugin/alt-text-generator-gpt-vision
 ## Screenshots
 
 ![Generating manually](https://github.com/android-com-pl/wp-ai-alt-generator/assets/25438601/0474e485-1149-4307-b229-5c973451e89a)
+![Bulk generation](./.wordpress-org/screenshot-1.png)
 
 ## For Developers
 
