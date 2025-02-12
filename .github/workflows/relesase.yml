@@ -45,6 +45,6 @@ jobs:
       - name: Upload release asset
         uses: softprops/action-gh-release@v2
         with:
-          files: ${{github.workspace}}/${{ env.PLUGIN_SLUG }}.zip
+          files: ${{github.workspace}}/${{ vars.PLUGIN_SLUG }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
