@@ -46,13 +46,32 @@ class AltGenerator {
 					apply_filters(
 						'acpl/ai_alt_generator/api_request_body',
 						[
-							'model'      => $options['model'] ?? AltGeneratorPlugin::DEFAULT_MODEL,
-							'messages'   => [
+							'model'           => $options['model'] ?? AltGeneratorPlugin::DEFAULT_MODEL,
+							'messages'        => [
 								[
 									'role'    => 'system',
 									'content' => apply_filters(
 										'acpl/ai_alt_generator/system_prompt',
-										"Generate a concise alt text description in $language ($locale) for the provided image, suitable for use as alt attribute in HTML. The response should be the alt text only, without any additional comments, prefixes, or text.",
+										<<<EOT
+										You are an alt text generator for HTML img tags. Default settings (unless overridden by user prompt):
+										- Language: {$language} ({$locale})
+										- Style: clear and informative, balancing detail with brevity
+										- Focus: 
+										  * Main subject with its key distinguishing features
+										  * Essential context or setting
+										  * Important visual elements that affect meaning
+										  * Keep it concise - aim for one clear, descriptive sentence
+										- Format: informative but brief description (note: phrases like 'Image of' are typically redundant for screen readers but can be included if user requests)
+										- Purpose: help users understand the image's content quickly through screen readers and SEO
+										- Technical: return just the alt text content - no HTML tags, no quotes, no additional formatting or commentary
+										
+										Follow the user's prompt first - they can override any of these defaults. If the user specifies different requirements (language, style, focus, format, etc.), use those instead.
+										
+										Always return response in the structured format with:
+										- success: boolean
+										- alt_text: string (just the clean alt text content)
+										- failure_reason: string or null (in the same language as alt_text)
+										EOT,
 										$attachment_id,
 										$locale,
 										$language
@@ -80,7 +99,33 @@ class AltGenerator {
 									],
 								],
 							],
-							'max_tokens' => 300,
+							'response_format' => [
+								'type'        => 'json_schema',
+								'json_schema' => [
+									'name'   => 'alt_text_response',
+									'schema' => [
+										'type'       => 'object',
+										'properties' => [
+											'success'  => [
+												'type' => 'boolean',
+												'description' => 'Whether the alt text was successfully generated',
+											],
+											'alt_text' => [
+												'type' => 'string',
+												'description' => 'The generated alt text',
+											],
+											'failure_reason' => [
+												'type' => [ 'string', 'null' ],
+												'description' => 'Reason why alt text could not be generated, if applicable',
+											],
+										],
+										'required'   => [ 'success', 'alt_text', 'failure_reason' ],
+										'additionalProperties' => false,
+									],
+									'strict' => true,
+								],
+							],
+							'max_tokens'      => 300,
 						],
 						$attachment_id
 					)
@@ -102,7 +147,39 @@ class AltGenerator {
 			);
 		}
 
-		return $completion['choices'][0]['message']['content'] ?? '';
+		$choice = $completion['choices'][0]['message'];
+		if ( ! is_null( $choice['refusal'] ) ) {
+			return new WP_Error(
+				'openai_refusal',
+				sprintf(
+					/* translators: %s is the refusal message from OpenAI's API */
+					__( 'AI refused to generate alt text: %s', 'alt-text-generator-gpt-vision' ),
+					$choice['refusal']
+				)
+			);
+		}
+
+		$content = $completion['choices'][0]['message']['content'] ?? '';
+		if ( empty( $content ) ) {
+			return new WP_Error(
+				'empty_response',
+				__( 'Received empty response from OpenAI API', 'alt-text-generator-gpt-vision' )
+			);
+		}
+
+		$structured_response = json_decode( $content, true );
+		if ( ! $structured_response['success'] ) {
+			return new WP_Error(
+				'generation_failed',
+				sprintf(
+					/* translators: %s is the failure reason */
+					__( 'Failed to generate alt text: %s', 'alt-text-generator-gpt-vision' ),
+					$structured_response['failure_reason'] ?? __( 'Unknown reason', 'alt-text-generator-gpt-vision' )
+				)
+			);
+		}
+
+		return $structured_response['alt_text'];
 	}
 
 	public static function get_api_url(): string {
