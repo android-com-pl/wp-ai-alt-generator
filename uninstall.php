@@ -10,3 +10,4 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 require __DIR__ . '/vendor/autoload.php';
 
 delete_option( AltGeneratorPlugin::OPTION_NAME );
+delete_option( AltGeneratorPlugin::DB_VERSION_OPTION_NAME);

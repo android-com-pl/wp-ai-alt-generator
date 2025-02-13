@@ -12,6 +12,9 @@ class AltGeneratorPlugin {
 		'gpt-4o-mini',
 	];
 
+	public const DB_VERSION_OPTION_NAME = 'acpl_ai_alt_generator_db_version';
+	public const DB_VERSION             = '1.0.0';
+
 	public function __construct() {
 		add_filter( 'wp_generate_attachment_metadata', [ AltGenerator::class, 'on_attachment_upload' ], 10, 3 );
 		add_action( 'rest_api_init', [ ( new Api() ), 'register_routes' ] );
@@ -26,9 +29,9 @@ class AltGeneratorPlugin {
 			fn( $actions ) => $actions + [ 'generate_alt_text' => __( 'Generate Alternative Text', 'alt-text-generator-gpt-vision' ) ]
 		);
 
+		add_action( 'admin_init', [ $this, 'maybe_upgrade_plugin_data' ] );
 		add_action( 'activated_plugin', [ $this,'redirect_to_plugin_settings_after_activation' ] );
 		add_filter( 'plugin_row_meta', [ $this, 'plugin_row_meta' ], 10, 2 );
-		add_action( 'upgrader_process_complete', [ $this, 'on_plugin_update' ], 10, 2 );
 	}
 
 	public static function get_options(): array|false {
@@ -38,6 +41,23 @@ class AltGeneratorPlugin {
 		}
 
 		return $options;
+	}
+
+	public static function get_db_version(): string {
+		return get_option( self::DB_VERSION_OPTION_NAME, '0' );
+	}
+
+	public function maybe_upgrade_plugin_data(): void {
+		if ( version_compare( self::get_db_version(), '1.0.0', '<' ) ) {
+			$options = self::get_options();
+
+			if ( $options && isset( $options['model'] ) && ! in_array( $options['model'], self::SUPPORTED_MODELS, true ) ) {
+				$options['model'] = self::DEFAULT_MODEL;
+				update_option( self::OPTION_NAME, $options, false );
+			}
+
+			update_option( self::DB_VERSION_OPTION_NAME, self::DB_VERSION, true );
+		}
 	}
 
 	public static function error_log( WP_Error $error ): WP_Error {
@@ -103,26 +123,5 @@ class AltGeneratorPlugin {
 		}
 
 		return $plugin_meta;
-	}
-
-	public function on_plugin_update( $upgrader, array $options ): void {
-		if ( $options['action'] !== 'update' || $options['type'] !== 'plugin' ) {
-			return;
-		}
-
-		$current_plugin = plugin_basename( ACPL_AI_ALT_PLUGIN_FILE );
-		if ( ! isset( $options['plugins'] ) || ! in_array( $current_plugin, (array) $options['plugins'], true ) ) {
-			return;
-		}
-
-		$plugin_options = self::get_options();
-		if ( ! $plugin_options || ! isset( $plugin_options['model'] ) ) {
-			return;
-		}
-
-		if ( ! in_array( $plugin_options['model'], self::SUPPORTED_MODELS, true ) ) {
-			$plugin_options['model'] = self::DEFAULT_MODEL;
-			update_option( self::OPTION_NAME, $plugin_options );
-		}
 	}
 }
