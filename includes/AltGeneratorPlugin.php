@@ -28,6 +28,7 @@ class AltGeneratorPlugin {
 
 		add_action( 'activated_plugin', [ $this,'redirect_to_plugin_settings_after_activation' ] );
 		add_filter( 'plugin_row_meta', [ $this, 'plugin_row_meta' ], 10, 2 );
+		add_action( 'upgrade_process_complete', [ $this, 'on_plugin_update' ], 10, 2 );
 	}
 
 	public static function get_options(): array|false {
@@ -102,5 +103,26 @@ class AltGeneratorPlugin {
 		}
 
 		return $plugin_meta;
+	}
+
+	public function on_plugin_update( $upgrader, array $options ): void {
+		if ( $options['action'] !== 'update' || $options['type'] !== 'plugin' ) {
+			return;
+		}
+
+		$current_plugin = plugin_basename( ACPL_AI_ALT_PLUGIN_FILE );
+		if ( ! isset( $options['plugins'] ) || ! in_array( $current_plugin, (array) $options['plugins'], true ) ) {
+			return;
+		}
+
+		$plugin_options = self::get_options();
+		if ( ! $plugin_options || ! isset( $plugin_options['model'] ) ) {
+			return;
+		}
+
+		if ( ! in_array( $plugin_options['model'], self::SUPPORTED_MODELS, true ) ) {
+			$plugin_options['model'] = self::DEFAULT_MODEL;
+			update_option( self::OPTION_NAME, $plugin_options );
+		}
 	}
 }
