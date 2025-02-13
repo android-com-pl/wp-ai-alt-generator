@@ -20,6 +20,7 @@
         <exclude name="WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode"/>
         <exclude name="WordPress.WP.AlternativeFunctions.json_encode_json_encode"/>
         <exclude name="WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents"/>
+        <exclude name="WordPress.PHP.YodaConditions"/>
     </rule>
 
     <rule ref="WordPress.Files.FileName">
