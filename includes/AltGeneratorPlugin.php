@@ -28,7 +28,7 @@ class AltGeneratorPlugin {
 
 		add_action( 'activated_plugin', [ $this,'redirect_to_plugin_settings_after_activation' ] );
 		add_filter( 'plugin_row_meta', [ $this, 'plugin_row_meta' ], 10, 2 );
-		add_action( 'upgrade_process_complete', [ $this, 'on_plugin_update' ], 10, 2 );
+		add_action( 'upgrader_process_complete', [ $this, 'on_plugin_update' ], 10, 2 );
 	}
 
 	public static function get_options(): array|false {
