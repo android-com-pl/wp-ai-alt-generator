@@ -1,8 +1,9 @@
 import { InspectorControls } from '@wordpress/block-editor';
-import { Panel, PanelBody } from '@wordpress/components';
+import { Panel, PanelBody, PanelRow } from '@wordpress/components';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import CustomPromptControl from '../../components/CustomPromptControl';
+import GenerationDisclaimer from '../../components/GenerationDisclaimer';
 import SaveAltInMediaLibraryControl from '../../components/SaveAltInMediaLibraryControl';
 import GenerateAltButton from './GenerateAltButton';
 
@@ -47,6 +48,10 @@ export default ({
             onGenerate={(alt) => setAttributes({ alt })}
             saveAltInMediaLibrary={saveAltInMediaLibrary}
           />
+
+          <PanelRow>
+            <GenerationDisclaimer showIcon={false} />
+          </PanelRow>
         </PanelBody>
       </Panel>
     </InspectorControls>

@@ -14,6 +14,7 @@ import generateAltText from '../utils/generateAltText';
 import sleep from '../utils/sleep';
 import BulkGenerationTable from './BulkGenerationTable';
 import CustomPromptControl from './CustomPromptControl';
+import GenerationDisclaimer from './GenerationDisclaimer';
 import SaveAltInMediaLibraryControl from './SaveAltInMediaLibraryControl';
 
 export interface BulkGenerateModalProps {
@@ -209,6 +210,8 @@ export default function BulkGenerateModal({
         loading={hasResolved}
         generationMap={altGenerationMap}
       />
+
+      <GenerationDisclaimer />
 
       <Flex>
         <p>
