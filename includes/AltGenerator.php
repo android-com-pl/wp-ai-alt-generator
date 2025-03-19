@@ -147,6 +147,18 @@ class AltGenerator {
 			);
 		}
 
+		if ( empty( $completion['choices'] ) ||
+			! is_array( $completion['choices'] ) ||
+			! isset( $completion['choices'][0]['message'] ) ) {
+			return new WP_Error(
+				'invalid_response_structure',
+				__( "Received invalid response structure from OpenAI's API", 'alt-text-generator-gpt-vision' ),
+				[
+					'raw_response' => $completion,
+				]
+			);
+		}
+
 		$choice = $completion['choices'][0]['message'];
 		if ( ! is_null( $choice['refusal'] ) ) {
 			return new WP_Error(

@@ -62,8 +62,17 @@ class AltGeneratorPlugin {
 
 	public static function error_log( WP_Error $error ): WP_Error {
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			$message = '[AI Alt Generator] ' . $error->get_error_message();
+
+			$data = $error->get_error_data();
+			if ( ! empty( $data ) ) {
+				// phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_print_r
+				$message .= ' | Data: ' . print_r( $data, true );
+				// phpcs:enable
+			}
+
 			// phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_error_log
-			error_log( '[AI Alt Generator] ' . $error->get_error_message() );
+			error_log( $message );
 			// phpcs:enable
 		}
 
