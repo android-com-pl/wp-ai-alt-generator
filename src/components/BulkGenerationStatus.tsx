@@ -12,7 +12,6 @@ export default function BulkGenerationStatus({
     <Flex justify="start">
       {status === 'generating' ? (
         <>
-          {/* @ts-ignore - wrong Spinner prop types */}
           <Spinner />
           {_x(
             'Generating...',

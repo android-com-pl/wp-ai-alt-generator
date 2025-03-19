@@ -38,7 +38,6 @@ export default function BulkGenerationTable({
           {!loading ? (
             <tr>
               <td colSpan={3} style={{ textAlign: 'center' }}>
-                {/* @ts-ignore - wrong prop types */}
                 <Spinner />
               </td>
             </tr>
