@@ -21,7 +21,12 @@ export default function BulkGenerationTable({
         style={{ border: '0' }}
       >
         <thead
-          style={{ position: 'sticky', top: '0', backgroundColor: 'white' }}
+          style={{
+            position: 'sticky',
+            top: '0',
+            backgroundColor: 'white',
+            zIndex: 1,
+          }}
         >
           <tr>
             <th>{__('File', 'alt-text-generator-gpt-vision')}</th>
