@@ -193,7 +193,7 @@ class Admin {
 						sprintf(
 							// translators: %s is for link attributes.
 							__(
-								'Choose "Low" detail to minimize token usage and costs for image processing, which should be sufficient for most use cases and is significantly cheaper. "High" detail will use more tokens but provides finer detail. For precise token calculations and cost implications, refer to the <a href="https://platform.openai.com/docs/guides/vision/calculating-costs" %s>OpenAI documentation on calculating costs</a>.',
+								'Choose "Low" detail to minimize token usage and costs for image processing, which should be sufficient for most use cases and is significantly cheaper. "High" detail will use more tokens but provides finer detail. For precise token calculations and cost implications, refer to the <a href="https://platform.openai.com/docs/guides/images?api-mode=responses#calculating-costs" %s>OpenAI documentation on calculating costs</a>.',
 								'alt-text-generator-gpt-vision'
 							),
 							'target="_blank" rel="noopener noreferrer"'
