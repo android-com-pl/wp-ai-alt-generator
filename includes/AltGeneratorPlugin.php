@@ -10,6 +10,9 @@ class AltGeneratorPlugin {
 	public const SUPPORTED_MODELS = [
 		'gpt-4o',
 		'gpt-4o-mini',
+		'gpt-4.1',
+		'gpt-4.1-mini',
+		'gpt-4.1-nano',
 	];
 
 	public const DB_VERSION_OPTION_NAME = 'acpl_ai_alt_generator_db_version';
