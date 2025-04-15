@@ -6,7 +6,7 @@ use WP_Error;
 
 class AltGeneratorPlugin {
 	public const OPTION_NAME      = 'acpl_ai_alt_generator';
-	public const DEFAULT_MODEL    = 'gpt-4o';
+	public const DEFAULT_MODEL    = 'gpt-4.1-mini';
 	public const SUPPORTED_MODELS = [
 		'gpt-4o',
 		'gpt-4o-mini',
