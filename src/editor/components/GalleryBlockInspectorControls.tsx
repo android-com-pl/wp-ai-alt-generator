@@ -4,7 +4,7 @@ import {
 } from '@wordpress/block-editor';
 import { Button, Panel, PanelBody } from '@wordpress/components';
 import { dispatch, useSelect } from '@wordpress/data';
-import { useState } from '@wordpress/element';
+import { useMemo, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import BulkGenerateModal from '../../components/BulkGenerateModal';
 
@@ -19,24 +19,25 @@ export default ({ clientId }: GalleryBlockInspectorControlsProps) => {
   const [isBulkGenerationModalOpen, setIsBulkGenerationModalOpen] =
     useState(false);
 
-  const { innerBlocks, imgIds } = useSelect(
-    (select) => {
-      const galleryBlock: GalleryBlockProps =
-        // @ts-ignore - missing types
-        select(blockEditorStore).getBlock(clientId);
-
-      const innerBlocks =
-        (galleryBlock?.innerBlocks as ImageBlockProps[]).filter(
-          (block) => block.name === 'core/image',
-        ) ?? [];
-
-      const imgIds = innerBlocks
-        .filter((block) => block.attributes?.id)
-        .map((block) => block.attributes.id);
-
-      return { galleryBlock, innerBlocks, imgIds };
-    },
+  const innerBlocks = useSelect(
+    (select) =>
+      //@ts-ignore - missing types
+      select(blockEditorStore).getBlock(clientId)
+        .innerBlocks as ImageBlockProps[],
     [clientId],
+  );
+
+  const imageBlocks = useMemo(
+    () => innerBlocks.filter((block) => block.name === 'core/image') ?? [],
+    [innerBlocks],
+  );
+
+  const imgIds = useMemo(
+    () =>
+      innerBlocks
+        .filter((block) => block.attributes?.id)
+        .map((block) => block.attributes.id),
+    [innerBlocks],
   );
 
   return (
@@ -60,7 +61,7 @@ export default ({ clientId }: GalleryBlockInspectorControlsProps) => {
               attachmentIds={imgIds}
               onClose={() => setIsBulkGenerationModalOpen(false)}
               onGenerate={({ id, alt }) => {
-                const imageBlock = innerBlocks.find(
+                const imageBlock = imageBlocks.find(
                   (block) => block.attributes.id === id,
                 );
                 if (!imageBlock) return;
