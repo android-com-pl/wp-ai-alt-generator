@@ -86,6 +86,7 @@ export default function BulkGenerateModal({
   }, [attachments, hasResolved]);
 
   const handleStart = async () => {
+    abortController.current = new AbortController();
     setIsGenerating(true);
     const generateTasks = [];
 
