@@ -40,6 +40,10 @@ export default ({ clientId }: GalleryBlockInspectorControlsProps) => {
     [innerBlocks],
   );
 
+  if (imgIds.length === 0) {
+    return null;
+  }
+
   return (
     <InspectorControls>
       <Panel>
