@@ -7,8 +7,8 @@ use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
 
-class Api {
-	public function register_routes(): void {
+class ApiController {
+	public static function init(): void {
 		register_rest_route(
 			'acpl',
 			'/ai-alt-generator',
@@ -31,13 +31,13 @@ class Api {
 						'description' => esc_html__( 'Saves the generated alt text to the image when enabled.', 'alt-text-generator-gpt-vision' ),
 					],
 				],
-				'callback'            => [ $this, 'generate_alt_text' ],
+				'callback'            => [ self::class, 'generate_alt_text' ],
 				'permission_callback' => fn() => current_user_can( 'edit_posts' ),
 			]
 		);
 	}
 
-	public function generate_alt_text( WP_REST_Request $request ): WP_REST_Response|WP_Error {
+	public static function generate_alt_text( WP_REST_Request $request ): WP_REST_Response|WP_Error {
 		$attachment_id = $request->get_param( 'attachment_id' );
 		$save_alt      = $request->get_param( 'save' );
 		$user_prompt   = $request->get_param( 'user_prompt' ) ?? '';

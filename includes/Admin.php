@@ -5,12 +5,12 @@ namespace ACPL\AIAltGenerator;
 class Admin {
 	const SETTINGS_SECTION_ID = 'acpl_ai_alt_generator_section';
 
-	public function __construct() {
-		add_action( 'admin_init', [ $this, 'register_settings' ] );
-		add_action( 'admin_menu', [ $this, 'add_plugin_settings' ] );
+	public static function init(): void {
+		add_action( 'admin_init', [ self::class, 'register_settings' ] );
+		add_action( 'admin_menu', [ self::class, 'add_plugin_settings' ] );
 	}
 
-	public function register_settings(): void {
+	public static function register_settings(): void {
 		register_setting(
 			'media',
 			AltGeneratorPlugin::OPTION_NAME,
@@ -52,7 +52,7 @@ class Admin {
 		);
 	}
 
-	public function add_plugin_settings(): void {
+	public static function add_plugin_settings(): void {
 		$options = AltGeneratorPlugin::get_options();
 
 		add_settings_section(
