@@ -125,7 +125,6 @@ class AltGenerator {
 									'strict' => true,
 								],
 							],
-							'max_tokens'      => 300,
 						],
 						$attachment_id
 					)
