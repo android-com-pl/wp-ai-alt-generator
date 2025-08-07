@@ -14,13 +14,13 @@ A WordPress plugin that leverages OpenAI's vision models to automatically genera
 
 == Description ==
 
-Plugin that uses the OpenAI API (supporting GPT-4o and GPT-4.1 model families) to automatically generate alt text for images, either during the upload process or on-demand with a button. It enhances website accessibility and SEO by providing descriptive and relevant image descriptions.
+Plugin that uses the OpenAI API (supporting GPT-5, and GPT-4.1 and GPT-4o model families) to automatically generate alt text for images, either during the upload process or on-demand with a button. It enhances website accessibility and SEO by providing descriptive and relevant image descriptions.
 
 Features:
 - Bulk alt text generation for multiple images at once in media library and gallery block
 - Manual generation via a button in the image block and media library
 - Configurable automatic alt text generation during the upload process
-- Support for multiple OpenAI vision models (GPT-4o, GPT-4o-mini, GPT-4.1, GPT-4.1-mini, GPT-4.1-nano)
+- Support for multiple OpenAI vision models (GPT-5, GPT-5-mini, GPT-5-nano, GPT-4.1, GPT-4.1-mini, GPT-4.1-nano, GPT-4o, GPT-4o-mini)
 
 == External Service Usage ==
 
