@@ -6,10 +6,11 @@ const { wp } = window;
  * Add generate alt button to media modal.
  */
 // @ts-ignore - missing types for Attachment
-wp.media.view.Attachment.Details = wp.media.view.Attachment.Details.extend({
+const Details = wp.media.view.Attachment.Details;
+// @ts-ignore
+wp.media.view.Attachment.Details = Details.extend({
   render: function () {
-    // @ts-ignore - missing types for Attachment
-    wp.media.view.Attachment.prototype.render.apply(this, arguments);
+    Details.prototype.render.apply(this, arguments);
 
     if (this.model.get('type') !== 'image') {
       return this;
