@@ -8,7 +8,7 @@ class AltGeneratorPlugin {
 	public const OPTION_NAME      = 'acpl_ai_alt_generator';
 	public const DEFAULT_MODEL    = 'gpt-5-mini';
 	public const SUPPORTED_MODELS = [
-        'gpt-5.1',
+		'gpt-5.1',
 		'gpt-5',
 		'gpt-5-mini',
 		'gpt-5-nano',
