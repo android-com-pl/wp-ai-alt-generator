@@ -1,6 +1,6 @@
 import { Flex, Icon, Spinner } from '@wordpress/components';
 import { _x, sprintf } from '@wordpress/i18n';
-import { check, next, warning } from '@wordpress/icons';
+import { cautionFilled, check, next } from '@wordpress/icons';
 import type { AltGenerationDetails } from '../types';
 
 export default function BulkGenerationStatus({
@@ -35,7 +35,7 @@ export default function BulkGenerationStatus({
         </>
       ) : status === 'error' ? (
         <>
-          <Icon icon={warning} />
+          <Icon icon={cautionFilled} />
           {sprintf(
             _x(
               'Error: %s',
