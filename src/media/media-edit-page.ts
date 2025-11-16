@@ -1,5 +1,5 @@
 import { qs } from 'ts-dom-utils';
-import GenerateAltButon from './components/GenerateAltButon';
+import GenerateAltButon from './components/GenerateAltButton';
 
 /**
  * Adds generate alt button to media edit page (/wp-admin/post.php?post=[id]&action=edit).
