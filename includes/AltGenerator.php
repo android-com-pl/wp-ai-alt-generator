@@ -93,7 +93,8 @@ class AltGenerator {
 										[
 											'type'      => 'image_url',
 											'image_url' => [
-												'url' => "data:$image_mime_type;base64,$image_base64",
+												'url'    => "data:$image_mime_type;base64,$image_base64",
+												'detail' => $options['detail'],
 											],
 										],
 									],
