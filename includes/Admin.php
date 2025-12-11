@@ -16,12 +16,12 @@ class Admin {
 			AltGeneratorPlugin::OPTION_NAME,
 			[
 				'type'              => 'array',
-				'sanitize_callback' => function ( $input ) {
+				'sanitize_callback' => static function ( $input ) {
 					if ( ! defined( 'ACPL_ALT_GENERATOR_OPENAI_API_KEY' ) ) {
 						$input['api_key'] = isset( $input['api_key'] ) ? sanitize_text_field( $input['api_key'] ) : null;
 					}
 					$input['auto_generate'] = isset( $input['auto_generate'] ) && $input['auto_generate'];
-					$input['detail']        = isset( $input['detail'] ) ? sanitize_text_field( $input['detail'] ) : 'low';
+					$input['detail']        = isset( $input['detail'] ) ? sanitize_text_field( $input['detail'] ) : 'auto';
 
 					// Sanitize and validate the model.
 					if ( isset( $input['model'] ) && in_array( $input['model'], AltGeneratorPlugin::SUPPORTED_MODELS, true ) ) {
@@ -45,7 +45,7 @@ class Admin {
 					'api_key'       => null,
 					'model'         => AltGeneratorPlugin::DEFAULT_MODEL,
 					'auto_generate' => false,
-					'detail'        => 'low',
+					'detail'        => 'auto',
 				],
 				'show_in_rest'      => false,
 			]
@@ -57,8 +57,8 @@ class Admin {
 
 		add_settings_section(
 			self::SETTINGS_SECTION_ID,
-			__( 'GPT Vision Alt Generator', 'alt-text-generator-gpt-vision' ),
-			function () {
+			__( 'AI image alt text generator', 'alt-text-generator-gpt-vision' ),
+			static function () {
 				echo '<p>' .
 					esc_html__( 'This plugin uses the OpenAI API to generate alt text for images.', 'alt-text-generator-gpt-vision' )
 					. '</p>';
@@ -73,7 +73,7 @@ class Admin {
 		add_settings_field(
 			'acpl_ai_alt_generator_api_key',
 			__( 'OpenAI API Key', 'alt-text-generator-gpt-vision' ),
-			function () use ( $options ) {
+			static function () use ( $options ) {
 				printf(
 					'<input type="password" id="openai_api_key" name="%1$s[api_key]" value="%2$s" class="regular-text" placeholder="sk-..." autocomplete="off" %3$s/>',
 					esc_attr( AltGeneratorPlugin::OPTION_NAME ),
@@ -121,7 +121,7 @@ class Admin {
 		add_settings_field(
 			'acpl_ai_alt_generator_model',
 			__( 'Model', 'alt-text-generator-gpt-vision' ),
-			function () use ( $options ) {
+			static function () use ( $options ) {
 				printf( '<select id="model" name="%s[model]">', esc_attr( AltGeneratorPlugin::OPTION_NAME ) );
 				foreach ( AltGeneratorPlugin::SUPPORTED_MODELS as $model ) {
 					printf(
@@ -147,7 +147,7 @@ class Admin {
 		add_settings_field(
 			'acpl_ai_alt_generator_auto_generate',
 			__( 'Auto generate alt text on image upload', 'alt-text-generator-gpt-vision' ),
-			function () use ( $options ) {
+			static function () use ( $options ) {
 				printf(
 					'<input type="checkbox" id="auto_generate_alt" name="%1$s[auto_generate]" %2$s/>',
 					esc_attr( AltGeneratorPlugin::OPTION_NAME ),
@@ -171,10 +171,11 @@ class Admin {
 		add_settings_field(
 			'acpl_ai_alt_generator_img_size',
 			__( 'Detail level', 'alt-text-generator-gpt-vision' ),
-			function () use ( $options ) {
+			static function () use ( $options ) {
 				$detail_levels = [
 					'high' => _x( 'High', 'Detail level', 'alt-text-generator-gpt-vision' ),
 					'low'  => _x( 'Low', 'Detail level', 'alt-text-generator-gpt-vision' ),
+					'auto' => _x( 'Auto', 'Detail level', 'alt-text-generator-gpt-vision' ),
 				];
 
 				printf( '<select id="detail_level" name="%s[detail]">', esc_attr( AltGeneratorPlugin::OPTION_NAME ) );
@@ -193,7 +194,7 @@ class Admin {
 						sprintf(
 							// translators: %s is for link attributes.
 							__(
-								'Choose "Low" detail to minimize token usage and costs for image processing, which should be sufficient for most use cases and is significantly cheaper. "High" detail will use more tokens but provides finer detail. For precise token calculations and cost implications, refer to the <a href="https://platform.openai.com/docs/guides/images?api-mode=responses#calculating-costs" %s>OpenAI documentation on calculating costs</a>.',
+								'Choose "Low" detail to minimize token usage and costs for image processing, which should be sufficient for most use cases and is significantly cheaper. "High" detail will use more tokens but provides finer detail. For precise token calculations and cost implications, refer to the <a href="https://platform.openai.com/docs/guides/images-vision?api-mode=responses#calculating-costs" %s>OpenAI documentation on calculating costs</a>.',
 								'alt-text-generator-gpt-vision'
 							),
 							'target="_blank" rel="noopener noreferrer"'
