@@ -105,16 +105,16 @@
         },
         {
             "name": "php-stubs/wordpress-stubs",
-            "version": "v6.8.3",
+            "version": "v6.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-stubs/wordpress-stubs.git",
-                "reference": "abeb5a8b58fda7ac21f15ee596f302f2959a7114"
+                "reference": "5171cb6650e6c583a96943fd6ea0dfa3e1089a8a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-stubs/wordpress-stubs/zipball/abeb5a8b58fda7ac21f15ee596f302f2959a7114",
-                "reference": "abeb5a8b58fda7ac21f15ee596f302f2959a7114",
+                "url": "https://api.github.com/repos/php-stubs/wordpress-stubs/zipball/5171cb6650e6c583a96943fd6ea0dfa3e1089a8a",
+                "reference": "5171cb6650e6c583a96943fd6ea0dfa3e1089a8a",
                 "shasum": ""
             },
             "conflict": {
@@ -150,9 +150,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-stubs/wordpress-stubs/issues",
-                "source": "https://github.com/php-stubs/wordpress-stubs/tree/v6.8.3"
+                "source": "https://github.com/php-stubs/wordpress-stubs/tree/v6.9.0"
             },
-            "time": "2025-09-30T20:58:47+00:00"
+            "time": "2025-12-03T23:06:24+00:00"
         },
         {
             "name": "phpcsstandards/phpcsextra",
@@ -238,16 +238,16 @@
         },
         {
             "name": "phpcsstandards/phpcsutils",
-            "version": "1.2.0",
+            "version": "1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHPCSUtils.git",
-                "reference": "fa82d14ad1c1713224a52c66c78478145fe454ba"
+                "reference": "c216317e96c8b3f5932808f9b0f1f7a14e3bbf55"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/fa82d14ad1c1713224a52c66c78478145fe454ba",
-                "reference": "fa82d14ad1c1713224a52c66c78478145fe454ba",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/c216317e96c8b3f5932808f9b0f1f7a14e3bbf55",
+                "reference": "c216317e96c8b3f5932808f9b0f1f7a14e3bbf55",
                 "shasum": ""
             },
             "require": {
@@ -327,7 +327,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2025-11-11T00:17:56+00:00"
+            "time": "2025-12-08T14:27:58+00:00"
         },
         {
             "name": "phpstan/extension-installer",
@@ -379,11 +379,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.32",
+            "version": "2.1.33",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e126cad1e30a99b137b8ed75a85a676450ebb227",
-                "reference": "e126cad1e30a99b137b8ed75a85a676450ebb227",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/9e800e6bee7d5bd02784d4c6069b48032d16224f",
+                "reference": "9e800e6bee7d5bd02784d4c6069b48032d16224f",
                 "shasum": ""
             },
             "require": {
@@ -428,7 +428,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-11-11T15:18:17+00:00"
+            "time": "2025-12-05T10:24:31+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
@@ -574,16 +574,16 @@
         },
         {
             "name": "wp-coding-standards/wpcs",
-            "version": "3.2.0",
+            "version": "3.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/WordPress-Coding-Standards.git",
-                "reference": "d2421de7cec3274ae622c22c744de9a62c7925af"
+                "reference": "7795ec6fa05663d716a549d0b44e47ffc8b0d4a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/d2421de7cec3274ae622c22c744de9a62c7925af",
-                "reference": "d2421de7cec3274ae622c22c744de9a62c7925af",
+                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/7795ec6fa05663d716a549d0b44e47ffc8b0d4a6",
+                "reference": "7795ec6fa05663d716a549d0b44e47ffc8b0d4a6",
                 "shasum": ""
             },
             "require": {
@@ -591,17 +591,17 @@
                 "ext-libxml": "*",
                 "ext-tokenizer": "*",
                 "ext-xmlreader": "*",
-                "php": ">=5.4",
-                "phpcsstandards/phpcsextra": "^1.4.0",
+                "php": ">=7.2",
+                "phpcsstandards/phpcsextra": "^1.5.0",
                 "phpcsstandards/phpcsutils": "^1.1.0",
-                "squizlabs/php_codesniffer": "^3.13.0"
+                "squizlabs/php_codesniffer": "^3.13.4"
             },
             "require-dev": {
                 "php-parallel-lint/php-console-highlighter": "^1.0.0",
                 "php-parallel-lint/php-parallel-lint": "^1.4.0",
-                "phpcompatibility/php-compatibility": "^9.0",
+                "phpcompatibility/php-compatibility": "^10.0.0@dev",
                 "phpcsstandards/phpcsdevtools": "^1.2.0",
-                "phpunit/phpunit": "^4.0 || ^5.0 || ^6.0 || ^7.0 || ^8.0 || ^9.0"
+                "phpunit/phpunit": "^8.0 || ^9.0"
             },
             "suggest": {
                 "ext-iconv": "For improved results",
@@ -636,7 +636,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2025-07-24T20:08:31+00:00"
+            "time": "2025-11-25T12:08:04+00:00"
         }
     ],
     "aliases": [],
