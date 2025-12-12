@@ -120,6 +120,7 @@ class AltGenerator {
 			return new WP_Error(
 				(string) ( $data['error']['code'] ?? 'openai_error' ),
 				sprintf(
+					// translators: %s is for an error message.
 					__( "OpenAI's API error: %s", 'alt-text-generator-gpt-vision' ),
 					(string) ( $data['error']['message'] ?? __( 'Unknown error', 'alt-text-generator-gpt-vision' ) )
 				),
