@@ -46,15 +46,12 @@ class AltGenerator {
 					apply_filters(
 						'acpl/ai_alt_generator/api_request_body',
 						[
-							'model'           => $options['model'] ?? AltGeneratorPlugin::DEFAULT_MODEL,
-							'messages'        => [
-								[
-									'role'    => 'system',
-									'content' => apply_filters(
-										'acpl/ai_alt_generator/system_prompt',
-										<<<EOT
+							'model'        => $options['model'] ?? AltGeneratorPlugin::DEFAULT_MODEL,
+							'instructions' => apply_filters(
+								'acpl/ai_alt_generator/developer_prompt',
+								<<<EOT
 										You are an alt text generator for HTML img tags. Default settings (unless overridden by user prompt):
-										- Language: {$language} ({$locale})
+										- Language: $language ($locale)
 										- Style: clear and informative, balancing detail with brevity
 										- Focus: 
 										  * Main subject with its key distinguishing features
@@ -66,22 +63,17 @@ class AltGenerator {
 										- Technical: return just the alt text content - no HTML tags, no quotes, no additional formatting or commentary
 										
 										Follow the user's prompt first - they can override any of these defaults. If the user specifies different requirements (language, style, focus, format, etc.), use those instead.
-										
-										Always return response in the structured format with:
-										- success: boolean
-										- alt_text: string (just the clean alt text content)
-										- failure_reason: string or null (in the same language as alt_text)
 										EOT,
-										$attachment_id,
-										$locale,
-										$language
-									),
-								],
+								$attachment_id,
+								$locale,
+								$language
+							),
+							'input'        => [
 								[
 									'role'    => 'user',
 									'content' => [
 										[
-											'type' => 'text',
+											'type' => 'input_text',
 											'text' => apply_filters(
 												'acpl/ai_alt_generator/user_prompt',
 												$user_prompt,
@@ -91,39 +83,11 @@ class AltGenerator {
 											),
 										],
 										[
-											'type'      => 'image_url',
-											'image_url' => [
-												'url'    => "data:$image_mime_type;base64,$image_base64",
-												'detail' => $options['detail'],
-											],
+											'type'      => 'input_image',
+											'image_url' => "data:$image_mime_type;base64,$image_base64",
+											'detail'    => $options['detail'] ?? 'auto',
 										],
 									],
-								],
-							],
-							'response_format' => [
-								'type'        => 'json_schema',
-								'json_schema' => [
-									'name'   => 'alt_text_response',
-									'schema' => [
-										'type'       => 'object',
-										'properties' => [
-											'success'  => [
-												'type' => 'boolean',
-												'description' => 'Whether the alt text was successfully generated',
-											],
-											'alt_text' => [
-												'type' => 'string',
-												'description' => 'The generated alt text',
-											],
-											'failure_reason' => [
-												'type' => [ 'string', 'null' ],
-												'description' => 'Reason why alt text could not be generated, if applicable',
-											],
-										],
-										'required'   => [ 'success', 'alt_text', 'failure_reason' ],
-										'additionalProperties' => false,
-									],
-									'strict' => true,
 								],
 							],
 						],
@@ -137,69 +101,75 @@ class AltGenerator {
 			return $api_response;
 		}
 
-		$completion = json_decode( wp_remote_retrieve_body( $api_response ), true );
+		$status_code = wp_remote_retrieve_response_code( $api_response );
+		$raw_body    = wp_remote_retrieve_body( $api_response );
 
-		if ( isset( $completion['error'] ) ) {
+		$data = json_decode( $raw_body, true );
+		if ( ! is_array( $data ) ) {
 			return new WP_Error(
-				$completion['error']['code'],
-				// translators: %s is the error message from OpenAI's API.
-				sprintf( __( "OpenAI's API error: %s", 'alt-text-generator-gpt-vision' ), $completion['error']['message'] )
-			);
-		}
-
-		if ( empty( $completion['choices'] ) ||
-			! is_array( $completion['choices'] ) ||
-			! isset( $completion['choices'][0]['message'] ) ) {
-			return new WP_Error(
-				'invalid_response_structure',
-				__( "Received invalid response structure from OpenAI's API", 'alt-text-generator-gpt-vision' ),
+				'invalid_json_response',
+				__( "Received invalid JSON from OpenAI's API", 'alt-text-generator-gpt-vision' ),
 				[
-					'raw_response' => $completion,
+					'status_code' => $status_code,
+					'raw_body'    => $raw_body,
 				]
 			);
 		}
 
-		$choice = $completion['choices'][0]['message'];
-		if ( ! is_null( $choice['refusal'] ) ) {
+		if ( ! empty( $data['error'] ) ) {
 			return new WP_Error(
-				'openai_refusal',
+				(string) ( $data['error']['code'] ?? 'openai_error' ),
 				sprintf(
-					/* translators: %s is the refusal message from OpenAI's API */
-					__( 'AI refused to generate alt text: %s', 'alt-text-generator-gpt-vision' ),
-					$choice['refusal']
-				)
+					__( "OpenAI's API error: %s", 'alt-text-generator-gpt-vision' ),
+					(string) ( $data['error']['message'] ?? __( 'Unknown error', 'alt-text-generator-gpt-vision' ) )
+				),
+				[
+					'error' => $data['error'],
+				]
 			);
 		}
 
-		$content = $completion['choices'][0]['message']['content'] ?? '';
-		if ( empty( $content ) ) {
+		if ( empty( $data['output'] ) || ! is_array( $data['output'] ) ) {
+			return new WP_Error(
+				'invalid_response_structure',
+				__( "Missing 'output' in OpenAI response", 'alt-text-generator-gpt-vision' ),
+				[ 'raw_response' => $data ]
+			);
+		}
+
+		$alt_text = '';
+		// Output can contain reasoning, etc. Search for the first text output.
+		foreach ( $data['output'] as $output_item ) {
+			if ( isset( $output_item['content'] ) && is_array( $output_item['content'] ) ) {
+				foreach ( $output_item['content'] as $content_item ) {
+					if ( isset( $content_item['text'] ) && ( $content_item['type'] ?? null ) === 'output_text' ) {
+						$alt_text = $content_item['text'];
+						$alt_text = is_string( $alt_text ) ? trim( $alt_text ) : '';
+						break 2;
+					}
+				}
+			}
+		}
+
+		if ( $alt_text === '' ) {
 			return new WP_Error(
 				'empty_response',
-				__( 'Received empty response from OpenAI API', 'alt-text-generator-gpt-vision' )
+				__( 'Received empty response from OpenAI API', 'alt-text-generator-gpt-vision' ),
+				[
+					'raw_response' => $data,
+				]
 			);
 		}
 
-		$structured_response = json_decode( $content, true );
-		if ( ! $structured_response['success'] ) {
-			return new WP_Error(
-				'generation_failed',
-				sprintf(
-					/* translators: %s is the failure reason */
-					__( 'Failed to generate alt text: %s', 'alt-text-generator-gpt-vision' ),
-					$structured_response['failure_reason'] ?? __( 'Unknown reason', 'alt-text-generator-gpt-vision' )
-				)
-			);
-		}
-
-		return $structured_response['alt_text'];
+		return $alt_text;
 	}
 
 	public static function get_api_url(): string {
 		// Using this filter allows users to change the API address to, for example, a custom proxy.
-		return apply_filters( 'acpl/ai_alt_generator/api_url', 'https://api.openai.com/v1/chat/completions' );
+		return apply_filters( 'acpl/ai_alt_generator/api_url', 'https://api.openai.com/v1/responses' );
 	}
 
-	public static function generate_and_set_alt_text( int $attachment_id, string $user_prompt = '' ): string|WP_Error|null {
+	public static function generate_and_set_alt_text( int $attachment_id, string $user_prompt = '' ): string|WP_Error {
 		$alt_text = self::generate_alt_text( $attachment_id, $user_prompt );
 		if ( is_wp_error( $alt_text ) ) {
 			AltGeneratorPlugin::error_log( $alt_text );
@@ -207,17 +177,12 @@ class AltGenerator {
 			return $alt_text;
 		}
 
-		if ( ! empty( $alt_text ) ) {
-			update_post_meta( $attachment_id, '_wp_attachment_image_alt', sanitize_text_field( $alt_text ) );
-
-			return $alt_text;
-		}
-
-		return null;
+		update_post_meta( $attachment_id, '_wp_attachment_image_alt', sanitize_text_field( $alt_text ) );
+		return $alt_text;
 	}
 
 	public static function on_attachment_upload( array $metadata, int $attachment_id, string $context ): array {
-		if ( 'create' !== $context || ! wp_attachment_is_image( $attachment_id ) || ! empty( get_post_meta( $attachment_id, '_wp_attachment_image_alt', true ) ) ) {
+		if ( $context !== 'create' || ! wp_attachment_is_image( $attachment_id ) || ! empty( get_post_meta( $attachment_id, '_wp_attachment_image_alt', true ) ) ) {
 			return $metadata;
 		}
 
