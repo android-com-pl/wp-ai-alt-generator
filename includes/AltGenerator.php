@@ -18,6 +18,10 @@ class AltGenerator {
 			return ErrorCodes::No_API_key->to_wp_error();
 		}
 
+		if ( trim( $user_prompt ) === '' && ! empty( $options['default_user_prompt'] ) ) {
+			$user_prompt = $options['default_user_prompt'];
+		}
+
 		$locale   = get_locale();
 		$language = locale_get_display_language( $locale, 'en' );
 
