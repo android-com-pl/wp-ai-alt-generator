@@ -20,3 +20,4 @@ composer.json
 composer.lock
 phpstan.neon
 .phpcs.xml
+rector.php

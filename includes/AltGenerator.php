@@ -22,12 +22,8 @@ class AltGenerator {
 			$user_prompt = $options['default_user_prompt'];
 		}
 
-		$locale = get_locale();
-		if ( function_exists( 'locale_get_display_language' ) ) {
-			$language = locale_get_display_language( $locale, 'en' );
-		} else {
-			$language = $locale;
-		}
+		$locale   = get_locale();
+		$language = function_exists( 'locale_get_display_language' ) ? locale_get_display_language( $locale, 'en' ) : $locale;
 
 		$image_mime_type = get_post_mime_type( $attachment_id );
 		$image_base64    = self::get_image_as_base64( $attachment_id );

@@ -34,7 +34,7 @@ class AltGeneratorPlugin {
 		add_action( 'load-upload.php', fn()=> self::enqueue_script( 'media-upload', true ) );
 		add_filter(
 			'bulk_actions-upload',
-			fn( $actions ) => $actions + [ 'generate_alt_text' => __( 'Generate Alternative Text', 'alt-text-generator-gpt-vision' ) ]
+			fn( $actions ): array => $actions + [ 'generate_alt_text' => __( 'Generate Alternative Text', 'alt-text-generator-gpt-vision' ) ]
 		);
 
 		add_action( 'admin_init', [ self::class, 'maybe_upgrade_plugin_data' ] );
