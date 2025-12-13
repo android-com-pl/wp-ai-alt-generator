@@ -19,7 +19,7 @@ class AltGenerator {
 		}
 
 		$locale   = get_locale();
-		$language = locale_get_display_language( $locale );
+		$language = locale_get_display_language( $locale, 'en' );
 
 		$image_mime_type = get_post_mime_type( $attachment_id );
 		$image_base64    = self::get_image_as_base64( $attachment_id );
@@ -48,22 +48,12 @@ class AltGenerator {
 						[
 							'model'        => $options['model'] ?? AltGeneratorPlugin::DEFAULT_MODEL,
 							'instructions' => apply_filters(
-								'acpl/ai_alt_generator/developer_prompt',
-								<<<EOT
-										You are an alt text generator for HTML img tags. Default settings (unless overridden by user prompt):
-										- Language: $language ($locale)
-										- Style: clear and informative, balancing detail with brevity
-										- Focus: 
-										  * Main subject with its key distinguishing features
-										  * Essential context or setting
-										  * Important visual elements that affect meaning
-										  * Keep it concise - aim for one clear, descriptive sentence
-										- Format: informative but brief description (note: phrases like 'Image of' are typically redundant for screen readers but can be included if user requests)
-										- Purpose: help users understand the image's content quickly through screen readers and SEO
-										- Technical: return just the alt text content - no HTML tags, no quotes, no additional formatting or commentary
-										
-										Follow the user's prompt first - they can override any of these defaults. If the user specifies different requirements (language, style, focus, format, etc.), use those instead.
-										EOT,
+								'acpl/ai_alt_generator/system_prompt',
+								str_replace(
+									[ '{{LANGUAGE}}','{{LOCALE}}' ],
+									[ $language, $locale ],
+									file_get_contents( ACPL_AI_ALT_PLUGIN_PATH . 'data/system-prompt.md' )
+								),
 								$attachment_id,
 								$locale,
 								$language
