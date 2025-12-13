@@ -9,6 +9,7 @@ effort.
 You can download it here: https://wordpress.org/plugins/alt-text-generator-gpt-vision/
 
 Or use composer:
+
 ```shell
 composer require wpackagist-plugin/alt-text-generator-gpt-vision
 ```
@@ -31,12 +32,14 @@ composer require wpackagist-plugin/alt-text-generator-gpt-vision
 Modifies the system prompt.
 
 **Parameters:**
+
 - `string $system_prompt`
 - `int $attachment_id`
 - `string $locale` - The current WordPress locale.
 - `string $language` - The display name of the current WordPress language.
 
 **Usage:**
+
 ```php
 add_filter('acpl/ai_alt_generator/system_prompt', function($system_prompt, $attachment_id, $locale, $language) {
     // Modify the system prompt here
@@ -49,12 +52,14 @@ add_filter('acpl/ai_alt_generator/system_prompt', function($system_prompt, $atta
 Modifies the user prompt.
 
 **Parameters:**
+
 - `string $user_prompt`
 - `int $attachment_id`
 - `string $locale` - The current WordPress locale.
 - `string $language` - The display name of the current WordPress language.
 
 **Usage:**
+
 ```php
 add_filter('acpl/ai_alt_generator/user_prompt', function($user_prompt, $attachment_id, $locale, $language) {
     // Modify the user prompt here
@@ -67,9 +72,11 @@ add_filter('acpl/ai_alt_generator/user_prompt', function($user_prompt, $attachme
 Modifies the API URL used for generating alt text.
 
 **Parameters:**
-- `string $api_url` - Default: https://api.openai.com/v1/chat/completions
+
+- `string $api_url` - Default: https://api.openai.com/v1/responses
 
 **Usage:**
+
 ```php
 add_filter('acpl/ai_alt_generator/api_url', function($api_url) {
     // Modify the API URL here
@@ -82,6 +89,7 @@ add_filter('acpl/ai_alt_generator/api_url', function($api_url) {
 Modifies the request headers sent to the OpenAI API.
 
 **Parameters:**
+
 - `array $request_headers`
 - `string $api_key`
 - `int $attachment_id`
@@ -91,6 +99,7 @@ Modifies the request headers sent to the OpenAI API.
 Modifies the request body sent to the OpenAI API.
 
 **Parameters:**
+
 - `array $request_body`
 - `int $attachment_id`
 
@@ -101,7 +110,7 @@ If you would like to contribute to the development of this plugin, please follow
 1. Fork the Repository: Start by forking the GitHub repository to your own account.
 2. Clone Your Fork: Clone your forked repository to your local machine.
 3. Install Dependencies:
-   - Run `pnpm install` to install JavaScript dependencies. 
+   - Run `pnpm install` to install JavaScript dependencies.
    - Run `composer install` to set up PHP dependencies.
 4. Set Up Local Environment: Use `wp-env start` ([learn more](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/)) to start a local WordPress environment for testing and development.
 5. For JavaScript development, run `pnpm run dev`.
