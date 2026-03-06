@@ -2,6 +2,8 @@
 
 namespace ACPL\AIAltGenerator;
 
+use ACPL\AIAltGenerator\Enum\OpenAIModel;
+
 class Admin {
 	const SETTINGS_SECTION_ID = 'acpl_ai_alt_generator_section';
 
@@ -25,17 +27,17 @@ class Admin {
 					$input['default_user_prompt'] = isset( $input['default_user_prompt'] ) ? sanitize_textarea_field( $input['default_user_prompt'] ) : '';
 
 					// Sanitize and validate the model.
-					if ( isset( $input['model'] ) && in_array( $input['model'], AltGeneratorPlugin::SUPPORTED_MODELS, true ) ) {
-						$input['model'] = sanitize_text_field( $input['model'] );
+					if ( isset( $input['model'] ) && OpenAIModel::tryFrom( $input['model'] ) !== null ) {
+						$input['model'] = OpenAIModel::from( $input['model'] )->value;
 					} else {
-						$input['model'] = AltGeneratorPlugin::DEFAULT_MODEL;
+						$input['model'] = OpenAIModel::default()->value;
 						add_settings_error(
 							AltGeneratorPlugin::OPTION_NAME,
 							'invalid_model',
 							sprintf(
 								// translators: %s is for model name.
 								__( 'Invalid model selected. Default model (%s) has been set.', 'alt-text-generator-gpt-vision' ),
-								AltGeneratorPlugin::DEFAULT_MODEL
+								OpenAIModel::default()->value
 							)
 						);
 					}
@@ -44,7 +46,7 @@ class Admin {
 				},
 				'default'           => [
 					'api_key'             => null,
-					'model'               => AltGeneratorPlugin::DEFAULT_MODEL,
+					'model'               => OpenAIModel::default()->value,
 					'auto_generate'       => false,
 					'detail'              => 'auto',
 					'default_user_prompt' => '',
@@ -125,12 +127,12 @@ class Admin {
 			__( 'Model', 'alt-text-generator-gpt-vision' ),
 			static function () use ( $options ): void {
 				printf( '<select id="model" name="%s[model]">', esc_attr( AltGeneratorPlugin::OPTION_NAME ) );
-				foreach ( AltGeneratorPlugin::SUPPORTED_MODELS as $model ) {
+				foreach ( OpenAIModel::cases() as $model ) {
 					printf(
 						'<option value="%s" %s>%s</option>',
-						esc_attr( $model ),
-						selected( $options['model'] ?? AltGeneratorPlugin::DEFAULT_MODEL, $model, false ),
-						esc_html( $model )
+						esc_attr( $model->value ),
+						selected( $options['model'] ?? OpenAIModel::default()->value, $model->value, false ),
+						esc_html( $model->value )
 					);
 				}
 				echo '</select>';

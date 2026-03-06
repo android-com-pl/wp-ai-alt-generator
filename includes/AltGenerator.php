@@ -3,6 +3,7 @@
 namespace ACPL\AIAltGenerator;
 
 use ACPL\AIAltGenerator\Enum\ErrorCodes;
+use ACPL\AIAltGenerator\Enum\OpenAIModel;
 use WP_Error;
 
 class AltGenerator {
@@ -32,6 +33,55 @@ class AltGenerator {
 			return $image_base64;
 		}
 
+		$model = OpenAIModel::tryFrom( $options['model'] ?? '' ) ?? OpenAIModel::default();
+
+		$request_body = [
+			'model'        => $model->value,
+			'instructions' => apply_filters(
+				'acpl/ai_alt_generator/system_prompt',
+				str_replace(
+					[ '{{LANGUAGE}}','{{LOCALE}}' ],
+					[ $language, $locale ],
+					file_get_contents( ACPL_AI_ALT_PLUGIN_PATH . 'data/system-prompt.md' )
+				),
+				$attachment_id,
+				$locale,
+				$language
+			),
+			'input'        => [
+				[
+					'role'    => 'user',
+					'content' => [
+						[
+							'type' => 'input_text',
+							'text' => apply_filters(
+								'acpl/ai_alt_generator/user_prompt',
+								$user_prompt,
+								$attachment_id,
+								$locale,
+								$language
+							),
+						],
+						[
+							'type'      => 'input_image',
+							'image_url' => "data:$image_mime_type;base64,$image_base64",
+							'detail'    => $options['detail'] ?? 'auto',
+						],
+					],
+				],
+			],
+		];
+
+		if ( $model->responseVerbosity() ) {
+			$request_body['text'] = [ 'verbosity' => $model->responseVerbosity() ];
+		}
+
+		if ( $model->reasoningEffort() ) {
+			$request_body['reasoning'] = [
+				'effort' => $model->reasoningEffort(),
+			];
+		}
+
 		$api_response = wp_remote_post(
 			self::get_api_url(),
 			[
@@ -47,52 +97,7 @@ class AltGenerator {
 				'timeout'     => 90,
 				'httpversion' => '1.1',
 				'body'        => json_encode(
-					apply_filters(
-						'acpl/ai_alt_generator/api_request_body',
-						[
-							'model'        => $options['model'] ?? AltGeneratorPlugin::DEFAULT_MODEL,
-							'instructions' => apply_filters(
-								'acpl/ai_alt_generator/system_prompt',
-								str_replace(
-									[ '{{LANGUAGE}}','{{LOCALE}}' ],
-									[ $language, $locale ],
-									file_get_contents( ACPL_AI_ALT_PLUGIN_PATH . 'data/system-prompt.md' )
-								),
-								$attachment_id,
-								$locale,
-								$language
-							),
-							'reasoning'    => [
-								'effort' => 'none',
-							],
-							'text'         => [
-								'verbosity' => 'low',
-							],
-							'input'        => [
-								[
-									'role'    => 'user',
-									'content' => [
-										[
-											'type' => 'input_text',
-											'text' => apply_filters(
-												'acpl/ai_alt_generator/user_prompt',
-												$user_prompt,
-												$attachment_id,
-												$locale,
-												$language
-											),
-										],
-										[
-											'type'      => 'input_image',
-											'image_url' => "data:$image_mime_type;base64,$image_base64",
-											'detail'    => $options['detail'] ?? 'auto',
-										],
-									],
-								],
-							],
-						],
-						$attachment_id
-					)
+					apply_filters( 'acpl/ai_alt_generator/api_request_body', $request_body, $attachment_id )
 				),
 			]
 		);

@@ -2,25 +2,11 @@
 
 namespace ACPL\AIAltGenerator;
 
+use ACPL\AIAltGenerator\Enum\OpenAIModel;
 use WP_Error;
 
 class AltGeneratorPlugin {
-	public const OPTION_NAME      = 'acpl_ai_alt_generator';
-	public const DEFAULT_MODEL    = 'gpt-5-mini';
-	public const SUPPORTED_MODELS = [
-		'gpt-5.4',
-		'gpt-5.2',
-		'gpt-5.1',
-		'gpt-5',
-		'gpt-5-mini',
-		'gpt-5-nano',
-		'gpt-4.1',
-		'gpt-4.1-mini',
-		'gpt-4.1-nano',
-		'gpt-4o',
-		'gpt-4o-mini',
-	];
-
+	public const OPTION_NAME            = 'acpl_ai_alt_generator';
 	public const DB_VERSION_OPTION_NAME = 'acpl_ai_alt_generator_db_version';
 	public const DB_VERSION             = '1.0.0';
 
@@ -60,8 +46,8 @@ class AltGeneratorPlugin {
 		if ( version_compare( self::get_db_version(), '1.0.0', '<' ) ) {
 			$options = self::get_options();
 
-			if ( $options && isset( $options['model'] ) && ! in_array( $options['model'], self::SUPPORTED_MODELS, true ) ) {
-				$options['model'] = self::DEFAULT_MODEL;
+			if ( $options && isset( $options['model'] ) && OpenAIModel::tryFrom( $options['model'] ) === null ) {
+				$options['model'] = OpenAIModel::default()->value;
 				update_option( self::OPTION_NAME, $options, false );
 			}
 
