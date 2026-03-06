@@ -72,13 +72,13 @@ class AltGenerator {
 			],
 		];
 
-		if ( $model->responseVerbosity() ) {
-			$request_body['text'] = [ 'verbosity' => $model->responseVerbosity() ];
+		if ( $model->response_verbosity() ) {
+			$request_body['text'] = [ 'verbosity' => $model->response_verbosity() ];
 		}
 
-		if ( $model->reasoningEffort() ) {
+		if ( $model->reasoning_effort() ) {
 			$request_body['reasoning'] = [
-				'effort' => $model->reasoningEffort(),
+				'effort' => $model->reasoning_effort(),
 			];
 		}
 
