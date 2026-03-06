@@ -62,6 +62,12 @@ class AltGenerator {
 								$locale,
 								$language
 							),
+							'reasoning'    => [
+								'effort' => 'none',
+							],
+							'text'         => [
+								'verbosity' => 'low',
+							],
 							'input'        => [
 								[
 									'role'    => 'user',
