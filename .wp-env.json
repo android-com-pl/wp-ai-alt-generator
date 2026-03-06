@@ -1,4 +1,5 @@
 {
+  "$schema": "https://schemas.wp.org/trunk/wp-env.json",
   "phpVersion": "8.1",
   "plugins": ["."],
   "config": {
@@ -6,5 +7,6 @@
     "WP_DEBUG_DISPLAY": true,
     "WP_DEBUG_LOG": true,
     "SCRIPT_DEBUG": true
-  }
+  },
+  "testsEnvironment": false
 }
