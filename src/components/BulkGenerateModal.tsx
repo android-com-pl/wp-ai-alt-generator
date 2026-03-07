@@ -1,3 +1,4 @@
+import { useAsyncQueuer } from '@tanstack/react-pacer';
 import {
   Button,
   Flex,
@@ -5,13 +6,12 @@ import {
   Modal,
   ToggleControl,
 } from '@wordpress/components';
-import { useEffect, useRef, useState } from '@wordpress/element';
+import { useEffect, useState } from '@wordpress/element';
 import { decodeEntities } from '@wordpress/html-entities';
 import { __, _n, sprintf } from '@wordpress/i18n';
 import useAttachments from '../hooks/useAttachments';
 import { AltGenerationMap, GenerationContext } from '../types';
 import generateAltText from '../utils/generateAltText';
-import sleep from '../utils/sleep';
 import BulkGenerationTable from './BulkGenerationTable';
 import CustomPromptControl from './CustomPromptControl';
 import GenerationDisclaimer from './GenerationDisclaimer';
@@ -40,7 +40,78 @@ export default function BulkGenerateModal({
   const [altGenerationMap, setAltGenerationMap] = useState<AltGenerationMap>(
     new Map(attachmentIds.map((id) => [id, { status: '', alt: '' }])),
   );
-  const abortController = useRef(new AbortController());
+
+  const queuer = useAsyncQueuer(
+    async (id: number): Promise<null | string> => {
+      const details = altGenerationMap.get(id);
+      if (!details) return null;
+
+      if (!overwriteExisting && details.alt && details.alt.length > 0) {
+        setAltGenerationMap((prevMap) =>
+          new Map(prevMap).set(id, { ...details, status: 'skipped' }),
+        );
+        return null;
+      }
+
+      setAltGenerationMap((prevMap) =>
+        new Map(prevMap).set(id, { ...details, status: 'generating' }),
+      );
+
+      const alt = await generateAltText(
+        id,
+        saveAltInMediaLibrary,
+        customPrompt,
+        queuer.getAbortSignal(),
+      );
+
+      const attachment = attachments.find((a) => a.id === id);
+      if (attachment) {
+        attachment.alt_text = alt;
+      }
+
+      return alt;
+    },
+    {
+      started: false,
+      concurrency: 3,
+      wait: 1000,
+      asyncRetryerOptions: {
+        maxAttempts: 3,
+        backoff: 'exponential',
+        baseWait: 1500,
+        jitter: 0.3,
+      },
+      onSuccess: (alt: null | string, id) => {
+        if (!alt) return;
+
+        setAltGenerationMap((prevMap) =>
+          new Map(prevMap).set(id, {
+            ...prevMap.get(id)!,
+            alt,
+            status: 'generated',
+          }),
+        );
+
+        onGenerate?.({ id, alt });
+      },
+      onError: (error, id) => {
+        setAltGenerationMap((prevMap) => {
+          console.error('Alt generation task failed:', error);
+          return new Map(prevMap).set(id, {
+            ...prevMap.get(id)!,
+            status: 'error',
+            message: error.message,
+          });
+        });
+      },
+      onSettled: (id, queuer) => {
+        if (queuer.store.state.isEmpty && queuer.store.state.isIdle) {
+          setIsGenerating(false);
+          document.dispatchEvent(new CustomEvent('altTextsGenerated'));
+        }
+      },
+    },
+  );
 
   useEffect(() => {
     if (!attachments.length) return;
@@ -62,19 +133,17 @@ export default function BulkGenerateModal({
         details.title = decodeEntities(attachment.title.rendered);
         details.source_url = attachment.source_url;
 
-        const thumbnail =
-          //@ts-ignore - missing WP types
-          attachment.media_details.sizes?.thumbnail ??
-            attachment.media_details.sizes?.[0] ?? {
-              width: attachment.media_details.width,
-              height: attachment.media_details.height,
-              source_url: attachment.source_url,
-            };
+        const thumbnail = attachment.media_details.sizes?.thumbnail ??
+          attachment.media_details.sizes?.[0] ?? {
+            width: attachment.media_details.width,
+            height: attachment.media_details.height,
+            source_url: attachment.source_url,
+          };
 
         if (thumbnail)
           details.thumbnail = {
-            width: thumbnail.width,
-            height: thumbnail.height,
+            width: thumbnail.width!,
+            height: thumbnail.height!,
             source_url: thumbnail.source_url,
           };
 
@@ -85,84 +154,16 @@ export default function BulkGenerateModal({
     });
   }, [attachments, hasResolved]);
 
-  const handleStart = async () => {
-    abortController.current = new AbortController();
+  const handleStart = () => {
     setIsGenerating(true);
-    const generateTasks = [];
+    queuer.clear();
 
-    for (const [id, details] of altGenerationMap) {
-      if (!overwriteExisting && details.alt.length > 0) {
-        setAltGenerationMap(
-          (prevMap) =>
-            new Map(prevMap.set(id, { ...details, status: 'skipped' })),
-        );
-        continue;
-      }
-
-      setAltGenerationMap(
-        (prevMap) =>
-          new Map(prevMap.set(id, { ...details, status: 'generating' })),
-      );
-
-      const task = generateAltText(
-        id,
-        saveAltInMediaLibrary,
-        customPrompt,
-        abortController.current.signal,
-      )
-        .then((alt) => {
-          const attachment = attachments.find(
-            (attachment) => attachment.id === id,
-          );
-          if (attachment) {
-            attachment.alt_text = alt;
-          }
-
-          setAltGenerationMap(
-            (prevMap) =>
-              new Map(
-                prevMap.set(id, { ...details, alt, status: 'generated' }),
-              ),
-          );
-
-          if (onGenerate) {
-            onGenerate({ id, alt });
-          }
-        })
-        .catch((error) => {
-          setAltGenerationMap(
-            (prevMap) =>
-              new Map(
-                prevMap.set(id, {
-                  ...details,
-                  status: 'error',
-                  message: error.message,
-                }),
-              ),
-          );
-          console.error(error);
-        });
-
-      generateTasks.push(task);
-
-      // Wait for 1 second before processing the next image to avoid too many requests at once
-      // TODO:
-      //  Use rate limiting info and implement a better solution
-      //  https://platform.openai.com/docs/guides/rate-limits/rate-limits-in-headers
-      await sleep(1000);
+    for (const id of altGenerationMap.keys()) {
+      queuer.addItem(id);
     }
 
-    await Promise.all(generateTasks);
-    setIsGenerating(false);
-
-    document.dispatchEvent(new CustomEvent('altTextsGenerated'));
+    queuer.start();
   };
-
-  useEffect(() => {
-    return () => {
-      abortController.current.abort();
-    };
-  }, []);
 
   return (
     <Modal

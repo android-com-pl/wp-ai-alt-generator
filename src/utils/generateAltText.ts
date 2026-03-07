@@ -5,7 +5,7 @@ export default async (
   attachmentId: number,
   save: boolean = false,
   userPrompt?: string,
-  signal?: AbortSignal,
+  signal?: AbortSignal | null,
 ) => {
   const requestData: {
     attachment_id: number;

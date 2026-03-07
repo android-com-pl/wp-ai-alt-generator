@@ -10,6 +10,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@tanstack/react-pacer": "^0.20.0",
     "@wordpress/icons": "^11.8.0",
     "@wordpress/scripts": "^31.6.0",
     "husky": "^9.1.7",
