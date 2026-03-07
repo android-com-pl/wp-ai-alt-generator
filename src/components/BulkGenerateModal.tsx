@@ -102,8 +102,7 @@ export default function BulkGenerateModal({
         });
       },
       onSettled: (_id, queuer) => {
-        const { size, activeItems } = queuer.store.state;
-        if (size === 0 && activeItems.length === 0) {
+        if (queuer.store.state.isIdle) {
           document.dispatchEvent(new CustomEvent('altTextsGenerated'));
         }
       },
