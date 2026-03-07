@@ -3,7 +3,7 @@ import {
   store as blockEditorStore,
 } from '@wordpress/block-editor';
 import { Button, Panel, PanelBody } from '@wordpress/components';
-import { dispatch, useSelect } from '@wordpress/data';
+import { useDispatch, useSelect } from '@wordpress/data';
 import { useMemo, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import BulkGenerateModal from '../../components/BulkGenerateModal';
@@ -19,25 +19,35 @@ export default ({ clientId }: GalleryBlockInspectorControlsProps) => {
   const [isBulkGenerationModalOpen, setIsBulkGenerationModalOpen] =
     useState(false);
 
+  const { updateBlockAttributes } = useDispatch(blockEditorStore);
+
   const innerBlocks = useSelect(
-    (select) =>
-      //@ts-ignore - missing types
-      select(blockEditorStore).getBlock(clientId)
-        .innerBlocks as ImageBlockProps[],
+    (select) => select(blockEditorStore).getBlock(clientId)?.innerBlocks ?? [],
     [clientId],
   );
 
   const imageBlocks = useMemo(
-    () => innerBlocks.filter((block) => block.name === 'core/image') ?? [],
+    () =>
+      innerBlocks.filter(
+        (block) => block.name === 'core/image' && block.attributes?.id,
+      ),
     [innerBlocks],
   );
 
   const imgIds = useMemo(
+    () => imageBlocks.map((block) => block.attributes.id),
+    [imageBlocks],
+  );
+
+  const existingAlts = useMemo(
     () =>
-      innerBlocks
-        .filter((block) => block.attributes?.id)
-        .map((block) => block.attributes.id),
-    [innerBlocks],
+      Object.fromEntries(
+        imageBlocks.map((block) => [
+          block.attributes.id,
+          block.attributes.alt ?? '',
+        ]),
+      ) as Record<number, string>,
+    [imageBlocks],
   );
 
   if (imgIds.length === 0) {
@@ -63,17 +73,14 @@ export default ({ clientId }: GalleryBlockInspectorControlsProps) => {
             <BulkGenerateModal
               context="editor"
               attachmentIds={imgIds}
+              existingAlts={existingAlts}
               onClose={() => setIsBulkGenerationModalOpen(false)}
               onGenerate={({ id, alt }) => {
                 const imageBlock = imageBlocks.find(
                   (block) => block.attributes.id === id,
                 );
                 if (!imageBlock) return;
-                // @ts-ignore - missing types
-                dispatch(blockEditorStore).updateBlockAttributes(
-                  imageBlock.clientId,
-                  { alt },
-                );
+                updateBlockAttributes(imageBlock.clientId, { alt });
               }}
             />
           )}

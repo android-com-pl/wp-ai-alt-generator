@@ -26,6 +26,7 @@ export interface BulkGenerateModalProps {
   onGenerate?: ({ id, alt }: { id: number; alt: string }) => void;
   onClose: () => void;
   context?: GenerationContext;
+  existingAlts?: Record<number, string>;
 }
 
 export default function BulkGenerateModal({
@@ -33,6 +34,7 @@ export default function BulkGenerateModal({
   onGenerate,
   onClose,
   context = 'mediaLibrary',
+  existingAlts,
 }: BulkGenerateModalProps) {
   const [overwriteExisting, setOverwriteExisting] = useState(false);
   const [customPrompt, setCustomPrompt] = useState('');
@@ -41,7 +43,12 @@ export default function BulkGenerateModal({
   );
   const { attachments, hasResolved } = useAttachments(attachmentIds);
   const [altGenerationMap, setAltGenerationMap] = useState<AltGenerationMap>(
-    new Map(attachmentIds.map((id) => [id, { status: 'idle', alt: '' }])),
+    new Map(
+      attachmentIds.map((id) => [
+        id,
+        { status: 'idle', alt: existingAlts?.[id] || '' },
+      ]),
+    ),
   );
 
   const patchItem = (id: number, patch: Partial<AltGenerationDetails>) => {
@@ -112,6 +119,15 @@ export default function BulkGenerateModal({
     }),
   );
 
+  /**
+   * One-time hydration of the generation map for this modal instance.
+   *
+   * Runs only after attachments are loaded.
+   * Intentionally does not react to later prop/state changes (`existingAlts`, `onGenerate`, regenerated alts, etc.),
+   * because that would rehydrate the map and overwrite the local modal state during generation/editing.
+   *
+   * The modal is unmounted on close, so a fresh map is created on the next open.
+   */
   useEffect(() => {
     if (!attachments.length) return;
 
@@ -131,7 +147,7 @@ export default function BulkGenerateModal({
 
         nextMap.set(attachment.id, {
           ...details,
-          alt: attachment.alt_text,
+          alt: details.alt || attachment.alt_text,
           title: decodeEntities(attachment.title.rendered),
           source_url: attachment.source_url,
           thumbnail: thumbnail
