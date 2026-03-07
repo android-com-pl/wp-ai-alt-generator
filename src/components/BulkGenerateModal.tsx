@@ -10,7 +10,11 @@ import { useEffect, useState } from '@wordpress/element';
 import { decodeEntities } from '@wordpress/html-entities';
 import { __, _n, sprintf } from '@wordpress/i18n';
 import useAttachments from '../hooks/useAttachments';
-import { AltGenerationMap, GenerationContext } from '../types';
+import {
+  AltGenerationDetails,
+  AltGenerationMap,
+  GenerationContext,
+} from '../types';
 import generateAltText from '../utils/generateAltText';
 import BulkGenerationTable from './BulkGenerationTable';
 import CustomPromptControl from './CustomPromptControl';
@@ -35,27 +39,31 @@ export default function BulkGenerateModal({
   const [saveAltInMediaLibrary, setSaveAltInMediaLibrary] = useState(
     context === 'mediaLibrary',
   );
-  const [isGenerating, setIsGenerating] = useState(false);
   const { attachments, hasResolved } = useAttachments(attachmentIds);
   const [altGenerationMap, setAltGenerationMap] = useState<AltGenerationMap>(
-    new Map(attachmentIds.map((id) => [id, { status: '', alt: '' }])),
+    new Map(attachmentIds.map((id) => [id, { status: 'idle', alt: '' }])),
   );
+
+  const patchItem = (id: number, patch: Partial<AltGenerationDetails>) => {
+    setAltGenerationMap((prevMap) =>
+      new Map(prevMap).set(id, {
+        ...prevMap.get(id)!,
+        ...patch,
+      }),
+    );
+  };
 
   const queuer = useAsyncQueuer(
     async (id: number): Promise<null | string> => {
       const details = altGenerationMap.get(id);
       if (!details) return null;
 
-      if (!overwriteExisting && details.alt && details.alt.length > 0) {
-        setAltGenerationMap((prevMap) =>
-          new Map(prevMap).set(id, { ...details, status: 'skipped' }),
-        );
+      if (!overwriteExisting && details.alt?.length) {
+        patchItem(id, { status: 'skipped' });
         return null;
       }
 
-      setAltGenerationMap((prevMap) =>
-        new Map(prevMap).set(id, { ...details, status: 'generating' }),
-      );
+      patchItem(id, { status: 'generating' });
 
       const alt = await generateAltText(
         id,
@@ -64,6 +72,7 @@ export default function BulkGenerateModal({
         queuer.getAbortSignal(),
       );
 
+      // Sync local core-data cached record, so reopening the modal shows fresh alt text.
       const attachment = attachments.find((a) => a.id === id);
       if (attachment) {
         attachment.alt_text = alt;
@@ -83,55 +92,38 @@ export default function BulkGenerateModal({
       },
       onSuccess: (alt: null | string, id) => {
         if (!alt) return;
-
-        setAltGenerationMap((prevMap) =>
-          new Map(prevMap).set(id, {
-            ...prevMap.get(id)!,
-            alt,
-            status: 'generated',
-          }),
-        );
-
+        patchItem(id, { alt, status: 'generated' });
         onGenerate?.({ id, alt });
       },
       onError: (error, id) => {
-        setAltGenerationMap((prevMap) => {
-          console.error('Alt generation task failed:', error);
-          return new Map(prevMap).set(id, {
-            ...prevMap.get(id)!,
-            status: 'error',
-            message: error.message,
-          });
+        console.error('Alt generation task failed:', error);
+        patchItem(id, {
+          status: 'error',
+          message: error instanceof Error ? error.message : String(error),
         });
       },
-      onSettled: (id, queuer) => {
-        if (queuer.store.state.isEmpty && queuer.store.state.isIdle) {
-          setIsGenerating(false);
+      onSettled: (_id, queuer) => {
+        const { size, activeItems } = queuer.store.state;
+        if (size === 0 && activeItems.length === 0) {
           document.dispatchEvent(new CustomEvent('altTextsGenerated'));
         }
       },
     },
+    (state) => ({
+      size: state.size,
+      activeItems: state.activeItems,
+    }),
   );
 
   useEffect(() => {
     if (!attachments.length) return;
 
     setAltGenerationMap((prevMap) => {
-      const newMap = new Map(prevMap);
+      const nextMap = new Map(prevMap);
 
       attachments.forEach((attachment) => {
-        const details = newMap.get(attachment.id);
-        if (!details) {
-          console.error(
-            'Generation details not found for attachment',
-            attachment,
-          );
-          return;
-        }
-
-        details.alt = attachment.alt_text;
-        details.title = decodeEntities(attachment.title.rendered);
-        details.source_url = attachment.source_url;
+        const details = nextMap.get(attachment.id);
+        if (!details) return;
 
         const thumbnail = attachment.media_details.sizes?.thumbnail ??
           attachment.media_details.sizes?.[0] ?? {
@@ -140,22 +132,29 @@ export default function BulkGenerateModal({
             source_url: attachment.source_url,
           };
 
-        if (thumbnail)
-          details.thumbnail = {
-            width: thumbnail.width!,
-            height: thumbnail.height!,
-            source_url: thumbnail.source_url,
-          };
-
-        newMap.set(attachment.id, details);
+        nextMap.set(attachment.id, {
+          status: 'idle',
+          alt: attachment.alt_text,
+          title: decodeEntities(attachment.title.rendered),
+          source_url: attachment.source_url,
+          thumbnail: thumbnail
+            ? {
+                width: thumbnail.width!,
+                height: thumbnail.height!,
+                source_url: thumbnail.source_url,
+              }
+            : undefined,
+        });
       });
 
-      return newMap;
+      return nextMap;
     });
-  }, [attachments, hasResolved]);
+  }, [attachments]);
+
+  const isGenerating =
+    queuer.state.size > 0 || queuer.state.activeItems.length > 0;
 
   const handleStart = () => {
-    setIsGenerating(true);
     queuer.clear();
 
     for (const id of altGenerationMap.keys()) {
