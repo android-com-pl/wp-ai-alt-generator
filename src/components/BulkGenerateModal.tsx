@@ -83,7 +83,6 @@ export default function BulkGenerateModal({
     {
       started: false,
       concurrency: 3,
-      wait: 1000,
       asyncRetryerOptions: {
         maxAttempts: 3,
         backoff: 'exponential',
