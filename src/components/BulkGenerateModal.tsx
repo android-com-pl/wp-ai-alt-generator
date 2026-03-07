@@ -110,8 +110,7 @@ export default function BulkGenerateModal({
       },
     },
     (state) => ({
-      size: state.size,
-      activeItems: state.activeItems,
+      isGenerating: state.status === 'running',
     }),
   );
 
@@ -133,7 +132,7 @@ export default function BulkGenerateModal({
           };
 
         nextMap.set(attachment.id, {
-          status: 'idle',
+          ...details,
           alt: attachment.alt_text,
           title: decodeEntities(attachment.title.rendered),
           source_url: attachment.source_url,
@@ -151,11 +150,11 @@ export default function BulkGenerateModal({
     });
   }, [attachments]);
 
-  const isGenerating =
-    queuer.state.size > 0 || queuer.state.activeItems.length > 0;
+  const { isGenerating } = queuer.state;
 
   const handleStart = () => {
     queuer.clear();
+    queuer.reset();
 
     for (const id of altGenerationMap.keys()) {
       queuer.addItem(id);
@@ -215,17 +214,45 @@ export default function BulkGenerateModal({
       <GenerationDisclaimer />
 
       <Flex>
-        <p>
-          {sprintf(
-            _n(
-              '%d image selected',
-              '%d images selected',
-              attachmentIds.length,
-              'alt-text-generator-gpt-vision',
-            ),
-            attachmentIds.length,
-          )}
-        </p>
+        <queuer.Subscribe
+          selector={(state) => ({
+            settledCount: state.settledCount,
+            isRunning: state.isRunning,
+          })}
+        >
+          {({ settledCount, isRunning }) => {
+            const total = attachmentIds.length;
+
+            if (!isRunning) {
+              return (
+                <p>
+                  {sprintf(
+                    _n(
+                      '%d image selected',
+                      '%d images selected',
+                      total,
+                      'alt-text-generator-gpt-vision',
+                    ),
+                    total,
+                  )}
+                </p>
+              );
+            }
+
+            return (
+              <p>
+                {sprintf(
+                  __(
+                    'Processed: %1$d of %2$d',
+                    'alt-text-generator-gpt-vision',
+                  ),
+                  settledCount,
+                  total,
+                )}
+              </p>
+            );
+          }}
+        </queuer.Subscribe>
 
         <FlexItem>
           <Flex justify="end">
