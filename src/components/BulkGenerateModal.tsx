@@ -108,14 +108,21 @@ export default function BulkGenerateModal({
           message: error instanceof Error ? error.message : String(error),
         });
       },
-      onSettled: (_id, queuer) => {
+      onSettled: (id, queuer) => {
+        if (queuer.store.state.status === 'stopped') {
+          patchItem(id, { status: 'idle' });
+          queuer.addItem(id, 'front');
+          return;
+        }
+
         if (queuer.store.state.isIdle) {
           document.dispatchEvent(new CustomEvent('altTextsGenerated'));
         }
       },
     },
     (state) => ({
-      isGenerating: state.status === 'running',
+      queueStatus: state.status,
+      queueExecuteCount: state.executeCount,
     }),
   );
 
@@ -164,17 +171,45 @@ export default function BulkGenerateModal({
     });
   }, [attachments]);
 
-  const { isGenerating } = queuer.state;
+  const processedCount = Array.from(altGenerationMap.values()).filter(
+    ({ status }) => status !== 'idle' && status !== 'generating',
+  ).length;
 
-  const handleStart = () => {
+  const { queueStatus, queueExecuteCount } = queuer.state;
+  const isGenerating = queueStatus === 'running';
+  const isPaused = queueStatus === 'stopped' && queueExecuteCount > 0;
+  const showProgress = isGenerating || isPaused || processedCount > 0;
+
+  const startGeneration = () => {
+    if (isPaused) {
+      queuer.start();
+      return;
+    }
+
     queuer.clear();
     queuer.reset();
 
-    for (const id of altGenerationMap.keys()) {
-      queuer.addItem(id);
-    }
+    setAltGenerationMap((prevMap) => {
+      const nextMap = new Map(prevMap);
 
+      for (const [id, details] of nextMap) {
+        nextMap.set(id, {
+          ...details,
+          status: 'idle',
+          message: undefined,
+        });
+      }
+
+      return nextMap;
+    });
+
+    attachmentIds.forEach((id) => queuer.addItem(id));
     queuer.start();
+  };
+
+  const pauseGeneration = () => {
+    queuer.stop();
+    queuer.abort();
   };
 
   return (
@@ -228,59 +263,43 @@ export default function BulkGenerateModal({
       <GenerationDisclaimer />
 
       <Flex>
-        <queuer.Subscribe
-          selector={(state) => ({
-            settledCount: state.settledCount,
-            isRunning: state.isRunning,
-          })}
-        >
-          {({ settledCount, isRunning }) => {
-            const total = attachmentIds.length;
-
-            if (!isRunning) {
-              return (
-                <p>
-                  {sprintf(
-                    _n(
-                      '%d image selected',
-                      '%d images selected',
-                      total,
-                      'alt-text-generator-gpt-vision',
-                    ),
-                    total,
-                  )}
-                </p>
-              );
-            }
-
-            return (
-              <p>
-                {sprintf(
-                  __(
-                    'Processed: %1$d of %2$d',
-                    'alt-text-generator-gpt-vision',
-                  ),
-                  settledCount,
-                  total,
-                )}
-              </p>
-            );
-          }}
-        </queuer.Subscribe>
+        <p>
+          {showProgress
+            ? sprintf(
+                __('Processed: %1$d of %2$d', 'alt-text-generator-gpt-vision'),
+                processedCount,
+                attachmentIds.length,
+              )
+            : sprintf(
+                _n(
+                  '%d image selected',
+                  '%d images selected',
+                  attachmentIds.length,
+                  'alt-text-generator-gpt-vision',
+                ),
+                attachmentIds.length,
+              )}
+        </p>
 
         <FlexItem>
           <Flex justify="end">
-            <Button onClick={onClose} isDestructive>
-              {__('Cancel', 'alt-text-generator-gpt-vision')}
-            </Button>
+            {isGenerating && (
+              <Button onClick={pauseGeneration} isDestructive>
+                {__('Stop', 'alt-text-generator-gpt-vision')}
+              </Button>
+            )}
 
             <Button
               variant="primary"
               disabled={isGenerating || !hasResolved}
               isBusy={isGenerating}
-              onClick={handleStart}
+              onClick={startGeneration}
             >
-              {__('Start', 'alt-text-generator-gpt-vision')}
+              {isGenerating
+                ? __('Generating...', 'alt-text-generator-gpt-vision')
+                : isPaused
+                  ? __('Continue', 'alt-text-generator-gpt-vision')
+                  : __('Generate', 'alt-text-generator-gpt-vision')}
             </Button>
           </Flex>
         </FlexItem>
