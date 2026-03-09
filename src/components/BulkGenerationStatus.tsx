@@ -1,6 +1,6 @@
 import { Flex, Icon, Spinner } from '@wordpress/components';
 import { _x, sprintf } from '@wordpress/i18n';
-import { cautionFilled, check, next } from '@wordpress/icons';
+import { cautionFilled, check, next, scheduled } from '@wordpress/icons';
 import type { AltGenerationDetails } from '../types';
 
 export default function BulkGenerationStatus({
@@ -32,6 +32,11 @@ export default function BulkGenerationStatus({
         <>
           <Icon icon={next} />
           {_x('Skipped', 'Generation status', 'alt-text-generator-gpt-vision')}
+        </>
+      ) : status === 'queued' ? (
+        <>
+          <Icon icon={scheduled} />
+          {_x('In queue', 'Generation status', 'alt-text-generator-gpt-vision')}
         </>
       ) : status === 'error' ? (
         <>

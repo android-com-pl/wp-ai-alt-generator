@@ -110,7 +110,7 @@ export default function BulkGenerateModal({
       },
       onSettled: (id, queuer) => {
         if (queuer.store.state.status === 'stopped') {
-          patchItem(id, { status: 'idle' });
+          patchItem(id, { status: 'queued' });
           queuer.addItem(id, 'front');
           return;
         }
@@ -172,7 +172,8 @@ export default function BulkGenerateModal({
   }, [attachments]);
 
   const processedCount = Array.from(altGenerationMap.values()).filter(
-    ({ status }) => status !== 'idle' && status !== 'generating',
+    ({ status }) =>
+      status === 'generated' || status === 'error' || status === 'skipped',
   ).length;
 
   const { queueStatus, queueExecuteCount } = queuer.state;
@@ -195,15 +196,15 @@ export default function BulkGenerateModal({
       for (const [id, details] of nextMap) {
         nextMap.set(id, {
           ...details,
-          status: 'idle',
+          status: 'queued',
           message: undefined,
         });
+
+        queuer.addItem(id);
       }
 
       return nextMap;
     });
-
-    attachmentIds.forEach((id) => queuer.addItem(id));
     queuer.start();
   };
 
