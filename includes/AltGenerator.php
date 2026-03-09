@@ -203,10 +203,24 @@ class AltGenerator {
 	}
 
 	public static function get_image_as_base64( int $attachment_id ): string|WP_Error {
-		$image = file_get_contents( get_attached_file( $attachment_id ) );
+		$file_path = get_attached_file( $attachment_id );
+		if ( empty( $file_path ) || ! is_readable( $file_path ) ) {
+			return ErrorCodes::Img_not_found->to_wp_error(
+				[
+					'attachment_id' => $attachment_id,
+					'file_path'     => $file_path,
+				]
+			);
+		}
 
+		$image = file_get_contents( $file_path );
 		if ( ! $image ) {
-			return ErrorCodes::Img_not_found->to_wp_error();
+			return ErrorCodes::Img_not_found->to_wp_error(
+				[
+					'attachment_id' => $attachment_id,
+					'file_path'     => $file_path,
+				]
+			);
 		}
 
 		return base64_encode( $image );
