@@ -199,12 +199,13 @@ export default function BulkGenerateModal({
           status: 'queued',
           message: undefined,
         });
-
-        queuer.addItem(id);
       }
 
       return nextMap;
     });
+
+    attachmentIds.forEach((id) => queuer.addItem(id));
+
     queuer.start();
   };
 
