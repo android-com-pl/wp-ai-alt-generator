@@ -102,7 +102,7 @@ export default function BulkGenerateModal({
         onGenerate?.({ id, alt });
       },
       onError: (error, id) => {
-        console.error('Alt generation task failed:', error);
+        console.error('Alt generation task failed:', error, error?.cause);
         patchItem(id, {
           status: 'error',
           message: error instanceof Error ? error.message : String(error),

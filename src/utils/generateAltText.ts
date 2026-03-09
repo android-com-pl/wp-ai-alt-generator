@@ -26,14 +26,13 @@ export default async (
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(requestData),
+    data: requestData,
     signal,
   })
     .then((response) => {
       return response.alt;
     })
     .catch((error) => {
-      console.error(error);
-      throw error as WPError;
+      throw new Error(error?.message || String(error), { cause: error });
     });
 };
