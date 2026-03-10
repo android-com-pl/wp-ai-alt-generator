@@ -26,11 +26,15 @@ class AltGenerator {
 		$locale   = get_locale();
 		$language = function_exists( 'locale_get_display_language' ) ? locale_get_display_language( $locale, 'en' ) : $locale;
 
-		$image_mime_type = get_post_mime_type( $attachment_id );
-		$image_base64    = self::get_image_as_base64( $attachment_id );
-
+		$image_base64 = self::get_image_as_base64( $attachment_id );
 		if ( is_wp_error( $image_base64 ) ) {
-			return $image_base64;
+			$image_source = wp_get_attachment_image_url( $attachment_id, 'full' );
+			if ( ! $image_source ) {
+				return $image_base64;
+			}
+		} else {
+			$image_mime_type = get_post_mime_type( $attachment_id );
+			$image_source = "data:$image_mime_type;base64,$image_base64";
 		}
 
 		$model = OpenAIModel::tryFrom( $options['model'] ?? '' ) ?? OpenAIModel::default();
@@ -64,7 +68,7 @@ class AltGenerator {
 						],
 						[
 							'type'      => 'input_image',
-							'image_url' => "data:$image_mime_type;base64,$image_base64",
+							'image_url' => $image_source,
 							'detail'    => $options['detail'] ?? 'auto',
 						],
 					],
