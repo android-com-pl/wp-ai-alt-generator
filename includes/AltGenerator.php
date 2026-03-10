@@ -34,7 +34,7 @@ class AltGenerator {
 			}
 		} else {
 			$image_mime_type = get_post_mime_type( $attachment_id );
-			$image_source = "data:$image_mime_type;base64,$image_base64";
+			$image_source    = "data:$image_mime_type;base64,$image_base64";
 		}
 
 		$model = OpenAIModel::tryFrom( $options['model'] ?? '' ) ?? OpenAIModel::default();
