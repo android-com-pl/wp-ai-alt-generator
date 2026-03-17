@@ -4,6 +4,8 @@ namespace ACPL\AIAltGenerator\Enum;
 
 enum OpenAIModel: string {
 	case GPT_5_4      = 'gpt-5.4';
+	case GPT_5_4_MINI = 'gpt-5.4-mini';
+	case GPT_5_4_NANO = 'gpt-5.4-nano';
 	case GPT_5_2      = 'gpt-5.2';
 	case GPT_5_1      = 'gpt-5.1';
 	case GPT_5        = 'gpt-5';
@@ -23,6 +25,8 @@ enum OpenAIModel: string {
 		return match ( $this ) {
 			// gpt-5.1+ defaults to none, supports none.
 			self::GPT_5_4,
+			self::GPT_5_4_MINI,
+			self::GPT_5_4_NANO,
 			self::GPT_5_2,
 			self::GPT_5_1 => 'none',
 
@@ -43,6 +47,8 @@ enum OpenAIModel: string {
 	public function response_verbosity(): ?string {
 		return match ( $this ) {
 			self::GPT_5_4,
+			self::GPT_5_4_MINI,
+			self::GPT_5_4_NANO,
 			self::GPT_5_2,
 			self::GPT_5_1,
 			self::GPT_5,
