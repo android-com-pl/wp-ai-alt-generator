@@ -1,20 +1,13 @@
 {
   "compilerOptions": {
     "jsx": "react-jsx",
-    "esModuleInterop": true,
     "allowJs": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "target": "ES2022",
     "noEmit": true,
-    "lib": ["ESNext", "dom", "dom.iterable"],
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
     "noUncheckedIndexedAccess": true,
-    "typeRoots": ["node_modules/@types", "src/types"]
+    "lib": ["ESNext", "dom"],
+    "types": ["wordpress__admin"]
   },
-  "include": ["src"],
-  "exclude": ["build", "node_modules", "vendor"]
+  "include": ["src"]
 }

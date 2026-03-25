@@ -53,7 +53,7 @@ export default (
               'There was an error generating the alt text: %s',
               'alt-text-generator-gpt-vision',
             ),
-            error.message,
+            error instanceof Error ? error.message : String(error),
           ),
         );
       } finally {

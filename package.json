@@ -15,7 +15,7 @@
     "@wordpress/scripts": "^31.7.0",
     "husky": "^9.1.7",
     "ts-dom-utils": "^2.3.1",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.2"
   },
   "devDependencies": {
     "@types/react": "^18.3.28",
