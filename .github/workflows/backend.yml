@@ -10,6 +10,9 @@ on:
     paths:
       - '**.php'
 
+permissions:
+  contents: read
+
 jobs:
   phpcs:
     name: Run Backend Checks
