@@ -6,6 +6,9 @@
     "dev:hot": "wp-scripts start --hot",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
+    "lint": "oxlint",
+    "lint:github": "oxlint --format=github",
+    "lint:fix": "oxlint --fix",
     "prepare": "husky"
   },
   "dependencies": {
@@ -31,7 +34,8 @@
     "@wordpress/i18n": "^6.18.0",
     "@wordpress/notices": "^5.45.0",
     "lint-staged": "^17.0.2",
-    "oxfmt": "^0.48.0"
+    "oxfmt": "^0.48.0",
+    "oxlint": "^1.63.0"
   },
   "packageManager": "pnpm@11.0.8"
 }

@@ -14,7 +14,7 @@ permissions:
   contents: read
 
 jobs:
-  phpcs:
+  backend:
     name: Run Backend Checks
     runs-on: ubuntu-latest
 

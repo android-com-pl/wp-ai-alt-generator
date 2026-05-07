@@ -1,0 +1,32 @@
+name: Frontend Checks
+
+on:
+  pull_request:
+    paths-ignore:
+      - '**.php'
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.php'
+
+permissions:
+  contents: read
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm i --frozen-lockfile
+
+      - name: ✨ Lint
+        run: pnpm run lint:github
+
+      - name: 🎨 Check formatting
+        run: pnpm run format:check
