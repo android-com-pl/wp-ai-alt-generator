@@ -13,7 +13,7 @@ package.json
 pnpm-lock.yaml
 tsconfig.json
 webpack.config.js
-.prettierrc.yml
+.oxfmtrc.json
 .lintstagedrc.json
 
 composer.json

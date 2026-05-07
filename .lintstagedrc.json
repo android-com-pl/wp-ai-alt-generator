@@ -1,3 +1,3 @@
 {
-	"src/**/*": "prettier --ignore-unknown --write"
+  "src/**/*": "prettier --ignore-unknown --write"
 }

@@ -1,12 +1,11 @@
 {
   "private": true,
-  "packageManager": "pnpm@11.0.8",
   "scripts": {
     "build": "wp-scripts build",
     "dev": "wp-scripts start",
     "dev:hot": "wp-scripts start --hot",
-    "format": "prettier 'src/**/*' --ignore-unknown --write",
-    "format:check": "prettier 'src/**/*' --ignore-unknown --check",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
     "prepare": "husky"
   },
   "dependencies": {
@@ -32,7 +31,7 @@
     "@wordpress/i18n": "^6.18.0",
     "@wordpress/notices": "^5.45.0",
     "lint-staged": "^17.0.2",
-    "prettier": "^3.8.3",
-    "prettier-plugin-organize-imports": "^4.3.0"
-  }
+    "oxfmt": "^0.48.0"
+  },
+  "packageManager": "pnpm@11.0.8"
 }
