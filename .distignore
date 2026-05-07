@@ -14,7 +14,7 @@ pnpm-lock.yaml
 tsconfig.json
 webpack.config.js
 .prettierrc.yml
-.lintstagedrc
+.lintstagedrc.json
 
 composer.json
 composer.lock

@@ -35,7 +35,7 @@ export default ({ clientId }: GalleryBlockInspectorControlsProps) => {
   );
 
   const imgIds = useMemo(
-    () => imageBlocks.map((block) => block.attributes.id),
+    () => imageBlocks.map((block) => block.attributes.id as number),
     [imageBlocks],
   );
 
