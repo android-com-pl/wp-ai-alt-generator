@@ -1,8 +1,8 @@
-# GPT-Powered Alt Text Generator for WordPress
+# AI Alt Text Generator for WordPress
 
-WordPress plugin that uses the OpenAI's API to automatically generate descriptive and contextually relevant alt text (matching your WordPress site's language) for
-images during the upload process. This plugin is designed to enhance website accessibility and improve SEO with minimal
-effort.
+WordPress plugin that uses AI to automatically generate descriptive and contextually relevant alt text (matching your WordPress site's language) for images during the upload process. This plugin is designed to enhance website accessibility and improve SEO with minimal effort.
+
+Powered by the WordPress AI Client, supporting multiple AI providers including OpenAI, Google Gemini, Anthropic Claude, and others.
 
 ## Installation
 
@@ -11,12 +11,12 @@ You can download it here: https://wordpress.org/plugins/alt-text-generator-gpt-v
 Or use composer:
 
 ```shell
-composer require wpackagist-plugin/alt-text-generator-gpt-vision
+composer require wp-plugin/alt-text-generator-gpt-vision
 ```
 
-> [!IMPORTANT]  
-> The settings for the plugin are located in `Settings -> Media`.
-> You need to enter your [OpenAI's API key](https://platform.openai.com/api-keys) there.
+> [!IMPORTANT]
+> This plugin requires at least one AI provider to be configured under **Settings → Connectors**.
+> Plugin settings are located in **Settings → Media**.
 
 ## Screenshots
 
@@ -67,41 +67,21 @@ add_filter('acpl/ai_alt_generator/user_prompt', function($user_prompt, $attachme
 }, 10, 4);
 ```
 
-#### `acpl/ai_alt_generator/api_url`
+#### `acpl/ai_alt_generator/preferred_vision_models`
 
-Modifies the API URL used for generating alt text.
+Overrides the list of preferred AI models used for alt text generation. Models are tried in order — the first one available on the site will be used. This is a preference, not a requirement; if none of the listed models are available, the plugin falls back to any compatible vision model.
 
 **Parameters:**
 
-- `string $api_url` - Default: https://api.openai.com/v1/responses
+- `array $models` - Ordered list of model IDs.
 
 **Usage:**
 
 ```php
-add_filter('acpl/ai_alt_generator/api_url', function($api_url) {
-    // Modify the API URL here
-    return $api_url;
+add_filter('acpl/ai_alt_generator/preferred_vision_models', function($models) {
+    return ['gpt-5.4-mini', 'gemini-3-flash'];
 });
 ```
-
-#### `acpl/ai_alt_generator/api_request_headers`
-
-Modifies the request headers sent to the OpenAI API.
-
-**Parameters:**
-
-- `array $request_headers`
-- `string $api_key`
-- `int $attachment_id`
-
-#### `acpl/ai_alt_generator/api_request_body`
-
-Modifies the request body sent to the OpenAI API.
-
-**Parameters:**
-
-- `array $request_body`
-- `int $attachment_id`
 
 ## Contributing
 

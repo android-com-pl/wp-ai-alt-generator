@@ -1,14 +1,11 @@
 <?php
 
-namespace ACPL\AIAltGenerator;
+namespace Acpl\AltGenerator;
 
-use ACPL\AIAltGenerator\Enum\OpenAIModel;
 use WP_Error;
 
 class AltGeneratorPlugin {
-	public const OPTION_NAME            = 'acpl_ai_alt_generator';
-	public const DB_VERSION_OPTION_NAME = 'acpl_ai_alt_generator_db_version';
-	public const DB_VERSION             = '1.0.0';
+	public const OPTION_NAME = 'acpl_ai_alt_generator';
 
 	public static function init(): void {
 		add_filter( 'wp_generate_attachment_metadata', [ AltGenerator::class, 'on_attachment_upload' ], 10, 3 );
@@ -24,35 +21,20 @@ class AltGeneratorPlugin {
 			fn( $actions ): array => $actions + [ 'generate_alt_text' => __( 'Generate Alternative Text', 'alt-text-generator-gpt-vision' ) ]
 		);
 
-		add_action( 'admin_init', [ self::class, 'maybe_upgrade_plugin_data' ] );
 		add_action( 'activated_plugin', [ self::class,'redirect_to_plugin_settings_after_activation' ] );
 		add_filter( 'plugin_row_meta', [ self::class, 'plugin_row_meta' ], 10, 2 );
 	}
 
-	public static function get_options(): array|false {
+	public static function get_options(): array {
 		$options = get_option( self::OPTION_NAME );
-		if ( defined( 'ACPL_ALT_GENERATOR_OPENAI_API_KEY' ) ) {
-			$options['api_key'] = ACPL_ALT_GENERATOR_OPENAI_API_KEY;
+		if ( ! is_array( $options ) ) {
+			$options = [];
+		}
+		if ( ! isset( $options['preferred_model'] ) ) {
+			$options['preferred_model'] = '';
 		}
 
 		return $options;
-	}
-
-	public static function get_db_version(): string {
-		return get_option( self::DB_VERSION_OPTION_NAME, '0' );
-	}
-
-	public static function maybe_upgrade_plugin_data(): void {
-		if ( version_compare( self::get_db_version(), '1.0.0', '<' ) ) {
-			$options = self::get_options();
-
-			if ( $options && isset( $options['model'] ) && OpenAIModel::tryFrom( $options['model'] ) === null ) {
-				$options['model'] = OpenAIModel::default()->value;
-				update_option( self::OPTION_NAME, $options, false );
-			}
-
-			update_option( self::DB_VERSION_OPTION_NAME, self::DB_VERSION, true );
-		}
 	}
 
 	public static function error_log( WP_Error $error ): WP_Error {
