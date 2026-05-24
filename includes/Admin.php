@@ -41,10 +41,13 @@ class Admin {
 			__( 'AI image alt text generator', 'alt-text-generator-gpt-vision' ),
 			static function (): void {
 				echo '<p>' .
-					sprintf(
-					/* translators: %s: Connectors admin page URL */
-						__( 'This plugin uses WordPress AI Client to generate alternative text for images. AI providers and credentials are managed centrally under <a href="%s">Settings &gt; Connectors</a>.', 'alt-text-generator-gpt-vision' ),
-						esc_url( admin_url( 'options-connectors.php' ) )
+					wp_kses(
+						sprintf(
+						/* translators: %s: Connectors admin page URL */
+							__( 'This plugin uses WordPress AI Client to generate alternative text for images. AI providers and credentials are managed centrally under <a href="%s">Settings &gt; Connectors</a>.', 'alt-text-generator-gpt-vision' ),
+							esc_url( admin_url( 'options-connectors.php' ) )
+						),
+						[ 'a' => [ 'href' => [] ] ]
 					)
 					. '</p>';
 			},
