@@ -27,7 +27,7 @@ const STATUS_CONFIG: Record<
   queued: {
     icon: <Icon icon={scheduled} />,
     getLabel: () =>
-      _x('In queue', 'Generation status', 'alt-text-generator-gpt-vision'),
+      _x('Queued', 'Generation status', 'alt-text-generator-gpt-vision'),
   },
   error: {
     icon: <Icon icon={cautionFilled} />,

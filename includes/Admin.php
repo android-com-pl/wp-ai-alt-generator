@@ -44,7 +44,7 @@ class Admin {
 					wp_kses(
 						sprintf(
 						/* translators: %s: Connectors admin page URL */
-							__( 'This plugin uses WordPress AI Client to generate alternative text for images. AI providers and credentials are managed centrally under <a href="%s">Settings &gt; Connectors</a>.', 'alt-text-generator-gpt-vision' ),
+							__( 'This plugin uses WordPress AI Client to generate alternative text for images. AI providers and credentials are managed centrally under <a href="%s">Settings → Connectors</a>.', 'alt-text-generator-gpt-vision' ),
 							esc_url( admin_url( 'options-connectors.php' ) )
 						),
 						[ 'a' => [ 'href' => [] ] ]

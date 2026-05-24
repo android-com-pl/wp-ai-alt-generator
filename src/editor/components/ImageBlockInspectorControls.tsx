@@ -23,7 +23,7 @@ export default ({
   const [saveAltInMediaLibrary, setSaveAltInMediaLibrary] = useState(false);
 
   return (
-    <InspectorControls>
+    <InspectorControls group="content">
       <Panel>
         <PanelBody
           title={__(

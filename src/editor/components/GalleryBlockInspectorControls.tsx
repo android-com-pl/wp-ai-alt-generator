@@ -6,6 +6,7 @@ import { Button, Panel, PanelBody } from '@wordpress/components';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { useMemo, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { update } from '@wordpress/icons';
 import BulkGenerateModal from '../../components/BulkGenerateModal';
 
 interface GalleryBlockInspectorControlsProps {
@@ -55,19 +56,16 @@ export default ({ clientId }: GalleryBlockInspectorControlsProps) => {
   }
 
   return (
-    <InspectorControls>
+    <InspectorControls group="list">
       <Panel>
-        <PanelBody
-          title={__(
-            'Alternative Text Generator',
-            'alt-text-generator-gpt-vision',
-          )}
-        >
+        <PanelBody>
           <Button
-            variant="primary"
+            variant="secondary"
+            icon={update}
             onClick={() => setIsBulkGenerationModalOpen(true)}
+            style={{ width: '100%', justifyContent: 'center' }}
           >
-            {__('Generate alternative texts', 'alt-text-generator-gpt-vision')}
+            {__('Generate Alt Text', 'alt-text-generator-gpt-vision')}
           </Button>
           {isBulkGenerationModalOpen && (
             <BulkGenerateModal
