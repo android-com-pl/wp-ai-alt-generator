@@ -40,16 +40,37 @@ class Admin {
 			self::SETTINGS_SECTION_ID,
 			__( 'AI image alt text generator', 'alt-text-generator-gpt-vision' ),
 			static function (): void {
+				AltGeneratorPlugin::enqueue_script( 'admin', [ 'strategy' => 'defer' ] );
+				$connectors_url = esc_url( admin_url( 'options-connectors.php' ) );
+
 				echo '<p>' .
 					wp_kses(
 						sprintf(
-						/* translators: %s: Connectors admin page URL */
-							__( 'This plugin uses WordPress AI Client to generate alternative text for images. AI providers and credentials are managed centrally under <a href="%s">Settings → Connectors</a>.', 'alt-text-generator-gpt-vision' ),
-							esc_url( admin_url( 'options-connectors.php' ) )
+						/* translators: 1: opening link tag, 2: closing link tag. */
+							__( 'This plugin uses WordPress AI Client to generate alternative text for images. AI providers and credentials are managed centrally under %1$sSettings → Connectors%2$s.', 'alt-text-generator-gpt-vision' ),
+							"<a href='$connectors_url'>",
+							'</a>'
 						),
 						[ 'a' => [ 'href' => [] ] ]
 					)
 					. '</p>';
+
+				echo '<div class="alt-generator-no-models-notice" hidden>';
+				echo '<p>' .
+				wp_kses(
+					sprintf(
+					/* translators: 1: opening link tag, 2: closing link tag. */
+						__(
+							'No vision-capable AI models are available. Please configure an AI provider under %1$sSettings → Connectors%2$s and try again.',
+							'alt-text-generator-gpt-vision'
+						),
+						"<a href='$connectors_url'>",
+						'</a>'
+					),
+					[ 'a' => [ 'href' => [] ] ]
+				) .
+					'</p>';
+				echo '</div>';
 			},
 			'media',
 			[
@@ -62,31 +83,14 @@ class Admin {
 			'acpl_ai_alt_generator_preferred_model',
 			__( 'Preferred Model', 'alt-text-generator-gpt-vision' ),
 			static function () use ( $options ): void {
-				$providers     = ModelHelper::get_supported_models();
-				$current_value = $options['preferred_model'];
-
-				printf( '<select id="preferred_model" name="%1$s[preferred_model]">', esc_attr( AltGeneratorPlugin::OPTION_NAME ) );
-
+				printf(
+					'<select id="preferred_model" name="%1$s[preferred_model]" data-current="%2$s" hidden>',
+					esc_attr( AltGeneratorPlugin::OPTION_NAME ),
+					esc_attr( $options['preferred_model'] )
+				);
 				echo '<option value="">' . esc_html__( '— Default —', 'alt-text-generator-gpt-vision' ) . '</option>';
-
-				foreach ( $providers as $provider ) {
-					printf( '<optgroup label="%s">', esc_attr( $provider['name'] ) );
-
-					foreach ( $provider['models'] as $model ) {
-						$value = $model['id'];
-
-						printf(
-							'<option value="%1$s" %2$s>%3$s</option>',
-							esc_attr( $value ),
-							selected( $current_value, $value, false ),
-							esc_html( $model['name'] )
-						);
-					}
-
-					echo '</optgroup>';
-				}
-
 				echo '</select>';
+				echo '<span class="spinner preferred-model-spinner is-active" style="float: none; margin: 0 0 0 1em"></span>';
 			},
 			'media',
 			self::SETTINGS_SECTION_ID,

@@ -12,10 +12,10 @@ class AltGeneratorPlugin {
 		add_action( 'rest_api_init', [ ApiController::class, 'init' ] );
 
 		add_action( 'enqueue_block_editor_assets', fn()=> self::enqueue_script( 'editor' ) );
-		add_action( 'wp_enqueue_media', fn()=> self::enqueue_script( 'media-modal', true ) );
+		add_action( 'wp_enqueue_media', fn()=> self::enqueue_script( 'media-modal', [ 'strategy' => 'defer' ] ) );
 		add_action( 'admin_enqueue_scripts', fn()=> self::enqueue_attachment_edit_page_script() );
 
-		add_action( 'load-upload.php', fn()=> self::enqueue_script( 'media-upload', true ) );
+		add_action( 'load-upload.php', fn()=> self::enqueue_script( 'media-upload', [ 'strategy' => 'defer' ] ) );
 		add_filter(
 			'bulk_actions-upload',
 			fn( $actions ): array => $actions + [ 'generate_alt_text' => __( 'Generate Alt Text', 'alt-text-generator-gpt-vision' ) ]
@@ -56,7 +56,7 @@ class AltGeneratorPlugin {
 		return $error;
 	}
 
-	protected static function enqueue_script( string $file_name, array|bool $args = false ): void {
+	public static function enqueue_script( string $file_name, array|bool $args = false ): void {
 		$asset_file = include ACPL_AI_ALT_PLUGIN_PATH . "build/$file_name.asset.php";
 		$handle     = "acpl/ai-alt-generator/$file_name";
 		wp_enqueue_script( $handle, ACPL_AI_ALT_PLUGIN_URL . "build/$file_name.js", $asset_file['dependencies'], $asset_file['version'], $args );
