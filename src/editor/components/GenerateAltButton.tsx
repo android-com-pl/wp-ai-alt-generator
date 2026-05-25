@@ -2,6 +2,7 @@ import { Button } from '@wordpress/components';
 import { useDispatch } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
+import { update } from '@wordpress/icons';
 import { store as noticesStore } from '@wordpress/notices';
 import generateAltText from '../../utils/generateAltText';
 
@@ -77,12 +78,14 @@ export default ({
 
   return (
     <Button
-      variant="primary"
+      variant="secondary"
+      icon={update}
       onClick={handleClick}
       isBusy={isGenerating}
       disabled={isGenerating}
+      style={{ width: '100%', justifyContent: 'center' }}
     >
-      {__('Generate alternative text', 'alt-text-generator-gpt-vision')}
+      {__('Generate Alt Text', 'alt-text-generator-gpt-vision')}
     </Button>
   );
 };

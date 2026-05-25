@@ -1,22 +1,22 @@
 <?php
 /**
  * @wordpress-plugin
- * Plugin Name: AI Image Alt Text Generator with OpenAI Vision Models
+ * Plugin Name: AI Alt Text Generator
  * Plugin URI: https://github.com/android-com-pl/wp-ai-alt-generator
- * Description: Automatically generate alternative text for images using OpenAI's GPT Vision API.
- * Version: 3.3.0
- * Requires at least: 6.6
+ * Description: Automatically generate alternative text for images using the WordPress AI Client.
+ * Version: 4.0.0
+ * Requires at least: 7.0
  * Requires PHP: 8.1
  * Author: android.com.pl
  * Author URI: https://android.com.pl/
  * License: GPL v3
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain: alt-text-generator-gpt-vision
- * @package ACPL\AIAltGenerator
+ * @package Acpl\AltGenerator
  */
 
-use ACPL\AIAltGenerator\Admin;
-use ACPL\AIAltGenerator\AltGeneratorPlugin;
+use Acpl\AltGenerator\Admin;
+use Acpl\AltGenerator\AltGeneratorPlugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	http_response_code( 403 );

@@ -8,11 +8,11 @@ interface Props {
 
 export default ({ showIcon = true }: Props) => {
   return (
-    <Flex align="center" justify="end" gap={1}>
+    <Flex align="center" justify="end" gap={1} style={{ color: '#757575' }}>
       {showIcon && <Icon icon={caution} size={22} />}
       <small>
         {__(
-          'AI can make mistakes. Please double-check generated text.',
+          'AI can make mistakes. Please review generated alt text.',
           'alt-text-generator-gpt-vision',
         )}
       </small>

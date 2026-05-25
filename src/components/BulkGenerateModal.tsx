@@ -216,51 +216,53 @@ export default function BulkGenerateModal({
 
   return (
     <Modal
-      title={__('Generate Alternative Texts', 'alt-text-generator-gpt-vision')}
+      title={__('Generate Alt Text', 'alt-text-generator-gpt-vision')}
       onRequestClose={onClose}
       shouldCloseOnClickOutside={false}
       shouldCloseOnEsc={!isGenerating}
       style={{ maxWidth: '48rem' }}
     >
-      <CustomPromptControl
-        value={customPrompt}
-        onChange={setCustomPrompt}
-        disabled={isGenerating}
-      />
-
-      <ToggleControl
-        label={__(
-          'Overwrite existing alternative texts',
-          'alt-text-generator-gpt-vision',
-        )}
-        help={
-          overwriteExisting
-            ? __(
-                'The existing alternative texts will be overwritten with the new ones.',
-                'alt-text-generator-gpt-vision',
-              )
-            : __(
-                'The existing alternative texts will be preserved.',
-                'alt-text-generator-gpt-vision',
-              )
-        }
-        checked={overwriteExisting}
-        onChange={setOverwriteExisting}
-        disabled={isGenerating}
-      />
-
-      {context === 'editor' && (
-        <SaveAltInMediaLibraryControl
-          checked={saveAltInMediaLibrary}
-          onChange={setSaveAltInMediaLibrary}
+      <Flex direction="column" gap={3}>
+        <CustomPromptControl
+          value={customPrompt}
+          onChange={setCustomPrompt}
           disabled={isGenerating}
         />
-      )}
 
-      <BulkGenerationTable
-        loading={hasResolved}
-        generationMap={altGenerationMap}
-      />
+        <ToggleControl
+          label={__(
+            'Overwrite existing alt text',
+            'alt-text-generator-gpt-vision',
+          )}
+          help={
+            overwriteExisting
+              ? __(
+                  'Existing alt text will be overwritten.',
+                  'alt-text-generator-gpt-vision',
+                )
+              : __(
+                  'Existing alt text will be preserved.',
+                  'alt-text-generator-gpt-vision',
+                )
+          }
+          checked={overwriteExisting}
+          onChange={setOverwriteExisting}
+          disabled={isGenerating}
+        />
+
+        {context === 'editor' && (
+          <SaveAltInMediaLibraryControl
+            checked={saveAltInMediaLibrary}
+            onChange={setSaveAltInMediaLibrary}
+            disabled={isGenerating}
+          />
+        )}
+
+        <BulkGenerationTable
+          loading={hasResolved}
+          generationMap={altGenerationMap}
+        />
+      </Flex>
 
       <GenerationDisclaimer />
 

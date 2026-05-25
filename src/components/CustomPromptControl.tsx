@@ -12,12 +12,12 @@ const DEFAULT_LABEL = __(
 );
 
 const DEFAULT_HELP = __(
-  'Provide custom instructions for AI to tailor the alt text generation, such as including specific keywords for SEO.',
+  'Add instructions for the AI, such as keywords to include or style guidelines.',
   'alt-text-generator-gpt-vision',
 );
 
 const DEFAULT_PLACEHOLDER = _x(
-  'e.g. Include terms like "AI", "robotics"',
+  'e.g. Include terms like "AI" and "robotics"',
   'Additional prompt placeholder',
   'alt-text-generator-gpt-vision',
 );

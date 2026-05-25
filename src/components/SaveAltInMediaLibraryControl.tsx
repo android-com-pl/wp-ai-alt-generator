@@ -28,11 +28,11 @@ export default function SaveAltInMediaLibraryControl({
       help={
         checked
           ? __(
-              'Alternative text will be saved in the WordPress media library, making it available for reuse across site.',
+              'Alt text will be saved in the WordPress media library, making it available for reuse across the site.',
               'alt-text-generator-gpt-vision',
             )
           : __(
-              'Alternative text will only be saved for the current editor block.',
+              'Alt text will only be saved for the current editor block.',
               'alt-text-generator-gpt-vision',
             )
       }
