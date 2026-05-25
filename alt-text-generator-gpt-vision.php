@@ -1,9 +1,9 @@
 <?php
 /**
  * @wordpress-plugin
- * Plugin Name: AI Image Alt Text Generator with OpenAI Vision Models
+ * Plugin Name: AI Alt Text Generator
  * Plugin URI: https://github.com/android-com-pl/wp-ai-alt-generator
- * Description: Automatically generate alternative text for images using OpenAI's GPT Vision API.
+ * Description: Automatically generate alternative text for images using the WordPress AI Client.
  * Version: 4.0.0
  * Requires at least: 7.0
  * Requires PHP: 8.1
