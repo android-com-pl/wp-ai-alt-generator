@@ -5,7 +5,6 @@ on:
       - 'v*.*.*'
 
 env:
-  WP_DEVTOOL: source-map
   HUSKY: 0
 
 permissions:
