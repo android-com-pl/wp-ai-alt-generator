@@ -21,7 +21,6 @@ webpack.config.js
 composer.json
 composer.lock
 .mago.toml
-rector.php
 
 README.md
 SECURITY.md

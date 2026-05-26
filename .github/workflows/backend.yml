@@ -27,14 +27,19 @@ jobs:
           php-version: '8.1'
           coverage: none
 
-      - name: 📥 Install PHP dependencies
+      - name: 📦 Install PHP dependencies
         uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda
         with:
           require-lock-file: true
           composer-options: '--classmap-authoritative'
 
-      - name: ✨ PHPCS
-        run: composer analyse:phpcs
+      - name: 🎨 Check formatting
+        run: composer format:check
 
-      - name: 🧐 PHPStan
-        run: composer analyse:phpstan
+      - name: 🚨 Lint
+        if: success() || failure()
+        run: composer lint
+
+      - name: 🔍 Analyse
+        if: success() || failure()
+        run: composer analyse
