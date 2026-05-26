@@ -6,7 +6,7 @@ php-version = "8.1.0"
 
 [source]
 workspace = "."
-paths = ["includes/"]
+paths = ["alt-text-generator-gpt-vision.php", "includes/"]
 includes = ["vendor"]
 excludes = []
 
