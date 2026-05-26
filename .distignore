@@ -20,7 +20,6 @@ webpack.config.js
 
 composer.json
 composer.lock
-phpstan.neon
 .mago.toml
 rector.php
 
