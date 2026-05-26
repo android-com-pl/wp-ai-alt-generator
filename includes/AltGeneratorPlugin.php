@@ -44,16 +44,10 @@ class AltGeneratorPlugin {
 
             $data = $error->get_error_data();
             if (!empty($data)) {
-                // phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_print_r
                 $message .= ' | Data: ' . print_r($data, true);
-
-                // phpcs:enable
             }
 
-            // phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_error_log
             error_log($message);
-
-            // phpcs:enable
         }
 
         return $error;
@@ -79,7 +73,7 @@ class AltGeneratorPlugin {
     public static function enqueue_attachment_edit_page_script(): void {
         global $pagenow;
 
-        if ('post.php' === $pagenow && 'attachment' === get_post_type() && wp_attachment_is_image()) {
+        if ($pagenow === 'post.php' && get_post_type() === 'attachment' && wp_attachment_is_image()) {
             self::enqueue_script('media-edit-page', true);
         }
     }
@@ -92,14 +86,14 @@ class AltGeneratorPlugin {
             return;
         }
 
-        if (plugin_basename(__FILE__) === $plugin) {
+        if (plugin_basename(ACPL_AI_ALT_PLUGIN_FILE) === $plugin) {
             wp_safe_redirect(admin_url('options-media.php#' . Admin::SETTINGS_SECTION_ID));
             exit();
         }
     }
 
     public static function plugin_row_meta(array $plugin_meta, string $plugin_file): array {
-        if (str_contains($plugin_file, basename(ACPL_AI_ALT_PLUGIN_FILE))) {
+        if (str_contains($plugin_file, plugin_basename(ACPL_AI_ALT_PLUGIN_FILE))) {
             $plugin_meta[] = sprintf(
                 '<a href="%s">%s</a>',
                 esc_url(admin_url('options-media.php#' . Admin::SETTINGS_SECTION_ID)),
@@ -108,7 +102,7 @@ class AltGeneratorPlugin {
 
             $plugin_meta[] = sprintf(
                 '<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
-                'https://github.com/android-com-pl/wp-ai-alt-generator?sponsor=1',
+                esc_url('https://github.com/android-com-pl/wp-ai-alt-generator?sponsor=1'),
                 esc_html__('Support Development', 'alt-text-generator-gpt-vision'),
             );
         }
