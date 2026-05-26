@@ -15,7 +15,8 @@
   },
   "require-dev": {
     "rector/rector": "^2.2",
-    "carthage-software/mago": "^1.29"
+    "carthage-software/mago": "^1.29",
+    "php-stubs/wordpress-stubs": "^7.0"
   },
   "config": {
     "allow-plugins": {
