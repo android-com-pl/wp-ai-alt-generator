@@ -5,109 +5,114 @@ namespace Acpl\AltGenerator;
 use WP_Error;
 
 class AltGeneratorPlugin {
-	public const OPTION_NAME = 'acpl_ai_alt_generator';
+    public const OPTION_NAME = 'acpl_ai_alt_generator';
 
-	public static function init(): void {
-		add_filter( 'wp_generate_attachment_metadata', [ AltGenerator::class, 'on_attachment_upload' ], 10, 3 );
-		add_action( 'rest_api_init', [ ApiController::class, 'init' ] );
+    public static function init(): void {
+        add_filter('wp_generate_attachment_metadata', [AltGenerator::class, 'on_attachment_upload'], 10, 3);
+        add_action('rest_api_init', [ApiController::class, 'init']);
 
-		add_action( 'enqueue_block_editor_assets', fn()=> self::enqueue_script( 'editor' ) );
-		add_action( 'wp_enqueue_media', fn()=> self::enqueue_script( 'media-modal', [ 'strategy' => 'defer' ] ) );
-		add_action( 'admin_enqueue_scripts', fn()=> self::enqueue_attachment_edit_page_script() );
+        add_action('enqueue_block_editor_assets', static fn() => self::enqueue_script('editor'));
+        add_action('wp_enqueue_media', static fn() => self::enqueue_script('media-modal', ['strategy' => 'defer']));
+        add_action('admin_enqueue_scripts', self::enqueue_attachment_edit_page_script(...));
 
-		add_action( 'load-upload.php', fn()=> self::enqueue_script( 'media-upload', [ 'strategy' => 'defer' ] ) );
-		add_filter(
-			'bulk_actions-upload',
-			fn( $actions ): array => $actions + [ 'generate_alt_text' => __( 'Generate Alt Text', 'alt-text-generator-gpt-vision' ) ]
-		);
+        add_action('load-upload.php', static fn() => self::enqueue_script('media-upload', ['strategy' => 'defer']));
+        add_filter(
+            'bulk_actions-upload',
+            static fn($actions): array => $actions
+            + ['generate_alt_text' => __('Generate Alt Text', 'alt-text-generator-gpt-vision')],
+        );
 
-		add_action( 'activated_plugin', [ self::class,'redirect_to_plugin_settings_after_activation' ] );
-		add_filter( 'plugin_row_meta', [ self::class, 'plugin_row_meta' ], 10, 2 );
-	}
+        add_action('activated_plugin', [self::class, 'redirect_to_plugin_settings_after_activation']);
+        add_filter('plugin_row_meta', [self::class, 'plugin_row_meta'], 10, 2);
+    }
 
-	public static function get_options(): array {
-		$options = get_option( self::OPTION_NAME );
-		if ( ! is_array( $options ) ) {
-			$options = [];
-		}
-		if ( ! isset( $options['preferred_model'] ) ) {
-			$options['preferred_model'] = '';
-		}
+    public static function get_options(): array {
+        $options = get_option(self::OPTION_NAME);
+        if (!is_array($options)) {
+            $options = [];
+        }
+        if (!isset($options['preferred_model'])) {
+            $options['preferred_model'] = '';
+        }
 
-		return $options;
-	}
+        return $options;
+    }
 
-	public static function error_log( WP_Error $error ): WP_Error {
-		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			$message = '[AI Alt Generator] ' . $error->get_error_message();
+    public static function error_log(WP_Error $error): WP_Error {
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            $message = '[AI Alt Generator] ' . $error->get_error_message();
 
-			$data = $error->get_error_data();
-			if ( ! empty( $data ) ) {
-				// phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_print_r
-				$message .= ' | Data: ' . print_r( $data, true );
-				// phpcs:enable
-			}
+            $data = $error->get_error_data();
+            if (!empty($data)) {
+                // phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_print_r
+                $message .= ' | Data: ' . print_r($data, true);
 
-			// phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_error_log
-			error_log( $message );
-			// phpcs:enable
-		}
+                // phpcs:enable
+            }
 
-		return $error;
-	}
+            // phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_error_log
+            error_log($message);
 
-	public static function enqueue_script( string $file_name, array|bool $args = false ): void {
-		$asset_file = include ACPL_AI_ALT_PLUGIN_PATH . "build/$file_name.asset.php";
-		$handle     = "acpl/ai-alt-generator/$file_name";
-		wp_enqueue_script( $handle, ACPL_AI_ALT_PLUGIN_URL . "build/$file_name.js", $asset_file['dependencies'], $asset_file['version'], $args );
-		wp_set_script_translations( $handle, 'alt-text-generator-gpt-vision' );
+            // phpcs:enable
+        }
 
-		foreach ( $asset_file['dependencies'] as $dependency ) {
-			if ( 'wp-components' === $dependency ) {
-				wp_enqueue_style( 'wp-components' );
-			}
-		}
-	}
+        return $error;
+    }
 
-	public static function enqueue_attachment_edit_page_script(): void {
-		global $pagenow;
+    public static function enqueue_script(string $file_name, array|bool $args = false): void {
+        $asset_file = include ACPL_AI_ALT_PLUGIN_PATH . "build/{$file_name}.asset.php";
+        $handle = "acpl/ai-alt-generator/{$file_name}";
+        wp_enqueue_script(
+            $handle,
+            ACPL_AI_ALT_PLUGIN_URL . "build/{$file_name}.js",
+            $asset_file['dependencies'],
+            $asset_file['version'],
+            $args,
+        );
+        wp_set_script_translations($handle, 'alt-text-generator-gpt-vision');
 
-		if ( 'post.php' === $pagenow && 'attachment' === get_post_type() && wp_attachment_is_image() ) {
-			self::enqueue_script( 'media-edit-page', true );
-		}
-	}
+        if (in_array('wp-components', $asset_file['dependencies'], true)) {
+            wp_enqueue_style('wp-components');
+        }
+    }
 
-	public static function redirect_to_plugin_settings_after_activation( string $plugin ): void {
-		global $pagenow;
+    public static function enqueue_attachment_edit_page_script(): void {
+        global $pagenow;
 
-		// Disable redirect if there are multiple plugins activated at once.
-		// phpcs:disable WordPress.Security.NonceVerification.Recommended
-		if ( 'plugins.php' === $pagenow && isset( $_REQUEST['action'] ) && 'activate-selected' === $_REQUEST['action'] ) {
-			return;
-		}
-		// phpcs:enable
+        if ('post.php' === $pagenow && 'attachment' === get_post_type() && wp_attachment_is_image()) {
+            self::enqueue_script('media-edit-page', true);
+        }
+    }
 
-		if ( plugin_basename( __FILE__ ) === $plugin ) {
-			wp_safe_redirect( admin_url( 'options-media.php#' . Admin::SETTINGS_SECTION_ID ) );
-			exit();
-		}
-	}
+    public static function redirect_to_plugin_settings_after_activation(string $plugin): void {
+        global $pagenow;
 
-	public static function plugin_row_meta( array $plugin_meta, string $plugin_file ): array {
-		if ( str_contains( $plugin_file, basename( ACPL_AI_ALT_PLUGIN_FILE ) ) ) {
-			$plugin_meta[] = sprintf(
-				'<a href="%s">%s</a>',
-				admin_url( 'options-media.php#' . Admin::SETTINGS_SECTION_ID ),
-				__( 'Settings', 'alt-text-generator-gpt-vision' )
-			);
+        // Disable redirect if there are multiple plugins activated at once.
+        if ('plugins.php' === $pagenow && isset($_GET['action']) && $_GET['action'] === 'activate-selected') {
+            return;
+        }
 
-			$plugin_meta[] = sprintf(
-				'<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
-				'https://github.com/android-com-pl/wp-ai-alt-generator?sponsor=1',
-				__( 'Support Development', 'alt-text-generator-gpt-vision' )
-			);
-		}
+        if (plugin_basename(__FILE__) === $plugin) {
+            wp_safe_redirect(admin_url('options-media.php#' . Admin::SETTINGS_SECTION_ID));
+            exit();
+        }
+    }
 
-		return $plugin_meta;
-	}
+    public static function plugin_row_meta(array $plugin_meta, string $plugin_file): array {
+        if (str_contains($plugin_file, basename(ACPL_AI_ALT_PLUGIN_FILE))) {
+            $plugin_meta[] = sprintf(
+                '<a href="%s">%s</a>',
+                esc_url(admin_url('options-media.php#' . Admin::SETTINGS_SECTION_ID)),
+                esc_html__('Settings', 'alt-text-generator-gpt-vision'),
+            );
+
+            $plugin_meta[] = sprintf(
+                '<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
+                'https://github.com/android-com-pl/wp-ai-alt-generator?sponsor=1',
+                esc_html__('Support Development', 'alt-text-generator-gpt-vision'),
+            );
+        }
+
+        return $plugin_meta;
+    }
 }

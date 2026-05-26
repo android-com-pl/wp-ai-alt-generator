@@ -1,0 +1,57 @@
+#:schema https://mago.carthage.software/1.29.0/schema.json
+# Welcome to Mago!
+# For full documentation, see https://mago.carthage.software/tools/overview
+version = "1"
+php-version = "8.1.0"
+
+[source]
+workspace = "."
+paths = ["includes/"]
+includes = ["vendor"]
+excludes = []
+
+[source.glob]
+literal-separator = true
+
+[formatter]
+preset = "default"
+# Braces on the same line
+control-brace-style = "same-line"
+closure-brace-style = "same-line"
+function-brace-style = "same-line"
+method-brace-style = "same-line"
+classlike-brace-style = "same-line"
+sort-uses = true
+
+[linter]
+integrations = []
+
+[linter.rules]
+cyclomatic-complexity = { threshold = 30 }
+ambiguous-function-call = { enabled = false }
+literal-named-argument = { enabled = false }
+halstead = { effort-threshold = 7000 }
+no-else-clause = { enabled = false }
+no-global = { enabled = false } # unavoidable in WordPress
+strict-types = { enabled = false }
+no-empty = { enabled = false }
+no-isset = { enabled = false }
+
+[analyzer]
+plugins = []
+find-unused-definitions = true
+find-unused-expressions = false
+analyze-dead-code = false
+memoize-properties = true
+allow-possibly-undefined-array-keys = true
+check-throws = false
+unchecked-exceptions = ["Error", "LogicException"]
+unchecked-exception-classes = []
+check-missing-override = false
+find-unused-parameters = false
+strict-list-index-checks = false
+strict-array-index-existence = false
+allow-array-truthy-operand = false
+no-boolean-literal-comparison = false
+check-missing-type-hints = false
+register-super-globals = true

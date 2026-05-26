@@ -21,7 +21,7 @@ webpack.config.js
 composer.json
 composer.lock
 phpstan.neon
-.phpcs.xml
+.mago.toml
 rector.php
 
 README.md
