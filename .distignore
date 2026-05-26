@@ -11,6 +11,7 @@
 .husky
 package.json
 pnpm-lock.yaml
+pnpm-workspace.yaml
 tsconfig.json
 webpack.config.js
 .oxfmtrc.json
@@ -22,3 +23,6 @@ composer.lock
 phpstan.neon
 .phpcs.xml
 rector.php
+
+README.md
+SECURITY.md
