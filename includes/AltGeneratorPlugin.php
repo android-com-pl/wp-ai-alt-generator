@@ -6,8 +6,21 @@ use WP_Error;
 
 class AltGeneratorPlugin {
     public const OPTION_NAME = 'acpl_ai_alt_generator';
+    public const DEFAULT_OPTIONS = [
+        'auto_generate' => false,
+        'default_user_prompt' => '',
+        'preferred_model' => '',
+    ];
 
-    public static function init(): void {
+    public static string $plugin_file;
+    public static string $plugin_path;
+    public static string $plugin_url;
+
+    public static function init(string $plugin_file): void {
+        self::$plugin_file = $plugin_file;
+        self::$plugin_path = plugin_dir_path($plugin_file);
+        self::$plugin_url = plugin_dir_url($plugin_file);
+
         add_filter('wp_generate_attachment_metadata', [AltGenerator::class, 'on_attachment_upload'], 10, 3);
         add_action('rest_api_init', [ApiController::class, 'init']);
 
@@ -18,7 +31,7 @@ class AltGeneratorPlugin {
         add_action('load-upload.php', static fn() => self::enqueue_script('media-upload', ['strategy' => 'defer']));
         add_filter(
             'bulk_actions-upload',
-            static fn($actions): array => $actions
+            static fn(array $actions): array => $actions
             + ['generate_alt_text' => __('Generate Alt Text', 'alt-text-generator-gpt-vision')],
         );
 
@@ -26,16 +39,20 @@ class AltGeneratorPlugin {
         add_filter('plugin_row_meta', [self::class, 'plugin_row_meta'], 10, 2);
     }
 
+    /**
+     * @return array{
+     *     auto_generate:bool,
+     *     default_user_prompt: string,
+     *     preferred_model:string
+     * }
+     */
     public static function get_options(): array {
         $options = get_option(self::OPTION_NAME);
         if (!is_array($options)) {
             $options = [];
         }
-        if (!isset($options['preferred_model'])) {
-            $options['preferred_model'] = '';
-        }
 
-        return $options;
+        return wp_parse_args($options, self::DEFAULT_OPTIONS);
     }
 
     public static function error_log(WP_Error $error): WP_Error {
@@ -54,11 +71,12 @@ class AltGeneratorPlugin {
     }
 
     public static function enqueue_script(string $file_name, array|bool $args = false): void {
-        $asset_file = include ACPL_AI_ALT_PLUGIN_PATH . "build/{$file_name}.asset.php";
+	    /** @var array{dependencies: string[], version: string} $asset_file */
+        $asset_file = include self::$plugin_path . "build/{$file_name}.asset.php";
         $handle = "acpl/ai-alt-generator/{$file_name}";
         wp_enqueue_script(
             $handle,
-            ACPL_AI_ALT_PLUGIN_URL . "build/{$file_name}.js",
+            self::$plugin_url . "build/{$file_name}.js",
             $asset_file['dependencies'],
             $asset_file['version'],
             $args,
@@ -86,14 +104,14 @@ class AltGeneratorPlugin {
             return;
         }
 
-        if (plugin_basename(ACPL_AI_ALT_PLUGIN_FILE) === $plugin) {
+        if (plugin_basename(self::$plugin_file) === $plugin) {
             wp_safe_redirect(admin_url('options-media.php#' . Admin::SETTINGS_SECTION_ID));
             exit();
         }
     }
 
     public static function plugin_row_meta(array $plugin_meta, string $plugin_file): array {
-        if (str_contains($plugin_file, plugin_basename(ACPL_AI_ALT_PLUGIN_FILE))) {
+        if (str_contains($plugin_file, plugin_basename(self::$plugin_file))) {
             $plugin_meta[] = sprintf(
                 '<a href="%s">%s</a>',
                 esc_url(admin_url('options-media.php#' . Admin::SETTINGS_SECTION_ID)),

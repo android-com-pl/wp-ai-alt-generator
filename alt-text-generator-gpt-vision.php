@@ -24,14 +24,9 @@ if (!defined('ABSPATH')) {
     exit();
 }
 
-const ACPL_AI_ALT_PLUGIN_FILE = __FILE__;
-
-define('ACPL_AI_ALT_PLUGIN_PATH', plugin_dir_path(__FILE__));
-define('ACPL_AI_ALT_PLUGIN_URL', plugin_dir_url(__FILE__));
-
 require __DIR__ . '/vendor/autoload.php';
 
-AltGeneratorPlugin::init();
+AltGeneratorPlugin::init(__FILE__);
 
 if (is_admin()) {
     Admin::init();

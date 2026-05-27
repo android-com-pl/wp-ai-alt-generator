@@ -21,6 +21,7 @@ webpack.config.js
 composer.json
 composer.lock
 .mago.toml
+.mago-stubs.php
 
 README.md
 SECURITY.md

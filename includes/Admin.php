@@ -14,21 +14,17 @@ class Admin {
         register_setting('media', AltGeneratorPlugin::OPTION_NAME, [
             'type' => 'array',
             'sanitize_callback' => static function (array $input): array {
-                $input['auto_generate'] = isset($input['auto_generate']) && $input['auto_generate'];
+                $input['auto_generate'] = !empty($input['auto_generate']);
                 $input['default_user_prompt'] = isset($input['default_user_prompt'])
-                    ? sanitize_textarea_field($input['default_user_prompt'])
+                    ? sanitize_textarea_field((string) $input['default_user_prompt'])
                     : '';
                 $input['preferred_model'] = isset($input['preferred_model'])
-                    ? sanitize_text_field(trim($input['preferred_model']))
+                    ? sanitize_text_field(trim((string) $input['preferred_model']))
                     : '';
 
                 return $input;
             },
-            'default' => [
-                'auto_generate' => false,
-                'default_user_prompt' => '',
-                'preferred_model' => '',
-            ],
+            'default' => AltGeneratorPlugin::DEFAULT_OPTIONS,
             'show_in_rest' => false,
         ]);
     }
@@ -115,7 +111,7 @@ class Admin {
                 printf(
                     '<input type="checkbox" id="auto_generate_alt" name="%1$s[auto_generate]" %2$s/>',
                     esc_attr(AltGeneratorPlugin::OPTION_NAME),
-                    checked($options['auto_generate'] ?? false, true, false),
+                    checked($options['auto_generate'], true, false),
                 );
 
                 echo
@@ -141,7 +137,7 @@ class Admin {
                 printf(
                     '<textarea id="default_user_prompt" name="%1$s[default_user_prompt]" class="large-text" style="field-sizing:content;max-block-size:6rlh">%2$s</textarea>',
                     esc_attr(AltGeneratorPlugin::OPTION_NAME),
-                    esc_textarea($options['default_user_prompt'] ?? ''),
+                    esc_textarea($options['default_user_prompt']),
                 );
 
                 echo

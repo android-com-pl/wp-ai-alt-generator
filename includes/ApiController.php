@@ -42,9 +42,9 @@ class ApiController {
     }
 
     public static function generate_alt_text(WP_REST_Request $request): WP_REST_Response|WP_Error {
-        $attachment_id = $request->get_param('attachment_id');
-        $save_alt = $request->get_param('save');
-        $user_prompt = $request->get_param('user_prompt') ?? '';
+        $attachment_id = (int) $request->get_param('attachment_id');
+        $save_alt = (bool) $request->get_param('save');
+        $user_prompt = (string) ($request->get_param('user_prompt') ?? '');
 
         if ($save_alt) {
             $alt_text = AltGenerator::generate_and_set_alt_text($attachment_id, $user_prompt);

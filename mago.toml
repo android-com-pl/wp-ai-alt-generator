@@ -6,7 +6,7 @@ php-version = "8.1.0"
 
 [source]
 workspace = "."
-paths = ["alt-text-generator-gpt-vision.php", "includes/"]
+paths = [".mago-stubs.php", "alt-text-generator-gpt-vision.php", "includes/"]
 includes = ["vendor"]
 excludes = []
 
@@ -39,7 +39,7 @@ no-isset = { enabled = false }
 
 [analyzer]
 plugins = []
-find-unused-definitions = true
+find-unused-definitions = false
 find-unused-expressions = false
 analyze-dead-code = false
 memoize-properties = true

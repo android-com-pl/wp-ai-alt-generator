@@ -33,7 +33,7 @@ class AltGenerator {
             str_replace(
                 ['{{LANGUAGE}}', '{{LOCALE}}'],
                 [$language, $locale],
-                file_get_contents(ACPL_AI_ALT_PLUGIN_PATH . 'data/system-prompt.md'),
+                file_get_contents(AltGeneratorPlugin::$plugin_path . 'data/system-prompt.md'),
             ),
             $attachment_id,
             $locale,
