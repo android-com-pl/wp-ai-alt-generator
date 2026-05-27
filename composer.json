@@ -5,7 +5,8 @@
     "lint": "mago lint",
     "analyse": "mago analyse",
     "format": "mago fmt",
-    "format:check": "mago fmt --check"
+    "format:check": "mago fmt --check",
+    "format:staged": "mago fmt --staged"
   },
   "autoload": {
     "psr-4": {

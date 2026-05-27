@@ -71,7 +71,7 @@ class AltGeneratorPlugin {
     }
 
     public static function enqueue_script(string $file_name, array|bool $args = false): void {
-	    /** @var array{dependencies: string[], version: string} $asset_file */
+        /** @var array{dependencies: string[], version: string} $asset_file */
         $asset_file = include self::$plugin_path . "build/{$file_name}.asset.php";
         $handle = "acpl/ai-alt-generator/{$file_name}";
         wp_enqueue_script(
