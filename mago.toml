@@ -36,6 +36,7 @@ no-global = { enabled = false } # unavoidable in WordPress
 strict-types = { enabled = false }
 no-empty = { enabled = false }
 no-isset = { enabled = false }
+no-shorthand-ternary = { enabled = false }
 
 [analyzer]
 plugins = []
@@ -55,7 +56,12 @@ allow-array-truthy-operand = false
 no-boolean-literal-comparison = false
 check-missing-type-hints = false
 register-super-globals = true
-
 ignore = [
+  "mixed-assignment", # too noisy in WordPres
   { pattern = ".*WordPress\\\\AiClient.*" }, # wrong stubs
+  # Mago struggles to resolve types from the WordPress AI Client library, resulting in false positives about 'mixed' types and invalid iterators.
+  { code = "invalid-iterator", in = "includes/ModelHelper.php" },
+  { code = "mixed-method-access", in = "includes/ModelHelper.php" },
+  { code = "invalid-type-cast", in = "includes/ModelHelper.php" },
+  { code = "invalid-return-statement", in = "includes/ModelHelper.php" },
 ]

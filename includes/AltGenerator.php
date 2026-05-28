@@ -19,9 +19,9 @@ class AltGenerator {
         }
 
         $locale = get_locale();
-        $language = function_exists('locale_get_display_language')
-            ? locale_get_display_language($locale, 'en')
-            : $locale;
+        $language = (
+            function_exists('locale_get_display_language') ? locale_get_display_language($locale, 'en') : $locale
+        ) ?: $locale;
 
         $image_source = self::get_image_as_data_uri($attachment_id);
         if (is_wp_error($image_source)) {
@@ -33,7 +33,7 @@ class AltGenerator {
             str_replace(
                 ['{{LANGUAGE}}', '{{LOCALE}}'],
                 [$language, $locale],
-                file_get_contents(AltGeneratorPlugin::$plugin_path . 'data/system-prompt.md'),
+                (string) file_get_contents(AltGeneratorPlugin::$plugin_path . 'data/system-prompt.md'),
             ),
             $attachment_id,
             $locale,
@@ -75,7 +75,7 @@ class AltGenerator {
             return $result;
         }
 
-        $alt_text = trim((string) $result);
+        $alt_text = trim($result);
         $alt_text = trim($alt_text, '"\'.');
 
         if ($alt_text === '') {

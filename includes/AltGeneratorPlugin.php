@@ -41,9 +41,9 @@ class AltGeneratorPlugin {
 
     /**
      * @return array{
-     *     auto_generate:bool,
+     *     auto_generate: bool,
      *     default_user_prompt: string,
-     *     preferred_model:string
+     *     preferred_model: string
      * }
      */
     public static function get_options(): array {
@@ -52,11 +52,16 @@ class AltGeneratorPlugin {
             $options = [];
         }
 
+        /** @var array{
+         *     auto_generate: bool,
+         *     default_user_prompt: string,
+         *     preferred_model: string
+         * } */
         return wp_parse_args($options, self::DEFAULT_OPTIONS);
     }
 
     public static function error_log(WP_Error $error): WP_Error {
-        if (defined('WP_DEBUG') && WP_DEBUG) {
+        if (defined('WP_DEBUG') && WP_DEBUG === true) {
             $message = '[AI Alt Generator] ' . $error->get_error_message();
 
             $data = $error->get_error_data();
@@ -70,8 +75,11 @@ class AltGeneratorPlugin {
         return $error;
     }
 
+    /**
+     * @param array{fetchpriority?: string, in_footer?: bool, module_dependencies?: array<array-key, mixed>, strategy?: string}|bool $args
+     */
     public static function enqueue_script(string $file_name, array|bool $args = false): void {
-        /** @var array{dependencies: string[], version: string} $asset_file */
+        /** @var array{dependencies: list<non-empty-string>, version: non-empty-string} $asset_file */
         $asset_file = include self::$plugin_path . "build/{$file_name}.asset.php";
         $handle = "acpl/ai-alt-generator/{$file_name}";
         wp_enqueue_script(
