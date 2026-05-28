@@ -20,9 +20,8 @@ webpack.config.js
 
 composer.json
 composer.lock
-phpstan.neon
-.phpcs.xml
-rector.php
+.mago.toml
+.mago-stubs.php
 
 README.md
 SECURITY.md

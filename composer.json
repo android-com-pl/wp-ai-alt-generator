@@ -1,6 +1,13 @@
 {
   "name": "acpl/ai-alt-generator",
   "type": "wordpress-plugin",
+  "scripts": {
+    "lint": "mago lint",
+    "analyse": "mago analyse",
+    "format": "mago fmt",
+    "format:check": "mago fmt --check",
+    "format:staged": "mago fmt --staged"
+  },
   "autoload": {
     "psr-4": {
       "Acpl\\AltGenerator\\": "includes/"
@@ -14,23 +21,7 @@
     "ext-intl": "*"
   },
   "require-dev": {
-    "szepeviktor/phpstan-wordpress": "^v2.0",
-    "phpstan/extension-installer": "^1.3",
-    "wp-coding-standards/wpcs": "^3.0",
-    "rector/rector": "^2.2"
-  },
-  "config": {
-    "allow-plugins": {
-      "phpstan/extension-installer": true,
-      "dealerdirect/phpcodesniffer-composer-installer": true
-    }
-  },
-  "scripts": {
-    "analyse:phpstan": "phpstan analyse",
-    "clear-cache:phpstan": "phpstan clear-result-cache",
-    "analyse:phpcs": "phpcs",
-    "format": "phpcbf",
-    "analyse:rector": "rector process --dry-run",
-    "rector": "rector process"
+    "carthage-software/mago": "^1.29",
+    "php-stubs/wordpress-stubs": "^7.0"
   }
 }
