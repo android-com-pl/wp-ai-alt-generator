@@ -28,7 +28,7 @@ class AltGenerator {
             return $image_source;
         }
 
-        $system_prompt = apply_filters(
+        $system_prompt = (string) apply_filters(
             'acpl/ai_alt_generator/system_prompt',
             str_replace(
                 ['{{LANGUAGE}}', '{{LOCALE}}'],
@@ -40,7 +40,7 @@ class AltGenerator {
             $language,
         );
 
-        $user_prompt = apply_filters(
+        $user_prompt = (string) apply_filters(
             'acpl/ai_alt_generator/user_prompt',
             $user_prompt,
             $attachment_id,

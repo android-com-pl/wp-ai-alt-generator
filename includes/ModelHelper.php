@@ -47,6 +47,9 @@ class ModelHelper {
         return $vision_providers;
     }
 
+    /**
+     * @return list<string>
+     */
     public static function get_preferred_models(): array {
         return (array) apply_filters('acpl/ai_alt_generator/preferred_vision_models', [
             'gpt-5.4-mini',

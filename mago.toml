@@ -55,3 +55,7 @@ allow-array-truthy-operand = false
 no-boolean-literal-comparison = false
 check-missing-type-hints = false
 register-super-globals = true
+
+ignore = [
+  { pattern = ".*WordPress\\\\AiClient.*" }, # wrong stubs
+]
