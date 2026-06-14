@@ -9,48 +9,48 @@ class Abilities {
     public const GENERATE_ALT_TEXT = 'acpl/generate-alt-text';
 
     public static function init(): void {
-        add_action('wp_abilities_api_categories_init', [self::class, 'register_category']);
-        add_action('wp_abilities_api_init', [self::class, 'register']);
+        add_action('wp_abilities_api_categories_init', self::register_category(...));
+        add_action('wp_abilities_api_init', self::register(...));
     }
 
-    public static function register_category(): void {
+    private static function register_category(): void {
         wp_register_ability_category(self::CATEGORY, [
             'label' => __('Image Alt Text Generator', 'alt-text-generator-gpt-vision'),
             'description' => __('Tools for generating image alternative text.', 'alt-text-generator-gpt-vision'),
         ]);
     }
 
-    public static function register(): void {
+    private static function register(): void {
         wp_register_ability(self::GENERATE_ALT_TEXT, [
             'label' => __('Generate image alternative text', 'alt-text-generator-gpt-vision'),
             'description' => __(
-                'Generates alternative text for a specific image, with an option to save it directly to the media library attachment metadata.',
+                'Generates alternative text for a WordPress image attachment. By default, the generated text is only returned in the response. Set save to true to also save it to the attachment alt text metadata.',
                 'alt-text-generator-gpt-vision',
             ),
             'category' => self::CATEGORY,
-            'execute_callback' => [self::class, 'execute_generate_alt'],
-            'permission_callback' => static fn() => current_user_can('edit_posts'),
+            'execute_callback' => self::execute_generate_alt(...),
+            'permission_callback' => self::can_generate_alt(...),
             'input_schema' => [
                 'type' => 'object',
                 'properties' => [
                     'attachment_id' => [
                         'type' => 'integer',
                         'description' => __(
-                            'The ID of the attachment (image) in WordPress.',
+                            'The WordPress attachment ID of the image to generate alternative text for. The current user must be allowed to edit this attachment.',
                             'alt-text-generator-gpt-vision',
                         ),
                     ],
                     'user_prompt' => [
                         'type' => 'string',
                         'description' => __(
-                            'Optional additional instructions for the generation.',
+                            'Optional additional instructions that guide the generated alt text. Use this to provide context, tone, language, or specific details to include or avoid.',
                             'alt-text-generator-gpt-vision',
                         ),
                     ],
                     'save' => [
                         'type' => 'boolean',
                         'description' => __(
-                            'Whether to save the generated alt text directly to the media library.',
+                            'Whether to save the generated alt text to the attachment metadata. Defaults to false. If false, the generated alt text is only returned in the response and no attachment data is modified.',
                             'alt-text-generator-gpt-vision',
                         ),
                     ],
@@ -60,8 +60,14 @@ class Abilities {
             'output_schema' => [
                 'type' => 'object',
                 'properties' => [
-                    'img_id' => ['type' => 'integer'],
-                    'alt' => ['type' => 'string'],
+                    'img_id' => [
+                        'type' => 'integer',
+                        'description' => __('The attachment ID that was processed.', 'alt-text-generator-gpt-vision'),
+                    ],
+                    'alt' => [
+                        'type' => 'string',
+                        'description' => __('The generated alternative text.', 'alt-text-generator-gpt-vision'),
+                    ],
                 ],
                 'required' => ['img_id', 'alt'],
             ],
@@ -71,7 +77,15 @@ class Abilities {
         ]);
     }
 
-    public static function execute_generate_alt(array $args): array|WP_Error {
+    private static function can_generate_alt(array $args): bool {
+        if (!empty($args['save'])) {
+            return current_user_can('edit_post', (int) $args['attachment_id']);
+        }
+
+        return current_user_can('edit_posts');
+    }
+
+    private static function execute_generate_alt(array $args): array|WP_Error {
         $attachment_id = (int) $args['attachment_id'];
         $save_alt = !empty($args['save']);
         $user_prompt = (string) ($args['user_prompt'] ?? '');
