@@ -16,6 +16,7 @@
  * @package Acpl\AltGenerator
  */
 
+use Acpl\AltGenerator\Abilities;
 use Acpl\AltGenerator\Admin;
 use Acpl\AltGenerator\AltGeneratorPlugin;
 
@@ -27,6 +28,7 @@ if (!defined('ABSPATH')) {
 require __DIR__ . '/vendor/autoload.php';
 
 AltGeneratorPlugin::init(__FILE__);
+Abilities::init();
 
 if (is_admin()) {
     Admin::init();

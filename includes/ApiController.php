@@ -42,24 +42,16 @@ class ApiController {
     }
 
     public static function generate_alt_text(WP_REST_Request $request): WP_REST_Response|WP_Error {
-        $attachment_id = (int) $request->get_param('attachment_id');
-        $save_alt = (bool) $request->get_param('save');
-        $user_prompt = (string) ($request->get_param('user_prompt') ?? '');
-
-        if ($save_alt) {
-            $alt_text = AltGenerator::generate_and_set_alt_text($attachment_id, $user_prompt);
-        } else {
-            $alt_text = AltGenerator::generate_alt_text($attachment_id, $user_prompt);
+        $ability = wp_get_ability(Abilities::GENERATE_ALT_TEXT);
+        if ($ability === null) {
+            return new WP_Error('not_found', __('Ability not found.', 'alt-text-generator-gpt-vision'));
         }
 
-        if (is_wp_error($alt_text)) {
-            return $alt_text;
-        }
-
-        return new WP_REST_Response([
-            'img_id' => $attachment_id,
-            'alt' => $alt_text,
-        ]);
+        return rest_ensure_response($ability->execute([
+            'attachment_id' => (int) $request->get_param('attachment_id'),
+            'user_prompt' => (string) ($request->get_param('user_prompt') ?? ''),
+            'save' => (bool) $request->get_param('save'),
+        ]));
     }
 
     public static function get_supported_models(): WP_Error|WP_REST_Response {
