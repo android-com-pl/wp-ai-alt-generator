@@ -22,6 +22,7 @@ export default async (
     input.user_prompt = userPrompt;
   }
 
+  // Using apiFetch directly because `executeAbility` from `@wordpress/abilities` lacks `AbortSignal` support.
   return apiFetch<{ alt: string; img_id: number }>({
     path: GENERATE_API_PATH,
     method: 'POST',
