@@ -26,7 +26,7 @@ export default async (
     headers: {
       'Content-Type': 'application/json',
     },
-    data: requestData,
+    data: { input: requestData },
     signal,
   })
     .then((response) => {
