@@ -35,10 +35,7 @@ class Abilities {
                 'properties' => [
                     'attachment_id' => [
                         'type' => 'integer',
-                        'description' => __(
-                            'WordPress image attachment ID.',
-                            'alt-text-generator-gpt-vision',
-                        ),
+                        'description' => __('WordPress image attachment ID.', 'alt-text-generator-gpt-vision'),
                     ],
                     'user_prompt' => [
                         'type' => 'string',
