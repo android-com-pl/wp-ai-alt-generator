@@ -25,6 +25,31 @@ composer require wp-plugin/alt-text-generator-gpt-vision
 
 ## For Developers
 
+### Programmatic usage via Abilities API
+
+**Ability:** `acpl/generate-alt-text`
+
+```php
+$ability = wp_get_ability('acpl/generate-alt-text');
+if (!$ability) {
+    return;
+}
+
+$result = $ability->execute([
+    'attachment_id' => 456, // Required. Image attachment ID.
+    'user_prompt' => 'Write the alt text in Polish.', // Optional. Extra AI instructions.
+    'save' => false, // Optional. False returns only; true saves to attachment metadata. Default false.
+]);
+
+if (is_wp_error($result)) {
+    // Handle error.
+    return;
+}
+
+$attachment_id = $result['attachment_id']; // 456
+$alt_text = $result['alt']; // Generated alt text.
+```
+
 ### Filters
 
 #### `acpl/ai_alt_generator/system_prompt`
