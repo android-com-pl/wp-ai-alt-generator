@@ -5,7 +5,7 @@
  * Plugin Name: AI Alt Text Generator
  * Plugin URI: https://github.com/android-com-pl/wp-ai-alt-generator
  * Description: Automatically generate alternative text for images using the WordPress AI Client.
- * Version: 4.0.2
+ * Version: 4.1.0
  * Requires at least: 7.0
  * Requires PHP: 8.1
  * Author: android.com.pl
