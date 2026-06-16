@@ -16,7 +16,7 @@ class Abilities {
     private static function register_category(): void {
         wp_register_ability_category(self::CATEGORY, [
             'label' => __('Image Alt Text Generator', 'alt-text-generator-gpt-vision'),
-            'description' => __('Tools for generating image alternative text.', 'alt-text-generator-gpt-vision'),
+            'description' => __('Tools for generating alt text for images.', 'alt-text-generator-gpt-vision'),
         ]);
     }
 
@@ -24,7 +24,7 @@ class Abilities {
         wp_register_ability(self::GENERATE_ALT_TEXT, [
             'label' => __('Generate image alternative text', 'alt-text-generator-gpt-vision'),
             'description' => __(
-                'Generates alternative text for a WordPress image attachment. By default, the generated text is only returned in the response. Set save to true to also save it to the attachment alt text metadata.',
+                'Generates alt text for a WordPress image attachment. By default, returns the text only. Set save to true to also update the attachment metadata.',
                 'alt-text-generator-gpt-vision',
             ),
             'category' => self::CATEGORY,
@@ -36,21 +36,22 @@ class Abilities {
                     'attachment_id' => [
                         'type' => 'integer',
                         'description' => __(
-                            'The WordPress attachment ID of the image to generate alternative text for. The current user must be allowed to edit this attachment.',
+                            'WordPress image attachment ID.',
                             'alt-text-generator-gpt-vision',
                         ),
                     ],
                     'user_prompt' => [
                         'type' => 'string',
                         'description' => __(
-                            'Optional additional instructions that guide the generated alt text. Use this to provide context, tone, language, or specific details to include or avoid.',
+                            'Optional extra instructions for the generated alt text.',
                             'alt-text-generator-gpt-vision',
                         ),
                     ],
                     'save' => [
                         'type' => 'boolean',
+                        'default' => false,
                         'description' => __(
-                            'Whether to save the generated alt text to the attachment metadata. Defaults to false. If false, the generated alt text is only returned in the response and no attachment data is modified.',
+                            'Whether to save the generated alt text to attachment metadata. Defaults to false.',
                             'alt-text-generator-gpt-vision',
                         ),
                     ],
@@ -60,16 +61,16 @@ class Abilities {
             'output_schema' => [
                 'type' => 'object',
                 'properties' => [
-                    'img_id' => [
+                    'attachment_id' => [
                         'type' => 'integer',
-                        'description' => __('The attachment ID that was processed.', 'alt-text-generator-gpt-vision'),
+                        'description' => __('Processed attachment ID.', 'alt-text-generator-gpt-vision'),
                     ],
                     'alt' => [
                         'type' => 'string',
-                        'description' => __('The generated alternative text.', 'alt-text-generator-gpt-vision'),
+                        'description' => __('Generated alt text.', 'alt-text-generator-gpt-vision'),
                     ],
                 ],
-                'required' => ['img_id', 'alt'],
+                'required' => ['attachment_id', 'alt'],
             ],
             'meta' => [
                 'show_in_rest' => true,
@@ -101,7 +102,7 @@ class Abilities {
         }
 
         return [
-            'img_id' => $attachment_id,
+            'attachment_id' => $attachment_id,
             'alt' => $alt_text,
         ];
     }

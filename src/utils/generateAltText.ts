@@ -23,7 +23,7 @@ export default async (
   }
 
   // Using apiFetch directly because `executeAbility` from `@wordpress/abilities` lacks `AbortSignal` support.
-  return apiFetch<{ alt: string; img_id: number }>({
+  return apiFetch<{ alt: string; attachment_id: number }>({
     path: GENERATE_API_PATH,
     method: 'POST',
     headers: {
