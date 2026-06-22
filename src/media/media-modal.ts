@@ -6,9 +6,9 @@ const { wp } = window;
  * Add generate alt button to media modal.
  */
 // @ts-ignore - missing types for Attachment
-const Details = wp.media.view.Attachment.Details;
+const Details = wp.media.view.Attachment.Details.TwoColumn;
 // @ts-ignore
-wp.media.view.Attachment.Details = Details.extend({
+wp.media.view.Attachment.Details.TwoColumn = Details.extend({
   render: function () {
     Details.prototype.render.apply(this, arguments);
 
