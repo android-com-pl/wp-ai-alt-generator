@@ -19,12 +19,12 @@ export default (
 
   const spinner = createElement('span', {
     class: 'spinner',
-    style: { margin: '0' },
+    style: { margin: '0', padding: '0', minWidth: 'unset', aspectRatio: '1' },
   });
   buttonWrapper.append(spinner);
 
   const button = createElement('button', {
-    class: 'button',
+    class: ['button', 'button-small'],
     text: __('Generate Alt Text', 'alt-text-generator-gpt-vision'),
     onclick: async (e) => {
       e.preventDefault();

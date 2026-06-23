@@ -13,7 +13,10 @@ function extendAttachmentDetails(OriginalView: any) {
       }
 
       const { el } = this;
-      const altTextField = qs('.attachment-details .setting.alt-text', el);
+      const altTextField = qs<HTMLTextAreaElement>(
+        '.attachment-details .setting.alt-text textarea',
+        el,
+      );
 
       if (!altTextField) return this;
 
