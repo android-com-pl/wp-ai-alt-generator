@@ -44,6 +44,13 @@ class Abilities {
                             'alt-text-generator-gpt-vision',
                         ),
                     ],
+                    'context_post_id' => [
+                        'type' => 'integer',
+                        'description' => __(
+                            'Optional post ID whose Polylang locale should be used for the generated alt text.',
+                            'alt-text-generator-gpt-vision',
+                        ),
+                    ],
                     'save' => [
                         'type' => 'boolean',
                         'default' => false,
@@ -85,13 +92,14 @@ class Abilities {
 
     private static function execute_generate_alt(array $args): array|WP_Error {
         $attachment_id = (int) $args['attachment_id'];
+        $context_post_id = (int) ($args['context_post_id'] ?? 0);
         $save_alt = !empty($args['save']);
         $user_prompt = (string) ($args['user_prompt'] ?? '');
 
         if ($save_alt) {
-            $alt_text = AltGenerator::generate_and_set_alt_text($attachment_id, $user_prompt);
+            $alt_text = AltGenerator::generate_and_set_alt_text($attachment_id, $user_prompt, $context_post_id);
         } else {
-            $alt_text = AltGenerator::generate_alt_text($attachment_id, $user_prompt);
+            $alt_text = AltGenerator::generate_alt_text($attachment_id, $user_prompt, $context_post_id);
         }
 
         if (is_wp_error($alt_text)) {

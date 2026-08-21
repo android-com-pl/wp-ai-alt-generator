@@ -5,7 +5,11 @@ namespace Acpl\AltGenerator;
 use WP_Error;
 
 class AltGenerator {
-    public static function generate_alt_text(int $attachment_id, string $user_prompt = ''): string|WP_Error {
+    public static function generate_alt_text(
+        int $attachment_id,
+        string $user_prompt = '',
+        int $context_post_id = 0,
+    ): string|WP_Error {
         if (!wp_attachment_is_image($attachment_id)) {
             return new WP_Error('not_an_image', __('Attachment ID is not an image.', 'alt-text-generator-gpt-vision'), [
                 'attachment_id' => $attachment_id,
@@ -18,7 +22,7 @@ class AltGenerator {
             $user_prompt = $options['default_user_prompt'];
         }
 
-        $locale = get_locale();
+        $locale = self::get_content_locale($attachment_id, $context_post_id);
         $language = (
             function_exists('locale_get_display_language') ? locale_get_display_language($locale, 'en') : $locale
         ) ?: $locale;
@@ -88,8 +92,12 @@ class AltGenerator {
         return $alt_text;
     }
 
-    public static function generate_and_set_alt_text(int $attachment_id, string $user_prompt = ''): string|WP_Error {
-        $alt_text = self::generate_alt_text($attachment_id, $user_prompt);
+    public static function generate_and_set_alt_text(
+        int $attachment_id,
+        string $user_prompt = '',
+        int $context_post_id = 0,
+    ): string|WP_Error {
+        $alt_text = self::generate_alt_text($attachment_id, $user_prompt, $context_post_id);
         if (is_wp_error($alt_text)) {
             AltGeneratorPlugin::error_log($alt_text);
 
@@ -98,6 +106,28 @@ class AltGenerator {
 
         update_post_meta($attachment_id, '_wp_attachment_image_alt', sanitize_text_field($alt_text));
         return $alt_text;
+    }
+
+    private static function get_content_locale(int $attachment_id, int $context_post_id): string {
+        $locale = get_locale();
+
+        if (function_exists('pll_get_post_language')) {
+            $post_ids = array_unique(array_filter([
+                $context_post_id,
+                wp_get_post_parent_id($attachment_id),
+                $attachment_id,
+            ]));
+
+            foreach ($post_ids as $post_id) {
+                $polylang_locale = pll_get_post_language((int) $post_id, 'locale');
+                if (is_string($polylang_locale) && $polylang_locale !== '') {
+                    $locale = $polylang_locale;
+                    break;
+                }
+            }
+        }
+
+        return (string) apply_filters('acpl/ai_alt_generator/locale', $locale, $attachment_id, $context_post_id);
     }
 
     public static function on_attachment_upload(array $metadata, int $attachment_id, string $context): array {

@@ -37,6 +37,7 @@ if (!$ability) {
 
 $result = $ability->execute([
     'attachment_id' => 456, // Required. Image attachment ID.
+    'context_post_id' => 123, // Optional. Uses this post's Polylang locale when available.
     'user_prompt' => 'Write the alt text in Polish.', // Optional. Extra AI instructions.
     'save' => false, // Optional. False returns only; true saves to attachment metadata. Default false.
 ]);
@@ -49,6 +50,11 @@ if (is_wp_error($result)) {
 $attachment_id = $result['attachment_id']; // 456
 $alt_text = $result['alt']; // Generated alt text.
 ```
+
+When Polylang is active, the editor automatically generates alt text in the
+current post's language. Outside the editor, the plugin checks the attachment's
+parent and then the attachment itself. Ability callers can provide
+`context_post_id` explicitly when an image is reused across translations.
 
 ### Filters
 
@@ -70,6 +76,25 @@ add_filter('acpl/ai_alt_generator/system_prompt', function($system_prompt, $atta
     // Modify the system prompt here
     return $system_prompt;
 }, 10, 4);
+```
+
+#### `acpl/ai_alt_generator/locale`
+
+Overrides the locale used to build the system prompt. The default is the
+current WordPress locale, or the relevant post locale when Polylang is active.
+
+**Parameters:**
+
+- `string $locale`
+- `int $attachment_id`
+- `int $context_post_id`
+
+**Usage:**
+
+```php
+add_filter('acpl/ai_alt_generator/locale', function($locale, $attachment_id, $context_post_id) {
+    return $locale;
+}, 10, 3);
 ```
 
 #### `acpl/ai_alt_generator/user_prompt`

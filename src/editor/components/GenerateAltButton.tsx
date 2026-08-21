@@ -1,5 +1,5 @@
 import { Button } from '@wordpress/components';
-import { useDispatch } from '@wordpress/data';
+import { useDispatch, useSelect } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { update } from '@wordpress/icons';
@@ -23,6 +23,15 @@ export default ({
 }: GenerateAltButtonProps) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const { createSuccessNotice, createErrorNotice } = useDispatch(noticesStore);
+  const contextPostId = useSelect(
+    (select) =>
+      (
+        select('core/editor') as unknown as {
+          getCurrentPostId: () => number;
+        }
+      ).getCurrentPostId(),
+    [],
+  );
 
   const handleClick = async () => {
     if (
@@ -44,6 +53,8 @@ export default ({
         imgId,
         saveAltInMediaLibrary,
         customPrompt,
+        undefined,
+        contextPostId,
       );
       onGenerate(alt);
 
