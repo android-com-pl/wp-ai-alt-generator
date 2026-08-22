@@ -44,6 +44,13 @@ class Abilities {
                             'alt-text-generator-gpt-vision',
                         ),
                     ],
+                    'context_post_id' => [
+                        'type' => 'integer',
+                        'description' => __(
+                            "Optional ID of the post where the generation was triggered. Can be used to determine the post's language when multilingual plugins are in use.",
+                            'alt-text-generator-gpt-vision',
+                        ),
+                    ],
                     'save' => [
                         'type' => 'boolean',
                         'default' => false,
@@ -87,11 +94,12 @@ class Abilities {
         $attachment_id = (int) $args['attachment_id'];
         $save_alt = !empty($args['save']);
         $user_prompt = (string) ($args['user_prompt'] ?? '');
+        $context_post_id = isset($args['context_post_id']) ? (int) $args['context_post_id'] : null;
 
         if ($save_alt) {
-            $alt_text = AltGenerator::generate_and_set_alt_text($attachment_id, $user_prompt);
+            $alt_text = AltGenerator::generate_and_set_alt_text($attachment_id, $user_prompt, $context_post_id);
         } else {
-            $alt_text = AltGenerator::generate_alt_text($attachment_id, $user_prompt);
+            $alt_text = AltGenerator::generate_alt_text($attachment_id, $user_prompt, $context_post_id);
         }
 
         if (is_wp_error($alt_text)) {
