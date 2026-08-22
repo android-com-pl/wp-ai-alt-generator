@@ -12,9 +12,9 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@tanstack/react-pacer": "^0.22.1",
-    "@wordpress/icons": "^15.2.0",
-    "@wordpress/scripts": "^33.0.0",
+    "@tanstack/react-pacer": "^0.23.0",
+    "@wordpress/icons": "^15.4.0",
+    "@wordpress/scripts": "^34.1.0",
     "husky": "^9.1.7",
     "ts-dom-utils": "^2.3.1",
     "typescript": "^7.0.2"
@@ -23,19 +23,19 @@
     "@types/react": "^18.3.31",
     "@types/wordpress__admin": "^5.8.5",
     "@types/wordpress__block-editor": "^15.0.6",
-    "@wordpress/api-fetch": "^7.51.0",
-    "@wordpress/components": "^37.0.0",
-    "@wordpress/core-data": "^7.51.0",
-    "@wordpress/data": "^10.51.0",
-    "@wordpress/dom-ready": "^4.51.0",
-    "@wordpress/element": "^8.3.0",
-    "@wordpress/hooks": "^4.51.0",
-    "@wordpress/html-entities": "^4.51.0",
-    "@wordpress/i18n": "^6.24.0",
-    "@wordpress/notices": "^5.51.0",
-    "lint-staged": "^17.0.8",
-    "oxfmt": "^0.59.0",
-    "oxlint": "^1.74.0"
+    "@wordpress/api-fetch": "^7.53.0",
+    "@wordpress/components": "^39.0.0",
+    "@wordpress/core-data": "^7.53.0",
+    "@wordpress/data": "^10.53.0",
+    "@wordpress/dom-ready": "^4.53.0",
+    "@wordpress/element": "^8.5.0",
+    "@wordpress/hooks": "^4.53.0",
+    "@wordpress/html-entities": "^4.53.0",
+    "@wordpress/i18n": "^6.26.0",
+    "@wordpress/notices": "^5.53.0",
+    "lint-staged": "^17.3.0",
+    "oxfmt": "^0.64.0",
+    "oxlint": "^1.79.0"
   },
   "devEngines": {
     "packageManager": {
