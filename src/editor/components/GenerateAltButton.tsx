@@ -4,6 +4,7 @@ import { useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { update } from '@wordpress/icons';
 import { store as noticesStore } from '@wordpress/notices';
+import usePostId from '../../hooks/usePostId';
 import generateAltText from '../../utils/generateAltText';
 
 interface GenerateAltButtonProps {
@@ -23,6 +24,7 @@ export default ({
 }: GenerateAltButtonProps) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const { createSuccessNotice, createErrorNotice } = useDispatch(noticesStore);
+  const contextPostId = usePostId();
 
   const handleClick = async () => {
     if (
@@ -40,11 +42,12 @@ export default ({
     try {
       setIsGenerating(true);
 
-      const alt = await generateAltText(
-        imgId,
-        saveAltInMediaLibrary,
-        customPrompt,
-      );
+      const alt = await generateAltText({
+        attachmentId: imgId,
+        save: saveAltInMediaLibrary,
+        userPrompt: customPrompt,
+        contextPostId,
+      });
       onGenerate(alt);
 
       await createSuccessNotice(

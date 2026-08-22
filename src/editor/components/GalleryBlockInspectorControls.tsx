@@ -8,6 +8,7 @@ import { useMemo, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { update } from '@wordpress/icons';
 import BulkGenerateModal from '../../components/BulkGenerateModal';
+import usePostId from '../../hooks/usePostId';
 
 interface GalleryBlockInspectorControlsProps {
   clientId: string;
@@ -19,6 +20,8 @@ interface GalleryBlockInspectorControlsProps {
 export default ({ clientId }: GalleryBlockInspectorControlsProps) => {
   const [isBulkGenerationModalOpen, setIsBulkGenerationModalOpen] =
     useState(false);
+
+  const currentPostId = usePostId();
 
   const { updateBlockAttributes } = useDispatch(blockEditorStore);
 
@@ -72,6 +75,7 @@ export default ({ clientId }: GalleryBlockInspectorControlsProps) => {
               context="editor"
               attachmentIds={imgIds}
               existingAlts={existingAlts}
+              contextPostId={currentPostId}
               onClose={() => setIsBulkGenerationModalOpen(false)}
               onGenerate={({ id, alt }) => {
                 const imageBlock = imageBlocks.find(

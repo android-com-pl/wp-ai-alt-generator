@@ -3,7 +3,7 @@ import { createElement } from 'ts-dom-utils';
 import generateAltText from '../../utils/generateAltText';
 
 export default (
-  imageId: number,
+  attachmentId: number,
   onClick: (altText: string) => void,
   currentAlt?: string,
 ) => {
@@ -44,7 +44,7 @@ export default (
         spinner.classList.add('is-active');
         button.disabled = true;
 
-        const altText = await generateAltText(imageId);
+        const altText = await generateAltText({ attachmentId });
         onClick(altText);
       } catch (error) {
         alert(
