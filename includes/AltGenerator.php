@@ -5,7 +5,11 @@ namespace Acpl\AltGenerator;
 use WP_Error;
 
 class AltGenerator {
-    public static function generate_alt_text(int $attachment_id, string $user_prompt = ''): string|WP_Error {
+    public static function generate_alt_text(
+        int $attachment_id,
+        string $user_prompt = '',
+        ?int $context_post_id = null,
+    ): string|WP_Error {
         if (!wp_attachment_is_image($attachment_id)) {
             return new WP_Error('not_an_image', __('Attachment ID is not an image.', 'alt-text-generator-gpt-vision'), [
                 'attachment_id' => $attachment_id,
@@ -18,7 +22,12 @@ class AltGenerator {
             $user_prompt = $options['default_user_prompt'];
         }
 
-        $locale = get_locale();
+        $locale = (string) apply_filters(
+            'acpl/ai_alt_generator/attachment_locale',
+            get_locale(),
+            $attachment_id,
+            $context_post_id,
+        );
         $language = (
             function_exists('locale_get_display_language') ? locale_get_display_language($locale, 'en') : $locale
         ) ?: $locale;
@@ -88,7 +97,11 @@ class AltGenerator {
         return $alt_text;
     }
 
-    public static function generate_and_set_alt_text(int $attachment_id, string $user_prompt = ''): string|WP_Error {
+    public static function generate_and_set_alt_text(
+        int $attachment_id,
+        string $user_prompt = '',
+        ?int $context_post_id = null,
+    ): string|WP_Error {
         $alt_text = self::generate_alt_text($attachment_id, $user_prompt);
         if (is_wp_error($alt_text)) {
             AltGeneratorPlugin::error_log($alt_text);

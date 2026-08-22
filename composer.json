@@ -22,6 +22,7 @@
   },
   "require-dev": {
     "carthage-software/mago": "^1.29",
-    "php-stubs/wordpress-stubs": "^7.0"
+    "php-stubs/wordpress-stubs": "^7.0",
+    "wpsyntex/polylang-stubs": "^3.7"
   }
 }

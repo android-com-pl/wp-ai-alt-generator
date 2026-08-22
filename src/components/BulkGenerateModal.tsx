@@ -27,6 +27,7 @@ export interface BulkGenerateModalProps {
   onClose: () => void;
   context?: GenerationContext;
   existingAlts?: Record<number, string>;
+  contextPostId?: number | null;
 }
 
 export default function BulkGenerateModal({
@@ -35,6 +36,7 @@ export default function BulkGenerateModal({
   onClose,
   context = 'mediaLibrary',
   existingAlts,
+  contextPostId,
 }: BulkGenerateModalProps) {
   const [overwriteExisting, setOverwriteExisting] = useState(false);
   const [customPrompt, setCustomPrompt] = useState('');
@@ -72,13 +74,14 @@ export default function BulkGenerateModal({
 
       patchItem(id, { status: 'generating' });
 
-      const alt = await generateAltText(
-        id,
-        saveAltInMediaLibrary,
-        customPrompt,
+      const alt = await generateAltText({
+        attachmentId: id,
+        save: saveAltInMediaLibrary,
+        userPrompt: customPrompt,
+        contextPostId,
         // oxlint-disable-next-line react/immutability -- queuer is only invoked asynchronously, well after this hook call has finished initializing; no real TDZ risk here
-        queuer.getAbortSignal(),
-      );
+        signal: queuer.getAbortSignal(),
+      });
 
       // Sync local core-data cached record, so reopening the modal shows fresh alt text.
       const attachment = attachments.find((a) => a.id === id);

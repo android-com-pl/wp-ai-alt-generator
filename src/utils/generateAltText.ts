@@ -5,14 +5,24 @@ interface Input {
   attachment_id: number;
   save: boolean;
   user_prompt?: string;
+  context_post_id?: number;
 }
 
-export default async (
-  attachmentId: number,
-  save: boolean = false,
-  userPrompt?: string,
-  signal?: AbortSignal | null,
-) => {
+export interface GenerateAltTextOptions {
+  attachmentId: number;
+  save?: boolean;
+  userPrompt?: string;
+  contextPostId?: number | null;
+  signal?: AbortSignal | null;
+}
+
+export default async ({
+  attachmentId,
+  save = false,
+  userPrompt,
+  contextPostId,
+  signal,
+}: GenerateAltTextOptions) => {
   const input: Input = {
     attachment_id: attachmentId,
     save,
@@ -20,6 +30,10 @@ export default async (
 
   if (userPrompt?.length) {
     input.user_prompt = userPrompt;
+  }
+
+  if (contextPostId) {
+    input.context_post_id = contextPostId;
   }
 
   // Using apiFetch directly because `executeAbility` from `@wordpress/abilities` lacks `AbortSignal` support.
