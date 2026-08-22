@@ -18,7 +18,7 @@ class AltGenerator {
             $user_prompt = $options['default_user_prompt'];
         }
 
-        $locale = get_locale();
+        $locale = (string) apply_filters('acpl/ai_alt_generator/attachment_locale', get_locale(), $attachment_id);
         $language = (
             function_exists('locale_get_display_language') ? locale_get_display_language($locale, 'en') : $locale
         ) ?: $locale;

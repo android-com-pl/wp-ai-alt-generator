@@ -19,6 +19,7 @@
 use Acpl\AltGenerator\Abilities;
 use Acpl\AltGenerator\Admin;
 use Acpl\AltGenerator\AltGeneratorPlugin;
+use Acpl\AltGenerator\Integrations\Polylang;
 
 if (!defined('ABSPATH')) {
     http_response_code(403);
@@ -33,3 +34,9 @@ Abilities::init();
 if (is_admin()) {
     Admin::init();
 }
+
+add_action('plugins_loaded', static function (): void {
+    if (function_exists('pll_get_post_language')) {
+        (new Polylang())->register();
+    }
+});
