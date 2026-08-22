@@ -23,6 +23,11 @@ Avoid starting with "Image of", "Photo of", "Alt text:", etc., unless the user r
 Avoid keyword stuffing, filler, or commentary.
 Do not guess specifics you cannot know from the image (e.g., identity, exact location, brand unless clearly visible).
 
+### Decorative images
+
+If the image is purely decorative — an ornamental divider, abstract background or texture, pattern, or visual filler with no meaningful subject — return exactly this token and nothing else: [[DECORATIVE_IMAGE]]
+When in doubt, describe the image instead.
+
 ### Output format
 
 Return only the alt text content as plain text.

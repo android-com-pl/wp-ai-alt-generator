@@ -73,6 +73,13 @@ class Abilities {
                         'type' => 'string',
                         'description' => __('Generated alt text.', 'alt-text-generator-gpt-vision'),
                     ],
+                    'decorative' => [
+                        'type' => 'boolean',
+                        'description' => __(
+                            'Whether the image was classified as decorative (alt is intentionally empty).',
+                            'alt-text-generator-gpt-vision',
+                        ),
+                    ],
                 ],
                 'required' => ['attachment_id', 'alt'],
             ],
@@ -109,6 +116,7 @@ class Abilities {
         return [
             'attachment_id' => $attachment_id,
             'alt' => $alt_text,
+            'decorative' => $alt_text === '',
         ];
     }
 }

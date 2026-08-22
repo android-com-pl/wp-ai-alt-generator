@@ -1,7 +1,13 @@
 import type { ReactElement } from 'react';
 import { Flex, Icon, Spinner } from '@wordpress/components';
 import { _x, sprintf } from '@wordpress/i18n';
-import { cautionFilled, check, next, scheduled } from '@wordpress/icons';
+import {
+  cautionFilled,
+  check,
+  next,
+  scheduled,
+  unseen,
+} from '@wordpress/icons';
 import type { AltGenerationDetails } from '../types';
 
 const STATUS_CONFIG: Record<
@@ -18,6 +24,15 @@ const STATUS_CONFIG: Record<
     icon: <Icon icon={check} />,
     getLabel: () =>
       _x('Generated', 'Generation status', 'alt-text-generator-gpt-vision'),
+  },
+  decorative: {
+    icon: <Icon icon={unseen} />,
+    getLabel: () =>
+      _x(
+        'Decorative (alt left empty)',
+        'Generation status',
+        'alt-text-generator-gpt-vision',
+      ),
   },
   skipped: {
     icon: <Icon icon={next} />,
