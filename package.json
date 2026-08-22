@@ -9,6 +9,7 @@
     "lint": "oxlint",
     "lint:github": "oxlint --format=github",
     "lint:fix": "oxlint --fix",
+    "typecheck": "tsc --noEmit",
     "prepare": "husky"
   },
   "dependencies": {

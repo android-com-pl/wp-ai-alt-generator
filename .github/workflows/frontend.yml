@@ -28,5 +28,10 @@ jobs:
       - name: ✨ Lint
         run: pnpm run lint:github
 
+      - name: 🔍 Type check
+        if: success() || failure()
+        run: pnpm run typecheck
+
       - name: 🎨 Check formatting
+        if: success() || failure()
         run: pnpm run format:check
