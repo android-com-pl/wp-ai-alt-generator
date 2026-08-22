@@ -76,6 +76,7 @@ export default function BulkGenerateModal({
         id,
         saveAltInMediaLibrary,
         customPrompt,
+        // oxlint-disable-next-line react/immutability -- queuer is only invoked asynchronously, well after this hook call has finished initializing; no real TDZ risk here
         queuer.getAbortSignal(),
       );
 
