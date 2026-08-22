@@ -52,8 +52,8 @@ class ModelHelper {
      */
     public static function get_preferred_models(): array {
         return (array) apply_filters('acpl/ai_alt_generator/preferred_vision_models', [
-            'gpt-5.4-mini',
-            'gemini-2.5-flash',
+            'gpt-5.6-luna',
+            'gemini-3.5-flash-lite',
             'claude-haiku-4-5',
         ]);
     }
