@@ -47,7 +47,7 @@ class Abilities {
                     'context_post_id' => [
                         'type' => 'integer',
                         'description' => __(
-                            "Optional ID of the post where the generation was triggered. Can be used to determine the post's language when multilingual plugins are in use.",
+                            'Optional ID of the post or page being edited.',
                             'alt-text-generator-gpt-vision',
                         ),
                     ],

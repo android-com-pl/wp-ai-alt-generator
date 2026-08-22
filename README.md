@@ -92,6 +92,24 @@ add_filter('acpl/ai_alt_generator/user_prompt', function($user_prompt, $attachme
 }, 10, 4);
 ```
 
+#### `acpl/ai_alt_generator/attachment_locale`
+
+Sets the locale code (e.g., `pl_PL`, `en_US`) used to determine the language for the generated alt text.
+
+**Parameters:**
+
+- `string $locale` - Default locale.
+- `int $attachment_id` - Image attachment ID.
+- `?int $context_post_id` - Parent post-ID being edited (if triggered inside the editor).
+
+**Example:**
+
+```php
+add_filter('acpl/ai_alt_generator/attachment_locale', function (string $locale, int $attachment_id, ?int $context_post_id): string {
+    return 'en_US';
+}, 10, 3);
+```
+
 #### `acpl/ai_alt_generator/preferred_vision_models`
 
 Overrides the list of preferred AI models used for alt text generation. Models are tried in order — the first one available on the site will be used. This is a preference, not a requirement; if none of the listed models are available, the plugin falls back to any compatible vision model.
@@ -107,6 +125,12 @@ add_filter('acpl/ai_alt_generator/preferred_vision_models', function($models) {
     return ['gpt-5.4-mini', 'gemini-3-flash'];
 });
 ```
+
+## Supported Plugins
+
+Currently, the plugin provides built-in integrations and seamless support for:
+
+- **Polylang** (automatically detects the language of the image or the parent post being edited)
 
 ## Contributing
 
