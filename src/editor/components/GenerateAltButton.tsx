@@ -51,10 +51,15 @@ export default ({
       onGenerate(alt);
 
       await createSuccessNotice(
-        __('Alternative text generated', 'alt-text-generator-gpt-vision'),
+        alt === ''
+          ? __(
+              'Marked image as decorative (alt left empty) ',
+              'alt-text-generator-gpt-vision',
+            )
+          : __('Alternative text generated', 'alt-text-generator-gpt-vision'),
         {
+          id: `alt-text-generated-${imgId}`,
           type: 'snackbar',
-          id: 'alt-text-generated',
         },
       );
       //@ts-ignore
@@ -69,7 +74,7 @@ export default ({
             error.message,
           ),
           {
-            id: 'alt-text-error',
+            id: `alt-text-error-${imgId}`,
             type: 'default',
           },
         );

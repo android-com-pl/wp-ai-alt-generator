@@ -11,7 +11,7 @@ const withGenerateAltButton =
       | ImageBlockProps
       | GalleryBlockProps;
 
-    if (name === 'core/image' && !attributes.isDecorative) {
+    if (name === 'core/image') {
       return (
         <>
           <BlockEdit {...props} />

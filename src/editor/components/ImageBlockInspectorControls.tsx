@@ -1,5 +1,11 @@
 import { InspectorControls } from '@wordpress/block-editor';
-import { Panel, PanelBody, PanelRow } from '@wordpress/components';
+import {
+  ExternalLink,
+  Notice,
+  Panel,
+  PanelBody,
+  PanelRow,
+} from '@wordpress/components';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import CustomPromptControl from '../../components/CustomPromptControl';
@@ -31,27 +37,63 @@ export default ({
             'alt-text-generator-gpt-vision',
           )}
         >
-          <CustomPromptControl
-            value={customPrompt}
-            onChange={setCustomPrompt}
-          />
-
-          <SaveAltInMediaLibraryControl
-            checked={saveAltInMediaLibrary}
-            onChange={setSaveAltInMediaLibrary}
-          />
-
-          <GenerateAltButton
-            imgId={attributes.id}
-            currentAlt={attributes.alt}
-            customPrompt={customPrompt}
-            onGenerate={(alt) => setAttributes({ alt })}
-            saveAltInMediaLibrary={saveAltInMediaLibrary}
-          />
-
-          <PanelRow>
-            <GenerationDisclaimer showIcon={false} />
-          </PanelRow>
+          {attributes.isDecorative ? (
+            <Notice
+              status="info"
+              isDismissible={false}
+              actions={[
+                {
+                  label: __(
+                    'Enable Alt Text Generation',
+                    'alt-text-generator-gpt-vision',
+                  ),
+                  onClick: () => setAttributes({ isDecorative: false }),
+                  variant: 'secondary',
+                },
+              ]}
+            >
+              <span>
+                {__(
+                  'This image is marked as decorative (alt text is intentionally left empty). ',
+                  'alt-text-generator-gpt-vision',
+                )}
+              </span>
+              <ExternalLink
+                href={__(
+                  'https://www.w3.org/WAI/tutorials/images/decorative/',
+                  'alt-text-generator-gpt-vision',
+                )}
+              >
+                {__(
+                  'Learn more about decorative images',
+                  'alt-text-generator-gpt-vision',
+                )}
+              </ExternalLink>
+            </Notice>
+          ) : (
+            <>
+              <CustomPromptControl
+                value={customPrompt}
+                onChange={setCustomPrompt}
+              />
+              <SaveAltInMediaLibraryControl
+                checked={saveAltInMediaLibrary}
+                onChange={setSaveAltInMediaLibrary}
+              />
+              <GenerateAltButton
+                imgId={attributes.id}
+                currentAlt={attributes.alt}
+                customPrompt={customPrompt}
+                onGenerate={(alt) =>
+                  setAttributes({ alt, isDecorative: alt === '' })
+                }
+                saveAltInMediaLibrary={saveAltInMediaLibrary}
+              />
+              <PanelRow>
+                <GenerationDisclaimer showIcon={false} />
+              </PanelRow>
+            </>
+          )}
         </PanelBody>
       </Panel>
     </InspectorControls>
