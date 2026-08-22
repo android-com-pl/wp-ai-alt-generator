@@ -122,7 +122,7 @@ Overrides the list of preferred AI models used for alt text generation. Models a
 
 ```php
 add_filter('acpl/ai_alt_generator/preferred_vision_models', function($models) {
-    return ['gpt-5.4-mini', 'gemini-3-flash'];
+    return ['gpt-5.6-luna', 'gemini-3.5-flash-lite'];
 });
 ```
 
