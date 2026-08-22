@@ -102,7 +102,7 @@ class AltGenerator {
         string $user_prompt = '',
         ?int $context_post_id = null,
     ): string|WP_Error {
-        $alt_text = self::generate_alt_text($attachment_id, $user_prompt);
+        $alt_text = self::generate_alt_text($attachment_id, $user_prompt, $context_post_id);
         if (is_wp_error($alt_text)) {
             AltGeneratorPlugin::error_log($alt_text);
 
