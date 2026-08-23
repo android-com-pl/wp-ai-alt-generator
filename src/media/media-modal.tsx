@@ -28,7 +28,8 @@ function extendAttachmentDetails(OriginalView: any) {
       });
       altTextField.after(mountPoint);
 
-      createRoot(mountPoint).render(
+      this._altGeneratorReactRoot = createRoot(mountPoint);
+      this._altGeneratorReactRoot.render(
         <MediaAltGenerator
           attachmentId={this.model.get('id')}
           currentAlt={this.model.get('alt')}
@@ -50,6 +51,15 @@ function extendAttachmentDetails(OriginalView: any) {
       );
 
       return this;
+    },
+
+    remove: function () {
+      if (this._altGeneratorReactRoot) {
+        this._altGeneratorReactRoot.unmount();
+        this._altGeneratorReactRoot = null;
+      }
+
+      return OriginalView.prototype.remove.apply(this, arguments);
     },
   });
 }
