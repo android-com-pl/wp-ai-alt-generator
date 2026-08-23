@@ -1,30 +1,34 @@
+import type { ComponentProps } from 'react';
 import { Button } from '@wordpress/components';
-import { useDispatch } from '@wordpress/data';
 import { useState } from '@wordpress/element';
-import { __, sprintf } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import { update } from '@wordpress/icons';
-import { store as noticesStore } from '@wordpress/notices';
-import usePostId from '../../hooks/usePostId';
-import generateAltText from '../../utils/generateAltText';
+import generateAltText from '../utils/generateAltText';
 
-interface GenerateAltButtonProps {
+type GenerateAltButtonProps = Pick<
+  ComponentProps<typeof Button>,
+  'style' | 'size'
+> & {
   imgId: number;
   currentAlt?: string;
-  onGenerate: (alt: string) => void;
   customPrompt?: string;
   saveAltInMediaLibrary?: boolean;
-}
+  contextPostId?: number | null;
+  onGenerate: (alt: string) => void;
+  onError?: (error: Error) => void;
+};
 
 export default ({
   imgId,
   currentAlt = '',
-  onGenerate,
   customPrompt,
   saveAltInMediaLibrary = false,
+  contextPostId = null,
+  onGenerate,
+  onError,
+  ...props
 }: GenerateAltButtonProps) => {
   const [isGenerating, setIsGenerating] = useState(false);
-  const { createSuccessNotice, createErrorNotice } = useDispatch(noticesStore);
-  const contextPostId = usePostId();
 
   const handleClick = async () => {
     if (
@@ -49,30 +53,9 @@ export default ({
         contextPostId,
       });
       onGenerate(alt);
-
-      await createSuccessNotice(
-        __('Alternative text generated', 'alt-text-generator-gpt-vision'),
-        {
-          type: 'snackbar',
-          id: 'alt-text-generated',
-        },
-      );
-      //@ts-ignore
-    } catch (error: WPError) {
-      if (error.message) {
-        await createErrorNotice(
-          sprintf(
-            __(
-              'There was an error generating the alt text: %s',
-              'alt-text-generator-gpt-vision',
-            ),
-            error.message,
-          ),
-          {
-            id: 'alt-text-error',
-            type: 'default',
-          },
-        );
+    } catch (error) {
+      if (onError) {
+        onError(error instanceof Error ? error : new Error(String(error)));
       }
     } finally {
       setIsGenerating(false);
@@ -86,7 +69,7 @@ export default ({
       onClick={handleClick}
       isBusy={isGenerating}
       disabled={isGenerating}
-      style={{ width: '100%', justifyContent: 'center' }}
+      {...props}
     >
       {__('Generate Alt Text', 'alt-text-generator-gpt-vision')}
     </Button>

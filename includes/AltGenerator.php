@@ -5,6 +5,8 @@ namespace Acpl\AltGenerator;
 use WP_Error;
 
 class AltGenerator {
+    public const DECORATIVE_MARKER = '[[DECORATIVE_IMAGE]]';
+
     public static function generate_alt_text(
         int $attachment_id,
         string $user_prompt = '',
@@ -86,6 +88,10 @@ class AltGenerator {
 
         $alt_text = trim($result);
         $alt_text = trim($alt_text, '"\'.');
+
+        if ($alt_text === self::DECORATIVE_MARKER) {
+            return '';
+        }
 
         if ($alt_text === '') {
             return new WP_Error('empty_response', __(

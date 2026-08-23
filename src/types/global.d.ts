@@ -23,6 +23,7 @@ interface ImageBlockAttrs extends BlockAttrs {
   rel: string;
   linkClass: string;
   id: number;
+  isDecorative?: boolean;
   width: string;
   height: string;
   aspectRatio: string;

@@ -17,7 +17,9 @@ interface GalleryBlockInspectorControlsProps {
 /**
  * Add bulk alt generation panel to gallery block settings.
  */
-export default ({ clientId }: GalleryBlockInspectorControlsProps) => {
+export default function GalleryBlockInspectorControls({
+  clientId,
+}: GalleryBlockInspectorControlsProps) {
   const [isBulkGenerationModalOpen, setIsBulkGenerationModalOpen] =
     useState(false);
 
@@ -90,4 +92,4 @@ export default ({ clientId }: GalleryBlockInspectorControlsProps) => {
       </Panel>
     </InspectorControls>
   );
-};
+}

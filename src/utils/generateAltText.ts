@@ -1,5 +1,6 @@
 import apiFetch from '@wordpress/api-fetch';
 import { GENERATE_API_PATH } from '../constants';
+import { AltGenerationResponse } from '../types';
 
 interface Input {
   attachment_id: number;
@@ -37,7 +38,7 @@ export default async ({
   }
 
   // Using apiFetch directly because `executeAbility` from `@wordpress/abilities` lacks `AbortSignal` support.
-  return apiFetch<{ alt: string; attachment_id: number }>({
+  return apiFetch<AltGenerationResponse>({
     path: GENERATE_API_PATH,
     method: 'POST',
     headers: {

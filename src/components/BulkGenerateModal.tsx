@@ -101,8 +101,8 @@ export default function BulkGenerateModal({
         jitter: 0.3,
       },
       onSuccess: (alt: null | string, id) => {
-        if (!alt) return;
-        patchItem(id, { alt, status: 'generated' });
+        if (alt === null) return;
+        patchItem(id, { alt, status: alt === '' ? 'decorative' : 'generated' });
         onGenerate?.({ id, alt });
       },
       onError: (error, id) => {
@@ -177,7 +177,10 @@ export default function BulkGenerateModal({
 
   const processedCount = Array.from(altGenerationMap.values()).filter(
     ({ status }) =>
-      status === 'generated' || status === 'error' || status === 'skipped',
+      status === 'generated' ||
+      status === 'decorative' ||
+      status === 'error' ||
+      status === 'skipped',
   ).length;
 
   const { queueStatus, queueExecuteCount } = queuer.state;
