@@ -14,19 +14,19 @@ import usePostId from '../../hooks/usePostId';
 /**
  * Add alt generation panel to image block settings.
  */
-export default ({
+export default function ImageBlockInspectorControls({
   attributes,
   setAttributes,
 }: {
   attributes: ImageBlockAttrs;
   setAttributes: ImageBlockProps['setAttributes'];
-}) => {
-  if (!attributes.id) return null;
-
+}) {
   const [customPrompt, setCustomPrompt] = useState('');
   const [saveAltInMediaLibrary, setSaveAltInMediaLibrary] = useState(false);
   const contextPostId = usePostId();
   const { createSuccessNotice, createErrorNotice } = useDispatch(noticesStore);
+
+  if (!attributes.id) return null;
 
   return (
     <InspectorControls group="content">
@@ -110,4 +110,4 @@ export default ({
       </Panel>
     </InspectorControls>
   );
-};
+}
