@@ -177,7 +177,10 @@ export default function BulkGenerateModal({
 
   const processedCount = Array.from(altGenerationMap.values()).filter(
     ({ status }) =>
-      status === 'generated' || status === 'error' || status === 'skipped',
+      status === 'generated' ||
+      status === 'decorative' ||
+      status === 'error' ||
+      status === 'skipped',
   ).length;
 
   const { queueStatus, queueExecuteCount } = queuer.state;
