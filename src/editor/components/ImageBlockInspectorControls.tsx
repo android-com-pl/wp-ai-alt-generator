@@ -1,17 +1,15 @@
 import { InspectorControls } from '@wordpress/block-editor';
-import {
-  ExternalLink,
-  Notice,
-  Panel,
-  PanelBody,
-  PanelRow,
-} from '@wordpress/components';
+import { Panel, PanelBody, PanelRow } from '@wordpress/components';
+import { useDispatch } from '@wordpress/data';
 import { useState } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
+import { store as noticesStore } from '@wordpress/notices';
 import CustomPromptControl from '../../components/CustomPromptControl';
+import DecorativeNotice from '../../components/DecorativeNotice';
+import GenerateAltButton from '../../components/GenerateAltButton';
 import GenerationDisclaimer from '../../components/GenerationDisclaimer';
 import SaveAltInMediaLibraryControl from '../../components/SaveAltInMediaLibraryControl';
-import GenerateAltButton from './GenerateAltButton';
+import usePostId from '../../hooks/usePostId';
 
 /**
  * Add alt generation panel to image block settings.
@@ -27,6 +25,8 @@ export default ({
 
   const [customPrompt, setCustomPrompt] = useState('');
   const [saveAltInMediaLibrary, setSaveAltInMediaLibrary] = useState(false);
+  const contextPostId = usePostId();
+  const { createSuccessNotice, createErrorNotice } = useDispatch(noticesStore);
 
   return (
     <InspectorControls group="content">
@@ -38,9 +38,7 @@ export default ({
           )}
         >
           {attributes.isDecorative ? (
-            <Notice
-              status="info"
-              isDismissible={false}
+            <DecorativeNotice
               actions={[
                 {
                   label: __(
@@ -48,28 +46,9 @@ export default ({
                     'alt-text-generator-gpt-vision',
                   ),
                   onClick: () => setAttributes({ isDecorative: false }),
-                  variant: 'secondary',
                 },
               ]}
-            >
-              <span>
-                {__(
-                  'This image is marked as decorative (alt text is intentionally left empty). ',
-                  'alt-text-generator-gpt-vision',
-                )}
-              </span>
-              <ExternalLink
-                href={__(
-                  'https://www.w3.org/WAI/tutorials/images/decorative/',
-                  'alt-text-generator-gpt-vision',
-                )}
-              >
-                {__(
-                  'Learn more about decorative images',
-                  'alt-text-generator-gpt-vision',
-                )}
-              </ExternalLink>
-            </Notice>
+            />
           ) : (
             <>
               <CustomPromptControl
@@ -84,10 +63,43 @@ export default ({
                 imgId={attributes.id}
                 currentAlt={attributes.alt}
                 customPrompt={customPrompt}
-                onGenerate={(alt) =>
-                  setAttributes({ alt, isDecorative: alt === '' })
-                }
+                contextPostId={contextPostId}
                 saveAltInMediaLibrary={saveAltInMediaLibrary}
+                onGenerate={(alt) => {
+                  const isDecorative = alt === '';
+                  setAttributes({ alt, isDecorative });
+                  createSuccessNotice(
+                    isDecorative
+                      ? __(
+                          'Marked image as decorative (alt left empty) ',
+                          'alt-text-generator-gpt-vision',
+                        )
+                      : __(
+                          'Alternative text generated',
+                          'alt-text-generator-gpt-vision',
+                        ),
+                    {
+                      id: `alt-text-generated-${attributes.id}`,
+                      type: 'snackbar',
+                    },
+                  );
+                }}
+                onError={(error) => {
+                  createErrorNotice(
+                    sprintf(
+                      __(
+                        'There was an error generating the alt text: %s',
+                        'alt-text-generator-gpt-vision',
+                      ),
+                      error.message,
+                    ),
+                    {
+                      id: `alt-text-error-${attributes.id}`,
+                      type: 'default',
+                    },
+                  );
+                }}
+                style={{ width: '100%', justifyContent: 'center' }}
               />
               <PanelRow>
                 <GenerationDisclaimer showIcon={false} />
