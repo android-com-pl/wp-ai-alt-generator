@@ -53,8 +53,7 @@ class Admin {
                             ),
                             ['a' => ['href' => []]],
                         )
-                        . '</p>'
-                ;
+                        . '</p>';
 
                 echo '<div class="alt-generator-no-models-notice" hidden>';
                 echo
@@ -71,8 +70,7 @@ class Admin {
                             ),
                             ['a' => ['href' => []]],
                         )
-                        . '</p>'
-                ;
+                        . '</p>';
                 echo '</div>';
             },
             'media',
@@ -94,8 +92,7 @@ class Admin {
                 echo '<option value="">' . esc_html__('— Default —', 'alt-text-generator-gpt-vision') . '</option>';
                 echo '</select>';
                 echo
-                    '<span class="spinner preferred-model-spinner is-active" style="float: none; margin: 0 0 0 1em"></span>'
-                ;
+                    '<span class="spinner preferred-model-spinner is-active" style="float: none; margin: 0 0 0 1em"></span>';
             },
             'media',
             self::SETTINGS_SECTION_ID,
@@ -120,8 +117,7 @@ class Admin {
                             'Automatically generate alt text when images are uploaded. Please review generated alt texts, as AI can sometimes produce inaccurate descriptions.',
                             'alt-text-generator-gpt-vision',
                         )
-                        . '</p>'
-                ;
+                        . '</p>';
             },
             'media',
             self::SETTINGS_SECTION_ID,
@@ -146,8 +142,7 @@ class Admin {
                             'Used as the default prompt for alt text generation when no custom instructions are provided. Can be left empty.',
                             'alt-text-generator-gpt-vision',
                         )
-                        . '</p>'
-                ;
+                        . '</p>';
             },
             'media',
             self::SETTINGS_SECTION_ID,

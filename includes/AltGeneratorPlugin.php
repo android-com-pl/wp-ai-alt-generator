@@ -76,7 +76,12 @@ class AltGeneratorPlugin {
     }
 
     /**
-     * @param array{fetchpriority?: string, in_footer?: bool, module_dependencies?: array<array-key, mixed>, strategy?: string}|bool $args
+     * @param array{
+     *     fetchpriority?: 'auto'|'high'|'low',
+     *     in_footer?: bool,
+     *     module_dependencies?: array<array-key, non-empty-string|array{id: non-empty-string, ...}>,
+     *     strategy?: 'async'|'defer'
+     * }|bool $args
      */
     public static function enqueue_script(string $file_name, array|bool $args = false): void {
         /** @var array{dependencies: list<non-empty-string>, version: non-empty-string} $asset_file */
