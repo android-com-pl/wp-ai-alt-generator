@@ -126,7 +126,7 @@ export default function BulkGenerateModal({
     },
     (state) => ({
       queueStatus: state.status,
-      queueExecuteCount: state.executeCount,
+      queueExecuteCount: state.executionCount,
     }),
   );
 
