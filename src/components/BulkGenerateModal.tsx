@@ -6,7 +6,7 @@ import {
   Modal,
   ToggleControl,
 } from '@wordpress/components';
-import { useEffect, useState } from '@wordpress/element';
+import { useEffect, useRef, useState } from '@wordpress/element';
 import { decodeEntities } from '@wordpress/html-entities';
 import { __, _n, sprintf } from '@wordpress/i18n';
 import useAttachments from '../hooks/useAttachments';
@@ -38,6 +38,8 @@ export default function BulkGenerateModal({
   existingAlts,
   contextPostId,
 }: BulkGenerateModalProps) {
+  // Preserve the editor's initial alt values, including intentionally empty strings.
+  const initialExistingAlts = useRef(existingAlts);
   const [overwriteExisting, setOverwriteExisting] = useState(false);
   const [customPrompt, setCustomPrompt] = useState('');
   const [saveAltInMediaLibrary, setSaveAltInMediaLibrary] = useState(
@@ -158,7 +160,8 @@ export default function BulkGenerateModal({
 
         nextMap.set(attachment.id, {
           ...details,
-          alt: details.alt || attachment.alt_text,
+          alt:
+            initialExistingAlts.current?.[attachment.id] ?? attachment.alt_text,
           title: decodeEntities(attachment.title.rendered),
           source_url: attachment.source_url,
           thumbnail: thumbnail
