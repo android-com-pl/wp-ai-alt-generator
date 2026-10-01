@@ -1,6 +1,7 @@
 import type { ComponentProps } from 'react';
 import { Flex } from '@wordpress/components';
 import { useState } from '@wordpress/element';
+import { __, sprintf } from '@wordpress/i18n';
 import DecorativeNotice from '../../components/DecorativeNotice';
 import GenerateAltButton from '../../components/GenerateAltButton';
 
@@ -36,6 +37,17 @@ export default function MediaAltGenerator({
         onGenerate={(alt) => {
           setShowDecorativeNotice(alt === '');
           onGenerate(alt);
+        }}
+        onError={(error) => {
+          alert(
+            sprintf(
+              __(
+                'There was an error generating the alt text: %s',
+                'alt-text-generator-gpt-vision',
+              ),
+              error.message,
+            ),
+          );
         }}
         size="small"
       />
