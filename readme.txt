@@ -10,17 +10,22 @@ License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Plugin URI: https://github.com/android-com-pl/wp-ai-alt-generator
 
-A WordPress plugin that uses AI to automatically generate descriptive and contextually relevant alt text for images.
+Generate image alt text on demand or in bulk using the WordPress AI Client and your choice of AI provider.
 
 == Description ==
 
-Plugin that uses the WordPress AI Client to automatically generate alt text for images, either during the upload process or on-demand with a button. It enhances website accessibility and SEO by providing descriptive and relevant image descriptions. Supports multiple AI providers including OpenAI, Google Gemini, Anthropic Claude, and others — whichever you have configured under Settings → Connectors.
+Generate image alt text in your site's language to help improve accessibility and SEO. Uses the WordPress AI Client with your choice of AI provider, including OpenAI, Google Gemini, and Anthropic Claude. Configure a provider with an image-capable model under Settings → Connectors.
 
 Features:
-- Bulk alt text generation for multiple images at once in media library and gallery block
-- Manual generation via a button in the image block and media library
-- Configurable automatic alt text generation during the upload process
+- On-demand generation in the image block and media library
+- Bulk generation in the media library and gallery block
+- Optional automatic generation on upload
 - Support for multiple AI providers and vision models
+- Custom instructions and model selection under Settings → Media
+
+== Integrations ==
+
+Polylang: automatically detects the language of the image or the post being edited.
 
 == External Service Usage ==
 
@@ -28,14 +33,14 @@ This plugin relies on the WordPress AI Client to generate alt text for images. D
 
 == For Developers ==
 
-You can read about the available hooks here: [https://github.com/android-com-pl/wp-ai-alt-generator/blob/main/README.md#for-developers](https://github.com/android-com-pl/wp-ai-alt-generator/blob/main/README.md#for-developers)
+See the [developer documentation](https://github.com/android-com-pl/wp-ai-alt-generator/blob/main/README.md#for-developers) for filters and Abilities API usage.
 
 == Installation ==
 
-1. Upload the plugin directory to your `/wp-content/plugins/` directory.
-2. Activate the plugin through the 'Plugins' menu in WordPress.
-3. Configure at least one AI provider under `Settings -> Connectors`.
-4. Go to `Settings -> Media` to configure the plugin settings.
+1. Install the plugin via Plugins → Add New, or upload the plugin ZIP there.
+2. Activate the plugin.
+3. Configure an AI provider with an image-capable model under Settings → Connectors.
+4. Open Settings → Media to choose a model, add custom instructions, or enable automatic generation on upload.
 
 == Frequently Asked Questions ==
 

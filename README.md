@@ -1,22 +1,26 @@
 # AI Alt Text Generator for WordPress
 
-WordPress plugin that uses AI to automatically generate descriptive and contextually relevant alt text (matching your WordPress site's language) for images during the upload process. This plugin is designed to enhance website accessibility and improve SEO with minimal effort.
+Generate image alt text in your site's language on demand or in bulk. Helps improve accessibility and SEO. Automatic generation on upload is optional.
 
-Powered by the WordPress AI Client, supporting multiple AI providers including OpenAI, Google Gemini, Anthropic Claude, and others.
+Uses the WordPress AI Client with your choice of AI provider, including OpenAI, Google Gemini, and Anthropic Claude.
 
 ## Installation
 
-You can download it here: https://wordpress.org/plugins/alt-text-generator-gpt-vision/
+Requires **WordPress 7.0+** and **PHP 8.1+**.
 
-Or use composer:
+Install and activate [AI Alt Text Generator from WordPress.org](https://wordpress.org/plugins/alt-text-generator-gpt-vision/) via **Plugins → Add New**, or download the ZIP and upload it there.
+
+For [Roots Bedrock](https://roots.io/bedrock/) or another WordPress installation managed with Composer, run this from your site's project root:
 
 ```shell
 composer require wp-plugin/alt-text-generator-gpt-vision
 ```
 
+Your project must have the [WP Packages](https://wp-packages.org/) Composer repository and WordPress plugin installer configured (included in current Bedrock installations).
+
 > [!IMPORTANT]
-> This plugin requires at least one AI provider to be configured under **Settings → Connectors**.
-> Plugin settings are located in **Settings → Media**.
+> Configure an AI provider with an image-capable model under **Settings → Connectors**.
+> Then go to **Settings → Media** to choose a model, add custom instructions, or enable automatic generation on upload.
 
 ## Screenshots
 
@@ -126,23 +130,15 @@ add_filter('acpl/ai_alt_generator/preferred_vision_models', function($models) {
 });
 ```
 
-## Supported Plugins
+## Integrations
 
-Currently, the plugin provides built-in integrations and seamless support for:
-
-- **Polylang** (automatically detects the language of the image or the parent post being edited)
+**Polylang:** automatically detects the language of the image or the post being edited.
 
 ## Contributing
 
-If you would like to contribute to the development of this plugin, please follow these steps:
-
-1. Fork the Repository: Start by forking the GitHub repository to your own account.
-2. Clone Your Fork: Clone your forked repository to your local machine.
-3. Install Dependencies:
-   - Run `pnpm install` to install JavaScript dependencies.
-   - Run `composer install` to set up PHP dependencies.
-4. Set Up Local Environment: Use `wp-env start` ([learn more](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/)) to start a local WordPress environment for testing and development.
-5. For JavaScript development, run `pnpm run dev`.
-6. Make Your Changes: Implement your features or bug fixes in your fork.
-7. Test Your Changes: Ensure that your changes don't break any existing functionality.
-8. Create a Pull Request: Once you're happy with your changes, push them to your fork and create a pull request against the original repository.
+1. Fork and clone the repository.
+2. Install dependencies with `pnpm install` and `composer install`, then build assets with `pnpm run build`.
+3. Start a local WordPress environment with [wp-env](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/) and configure an AI provider under **Settings → Connectors**.
+4. Use `pnpm run dev` for JavaScript development.
+5. Test your changes and run the relevant checks: `pnpm run lint`, `pnpm run typecheck`, `pnpm run format:check`, `composer lint`, `composer analyse`, and `composer format:check`.
+6. Open a pull request.
