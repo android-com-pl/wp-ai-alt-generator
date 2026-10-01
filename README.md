@@ -10,13 +10,11 @@ Requires **WordPress 7.0+** and **PHP 8.1+**.
 
 Install and activate [AI Alt Text Generator from WordPress.org](https://wordpress.org/plugins/alt-text-generator-gpt-vision/) via **Plugins → Add New**, or download the ZIP and upload it there.
 
-For [Roots Bedrock](https://roots.io/bedrock/) or another WordPress installation managed with Composer, run this from your site's project root:
+For [Roots Bedrock](https://roots.io/bedrock/) or another WordPress installation managed with Composer, run this from your site's project root (WP Packages example):
 
 ```shell
 composer require wp-plugin/alt-text-generator-gpt-vision
 ```
-
-Your project must have the [WP Packages](https://wp-packages.org/) Composer repository and WordPress plugin installer configured (included in current Bedrock installations).
 
 > [!IMPORTANT]
 > Configure an AI provider with an image-capable model under **Settings → Connectors**.
