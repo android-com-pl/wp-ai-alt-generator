@@ -18,31 +18,34 @@ jobs:
       url: https://wordpress.org/plugins/${{ vars.PLUGIN_SLUG }}/
 
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413
-      - name: 🛠️ Setup Node.js
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
+        name: 📥 Install JS dependencies
         with:
-          node-version: 24
-          cache: 'pnpm'
-      - run: pnpm i --frozen-lockfile --prod
-      - run: pnpm run build
+          runtime: node@24
+          cache: true
+          install: true
+          require-lockfile: true
+
+      - name: 🏗️ Build
+        run: pnpm run build
 
       - name: 🐘 Setup PHP
-        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2.40.0
         with:
           php-version: '8.1'
           coverage: none
 
       - name: 📥 Install PHP dependencies
-        uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda
+        uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda # v4.0.0
         with:
           require-lock-file: true
           composer-options: '--no-dev --ignore-platform-reqs --classmap-authoritative'
 
       - name: 🚀 WordPress Plugin Deploy
         id: deploy
-        uses: 10up/action-wordpress-plugin-deploy@54bd289b8525fd23a5c365ec369185f2966529c2
+        uses: 10up/action-wordpress-plugin-deploy@54bd289b8525fd23a5c365ec369185f2966529c2 # v2.3.0
         env:
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
