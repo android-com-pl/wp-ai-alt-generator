@@ -84,7 +84,10 @@ export default function GalleryBlockInspectorControls({
                   (block) => block.attributes.id === id,
                 );
                 if (!imageBlock) return;
-                updateBlockAttributes(imageBlock.clientId, { alt });
+                updateBlockAttributes(imageBlock.clientId, {
+                  alt,
+                  isDecorative: alt === '',
+                });
               }}
             />
           )}
