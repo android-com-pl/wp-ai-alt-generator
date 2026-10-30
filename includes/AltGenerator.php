@@ -115,7 +115,7 @@ class AltGenerator {
             return $alt_text;
         }
 
-        update_post_meta($attachment_id, '_wp_attachment_image_alt', sanitize_text_field($alt_text));
+        update_post_meta($attachment_id, '_wp_attachment_image_alt', wp_slash(sanitize_text_field($alt_text)));
         return $alt_text;
     }
 
