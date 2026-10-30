@@ -36,7 +36,6 @@ export default function CustomPromptControl({
       help={help}
       placeholder={placeholder}
       style={{
-        // @ts-ignore - missing types for fieldSizing
         fieldSizing: 'content',
         maxBlockSize: '6rlh',
       }}

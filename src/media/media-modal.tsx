@@ -36,6 +36,9 @@ function extendAttachmentDetails(OriginalView: any) {
           align="end"
           onGenerate={(altText) => {
             altTextField.value = altText;
+            altTextField.style.fieldSizing = 'content';
+            altTextField.style.height = 'auto';
+            altTextField.style.minHeight = '2lh';
             altTextField.placeholder =
               altText === ''
                 ? __(

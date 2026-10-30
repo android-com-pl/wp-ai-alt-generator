@@ -34,6 +34,9 @@ import MediaAltGenerator from './components/MediaAltGenerator';
       currentAlt={textarea.value}
       onGenerate={(altText) => {
         textarea.value = altText;
+        textarea.style.fieldSizing = 'content';
+        textarea.style.height = 'auto';
+        textarea.style.minHeight = '2lh';
         textarea.placeholder =
           altText === ''
             ? __(
