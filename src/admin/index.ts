@@ -7,10 +7,14 @@ import { LIST_MODELS_API_PATH } from '../constants';
   const section = qs<HTMLDivElement>('#acpl_ai_alt_generator_section')!;
   const modelSelect = qs<HTMLSelectElement>('select#preferred_model', section)!;
   const spinner = qs<HTMLSpanElement>('.preferred-model-spinner', section)!;
+  const currentOption = modelSelect.selectedOptions[0];
 
   const providers = await apiFetch<AiProviderMetadata[]>({
     method: 'GET',
     path: LIST_MODELS_API_PATH,
+  }).catch((error) => {
+    console.error('Failed to load AI models:', error);
+    return [];
   });
 
   if (providers?.length) {
@@ -20,11 +24,11 @@ import { LIST_MODELS_API_PATH } from '../constants';
       });
 
       provider.models.forEach((model) => {
-        const option = createElement('option', {
-          value: model.id,
-          text: model.name,
-          selected: model.id === modelSelect.dataset.current,
-        });
+        const option =
+          currentOption?.value === model.id
+            ? currentOption
+            : createElement('option', { value: model.id });
+        option.textContent = model.name;
         group.append(option);
       });
 
@@ -37,5 +41,6 @@ import { LIST_MODELS_API_PATH } from '../constants';
   }
 
   spinner.remove();
+  modelSelect.value = modelSelect.dataset.current ?? '';
   modelSelect.removeAttribute('hidden');
 })();

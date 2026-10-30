@@ -90,6 +90,9 @@ class Admin {
                     esc_attr($options['preferred_model']),
                 );
                 echo '<option value="">' . esc_html__('— Default —', 'alt-text-generator-gpt-vision') . '</option>';
+                if ($options['preferred_model'] !== '') {
+                    printf('<option value="%1$s" selected>%1$s</option>', esc_attr($options['preferred_model']));
+                }
                 echo '</select>';
                 echo
                     '<span class="spinner preferred-model-spinner is-active" style="float: none; margin: 0 0 0 1em"></span>';
