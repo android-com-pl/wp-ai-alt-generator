@@ -6,6 +6,8 @@ import {
   Modal,
   ToggleControl,
 } from '@wordpress/components';
+import { store as coreDataStore } from '@wordpress/core-data';
+import { useDispatch } from '@wordpress/data';
 import { useEffect, useRef, useState } from '@wordpress/element';
 import { decodeEntities } from '@wordpress/html-entities';
 import { __, _n, sprintf } from '@wordpress/i18n';
@@ -46,6 +48,7 @@ export default function BulkGenerateModal({
     context === 'mediaLibrary',
   );
   const { attachments, hasResolved } = useAttachments(attachmentIds);
+  const { receiveEntityRecords } = useDispatch(coreDataStore);
   const [altGenerationMap, setAltGenerationMap] = useState<AltGenerationMap>(
     new Map(
       attachmentIds.map((id) => [
@@ -85,10 +88,12 @@ export default function BulkGenerateModal({
         signal: queuer.getAbortSignal(),
       });
 
-      // Sync local core-data cached record, so reopening the modal shows fresh alt text.
       const attachment = attachments.find((a) => a.id === id);
-      if (attachment) {
-        attachment.alt_text = alt;
+      if (saveAltInMediaLibrary && attachment) {
+        receiveEntityRecords('postType', 'attachment', {
+          ...attachment,
+          alt_text: alt,
+        });
       }
 
       return alt;
@@ -146,7 +151,7 @@ export default function BulkGenerateModal({
 
       attachments.forEach((attachment) => {
         const details = nextMap.get(attachment.id);
-        if (!details) return;
+        if (!details || details.status !== 'idle') return;
 
         const thumbnail = attachment.media_details.sizes?.thumbnail ??
           attachment.media_details.sizes?.[0] ?? {
