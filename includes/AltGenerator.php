@@ -115,7 +115,16 @@ class AltGenerator {
             return $alt_text;
         }
 
-        update_post_meta($attachment_id, '_wp_attachment_image_alt', wp_slash(sanitize_text_field($alt_text)));
+        $alt_text = sanitize_text_field($alt_text);
+        $saved = update_post_meta($attachment_id, '_wp_attachment_image_alt', wp_slash($alt_text));
+        if (!$saved && get_post_meta($attachment_id, '_wp_attachment_image_alt', true) !== $alt_text) {
+            return AltGeneratorPlugin::error_log(new WP_Error(
+                'alt_text_save_failed',
+                __('Failed to save the generated alt text.', 'alt-text-generator-gpt-vision'),
+                ['status' => 500, 'attachment_id' => $attachment_id],
+            ));
+        }
+
         return $alt_text;
     }
 
