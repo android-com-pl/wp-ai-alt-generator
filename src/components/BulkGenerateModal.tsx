@@ -103,7 +103,7 @@ export default function BulkGenerateModal({
         jitter: 0.3,
       },
       onSuccess: (alt: null | string, id) => {
-        if (alt === null) return;
+        if (typeof alt !== 'string') return;
         patchItem(id, { alt, status: alt === '' ? 'decorative' : 'generated' });
         onGenerate?.({ id, alt });
       },
@@ -114,14 +114,11 @@ export default function BulkGenerateModal({
           message: error instanceof Error ? error.message : String(error),
         });
       },
-      onSettled: (id, queuer) => {
-        if (queuer.store.state.status === 'stopped') {
-          patchItem(id, { status: 'queued' });
-          queuer.addItem(id, 'front');
-          return;
-        }
-
-        if (queuer.store.state.isIdle) {
+      onSettled: (_id, queuer) => {
+        if (
+          queuer.store.state.isEmpty &&
+          !queuer.store.state.activeItems.length
+        ) {
           document.dispatchEvent(new CustomEvent('altTextsGenerated'));
         }
       },
@@ -221,7 +218,6 @@ export default function BulkGenerateModal({
 
   const pauseGeneration = () => {
     queuer.stop();
-    queuer.abort();
   };
 
   return (
