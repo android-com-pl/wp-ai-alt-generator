@@ -1,6 +1,5 @@
 # IDE config
 .idea
-.fleet
 .vscode
 
 # Custom wp-env config
@@ -10,3 +9,5 @@
 node_modules
 vendor
 build
+
+.agents
