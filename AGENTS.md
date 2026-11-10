@@ -7,7 +7,7 @@ WordPress plugin that generates image alt text through the WordPress AI Client, 
 - The entry point is `alt-text-generator-gpt-vision.php`. PHP classes are in `includes/`, React and TypeScript in `src/`, and prompts in `data/`.
 - Use the `alt-text-generator-gpt-vision` text domain for user-facing strings.
 - Keep changes focused. Do not reformat unrelated code or automatically format Markdown.
-- Format changed files with `pnpm exec oxfmt <files>` or `composer format -- <files>`.
+- Format changed files with `pnpm format <files>` or `composer format -- <files>`.
 - Build frontend changes with `pnpm build`. `build/` is gitignored but included in WordPress.org releases.
 - Run `pnpm lint`, `pnpm typecheck`, and `pnpm format:check` for frontend changes; `composer lint`, `composer analyse`, and `composer format:check` for PHP changes.
 - No automated test suite is configured. Use `.wp-env.json` for local WordPress and configure an image-capable model under Settings > Connectors. Check affected editor and media-library flows, including Polylang when relevant.
