@@ -1,13 +1,7 @@
 import type { ReactElement } from 'react';
 import { Flex, Icon, Spinner } from '@wordpress/components';
 import { _x, sprintf } from '@wordpress/i18n';
-import {
-  cautionFilled,
-  check,
-  next,
-  scheduled,
-  unseen,
-} from '@wordpress/icons';
+import { caution, check, next, scheduled, unseen } from '@wordpress/icons';
 import type { AltGenerationDetails } from '../types';
 
 const STATUS_CONFIG: Record<
@@ -45,7 +39,7 @@ const STATUS_CONFIG: Record<
       _x('Queued', 'Generation status', 'alt-text-generator-gpt-vision'),
   },
   error: {
-    icon: <Icon icon={cautionFilled} />,
+    icon: <Icon icon={caution} />,
     getLabel: (message) =>
       sprintf(
         _x('Error: %s', 'Generation status', 'alt-text-generator-gpt-vision'),
